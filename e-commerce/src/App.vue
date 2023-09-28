@@ -4,19 +4,29 @@
     <Button color="#4172DC" text="Shop Now" icon="84$" image=" "></Button>
   </div> -->
   <div id="app">
+    <Button></Button>
+    <MenuItem></MenuItem>
+    <Pricing/>
     <ProductCard/>
+   
   </div>
 </template>
 
 <script>
 import { RouterLink, RouterView } from "vue-router"
-// import Button from "./components/basic/Button.vue"
-import ProductCard from "./components/Top100Card.vue"
+import Button from "./components/basic/Button.vue"
+import ProductCard from "./components/ProductCard.vue"
+import Pricing from "./components/basic/Pricing.vue"
+import MenuItem from "./components/basic/MenuItem.vue"
 
 export default{
   name:'App',
   components: {
+    Button,
+    MenuItem,
+    Pricing,
     ProductCard,
+   
   }
 }
 

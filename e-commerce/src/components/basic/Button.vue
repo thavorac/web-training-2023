@@ -1,31 +1,66 @@
 <template>
   <div>
-    <div class="fill" v-if="color" :style="{ background: color }">
-      {{ icon }} | {{ text }}
+    <div class="fill" v-if="color" :style="{ background: color } ">
+      <img style="width: 24px; height: 24px;" src="../../assets/icon.png" alt="">
+      {{ images }}   {{ text }}
     </div>
-    <div v-else class="outline">{{ icon }} | {{ text }}</div>
+    <div v-else class="outline">{{ icon + '  '+text}}</div>
   </div>
 </template>
 
 <script>
 export default {
-  props: ["text", "icon", "color"],
+  name: 'Button',
+  data(){
+    return {
+      color :"#4172DC",
+      text :"Shop Now",
+      icon : "84$",
+      image :" ",
+    }
+  }
 };
 </script>
 
-<style>
-.outline {
-  border: 1px solid grey;
-  border-radius: 5px;
-  width: 200px;
+<style scoped>
+ @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
+
+.outline{
+  border: 1px solid #D9D9D9;
+  width: 243px;
+  height: 56px;
+  padding:16px  ;
+  border-radius: 8px;
   text-align: center;
+  font-family: Lato;
+  font-size: 14px;
+  font-weight: 700;
+  background: #262626;
+  color: #FFFFFF;
+  font-family: 'Lato', sans-serif;
+  gap: 8px;
+
+
 }
 .fill{
-  background-color: blue;
-  color: white;
-  width: 200px;
-  text-align: center;
+  width: 243px;
+  height: 56px;
+  padding:16px  ;
+  border-radius: 4px;
+  gap: 8px;
+  font-size: 14px;
+  font-weight: 500;
+  line-height: 20px;
+  color: rgba(255, 255, 255, 1);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  font-family: 'Lato', sans-serif;
+
+
 }
+
+
 
 
 </style>
