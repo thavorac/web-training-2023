@@ -2,10 +2,11 @@
   <div>
     <div class="fill" v-if="color" :style="{ background: color } ">
       <img style="width: 24px; height: 24px;" src="../../assets/icon.png" alt="">
-      {{ images }}   {{ text }}
+      <span style="font-weight: 700;">{{ images }}</span>
+      {{ text }}
     </div>
     <div v-else class="outline">
-      <span style="margin-right: 10px;">{{ icon }}</span> 
+      <span style="margin-right: 10px; font-weight: 700;">{{ icon }}</span> 
       {{text}}
     </div>
   </div>

@@ -56,6 +56,9 @@ export default {
     .text{
         width: 220.67px;
         height: 58px;     
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
     }
     .text .first-text{
         width: 220.67px;
