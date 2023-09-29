@@ -30,8 +30,8 @@ export default {
 
 .outline{
   border: 1px solid #D9D9D9;
-  width: 243px;
-  height: 56px;
+  width: 146px;
+  height: 44px;
   padding:16px  ;
   border-radius: 8px;
   text-align: center;

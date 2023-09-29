@@ -10,6 +10,8 @@
     <Time></Time>
     <ProductCard/>
     <Top100Card4/>
+    <Trending1/>
+
    
   </div>
 </template>
@@ -22,6 +24,7 @@ import Pricing from "./components/basic/Pricing.vue"
 import Time from "./components/basic/Time.vue"
 import MenuItem from "./components/basic/MenuItem.vue"
 import Top100Card4 from "./components/Top100Card4.vue"
+import Trending1 from "./components/Trending(1).vue"
 
 
 export default{
@@ -33,6 +36,7 @@ export default{
     Time,
     ProductCard,
     Top100Card4,
+    Trending1,
    
   }
 }
