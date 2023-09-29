@@ -4,7 +4,10 @@
       <img style="width: 24px; height: 24px;" src="../../assets/icon.png" alt="">
       {{ images }}   {{ text }}
     </div>
-    <div v-else class="outline">{{ icon + '  '+text}}</div>
+    <div v-else class="outline">
+      <span style="margin-right: 10px;">{{ icon }}</span> 
+      {{text}}
+    </div>
   </div>
 </template>
 
@@ -13,7 +16,7 @@ export default {
   name: 'Button',
   data(){
     return {
-      color :"#4172DC",
+      color :"",
       text :"Shop Now",
       icon : "84$",
       image :" ",

@@ -2,9 +2,8 @@
     <div class="card1"> 
         <div class="top">
             <p>DEAL OF THE DAY</p>
-            <figure>
-                <img src="../assets/image/date.png" alt="">
-            </figure>
+            
+                <Time style="margin: 0px auto;"></Time>
 
         </div>
         <div class="mid">
@@ -27,16 +26,23 @@
 </template>
 
 <script>
+import Time from './basic/Time.vue';
     export default {
         name: 'ProductCard',
         data(){
+
             return {
                 productcard:'Tonny Black',
                 ptag : 'Shoulder bag-White-Plain'
             }
+        },
+        components:{
+            Time,
         }
+        
 
     };
+
 
 </script>
 
@@ -142,7 +148,6 @@
         font-weight: 400;
         padding-left: 5px;
 
-
     }
     .top p{
         font-size: 14px;
@@ -159,7 +164,5 @@
         padding-top: 2px;
 
     }
-
-
 
 </style>

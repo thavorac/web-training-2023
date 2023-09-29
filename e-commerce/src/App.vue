@@ -7,6 +7,7 @@
     <Button></Button>
     <MenuItem></MenuItem>
     <Pricing/>
+    <Time></Time>
     <ProductCard/>
    
   </div>
@@ -17,7 +18,9 @@ import { RouterLink, RouterView } from "vue-router"
 import Button from "./components/basic/Button.vue"
 import ProductCard from "./components/ProductCard.vue"
 import Pricing from "./components/basic/Pricing.vue"
+import Time from "./components/basic/Time.vue"
 import MenuItem from "./components/basic/MenuItem.vue"
+
 
 export default{
   name:'App',
@@ -25,6 +28,7 @@ export default{
     Button,
     MenuItem,
     Pricing,
+    Time,
     ProductCard,
    
   }
