@@ -32,7 +32,7 @@ export default {
   border: 1px solid #D9D9D9;
   width: 146px;
   height: 44px;
-  padding:16px  ;
+  padding-top:10px ;
   border-radius: 8px;
   text-align: center;
   font-family: Lato;
