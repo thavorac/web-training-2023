@@ -9,6 +9,7 @@
     <Pricing/>
     <Time></Time>
     <ProductCard/>
+    <Top100Card4/>
    
   </div>
 </template>
@@ -20,6 +21,7 @@ import ProductCard from "./components/ProductCard.vue"
 import Pricing from "./components/basic/Pricing.vue"
 import Time from "./components/basic/Time.vue"
 import MenuItem from "./components/basic/MenuItem.vue"
+import Top100Card4 from "./components/Top100Card4.vue"
 
 
 export default{
@@ -30,6 +32,7 @@ export default{
     Pricing,
     Time,
     ProductCard,
+    Top100Card4,
    
   }
 }

@@ -3,7 +3,7 @@
         <div class="top">
             <p>DEAL OF THE DAY</p>
             
-                <Time style="margin: 0px auto;"></Time>
+                <Time style="margin: 0px auto; padding-top: 5px;"></Time>
 
         </div>
         <div class="mid">

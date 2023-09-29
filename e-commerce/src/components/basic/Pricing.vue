@@ -22,8 +22,12 @@
 <style scoped>
  @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
 
+ .pricing {
+    margin: 40px;
+ }
  .pricing span{
-    padding-left: 15px;       
+    padding-left: 15px;  
+      
 }
 .pricing .red{
     color: rgba(255, 46, 0, 1);

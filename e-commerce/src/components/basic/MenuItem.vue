@@ -24,6 +24,7 @@
 
 
 .signIn{   
+    width: 243px;
     background-color: black;
     display: flex;
     justify-content: center;
