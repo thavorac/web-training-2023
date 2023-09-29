@@ -6,8 +6,8 @@
         </div>
         <div class="down">
             <img src="../assets/img/Vector.png" alt="">
-            <p>{{ productcard }}</p>
-                <p class="text1">{{ ptag }}</p>
+            <p class="Mago">{{ productcard }}</p>
+            <p class="text1">{{ ptag }}</p>
             <p class="icon">
                 <img src="../assets/img/star.png" alt="">
                 <span>(289)</span>
@@ -86,6 +86,32 @@
     .down .icon span{
         width: 29px;
         height: 25px;
+        font-weight: 400;
+        font-size: 12px;
+        line-height: 25px;
+        text-align: center;
+    }
+    .down .icon img{
+        width: 120px;
+        height: 24px;
+    }
+    .down .Mago{
+        width: 38px;
+        height: 20px;
+        font-weight: 700;
+        font-size: 12px;
+        line-height: 20px;
+    }
+    .down .text1{
+        width: 160px;
+        height: 20px;
+        font-weight: 400;
+        font-size: 10px;
+        line-height: 20px;
+    }
+    .down .icon span{
+        width: 29px;
+        height: 25px;
     }
 
     .down .last{
@@ -101,6 +127,4 @@
        
     }
     
-
-
 </style>
