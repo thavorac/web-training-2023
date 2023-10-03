@@ -15,11 +15,10 @@
 <script>
 export default {
   name: 'Button',
+  props:["color","icon"],
   data(){
-    return {
-      color :"",
+    return { 
       text :"Shop Now",
-      icon : "84$",
       image :" ",
     }
   }
@@ -60,8 +59,6 @@ export default {
   justify-content: center;
   align-items: center;
   font-family: 'Lato', sans-serif;
-
-
 }
 
 

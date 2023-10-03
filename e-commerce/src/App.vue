@@ -10,8 +10,8 @@
     <Time></Time>
     <ProductCard/>
     <Top100Card4/>
-    <Trending1/>
-
+    <Trending1 isNew="True" :image="image" price="64$" nameProduct="Hello" category="Cool"/>
+    <CardButton/>
    
   </div>
 </template>
@@ -25,12 +25,19 @@ import Time from "./components/basic/Time.vue"
 import MenuItem from "./components/basic/MenuItem.vue"
 import Top100Card4 from "./components/Top100Card4.vue"
 import Trending1 from "./components/Trending(1).vue"
+import CardButton from "./components/basic/CardButton.vue"
 
 
 export default{
   name:'App',
+  data() {
+    return {
+      image: new URL('./assets/image/top.png', import.meta.url)
+    }
+  },
   components: {
     Button,
+    CardButton,
     MenuItem,
     Pricing,
     Time,

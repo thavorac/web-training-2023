@@ -1,15 +1,15 @@
 <template>
     <div class="container">
         <div class="image">
-            <img src="../assets/image/top.png" alt="">
+            <img :src="image" alt="">
         </div>
         <div class="content">
             <div class="text">
-                <p class="first-text">Cool & Sexy Calvin Klein</p>
-                <p class="second-text">Dotted dress-Casual</p>
+                <p class="first-text">{{ category }}</p>
+                <p class="second-text">{{ nameProduct }}</p>
             </div>
             <div class="button">
-                <Button></Button>
+                <Button :color="blue" :icon="price" style="margin-top: 8px;"></Button>
             </div>
         </div>
     </div>
@@ -20,6 +20,7 @@
 import Button from './basic/Button.vue';
 export default {
     name: 'Trending(1)',
+    props: ["isNew","image","price","nameProduct","category"],
     data(){
             return{
 
