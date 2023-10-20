@@ -1,12 +1,13 @@
 <template>
-    <div class="container">
+    
+    <div class="container1">
         <div class="btn-green">
-            <div class="text">
-                <div class="icon">
-                    <img :src="image" alt="">
+            <div class="text1">
+                <div class="icon1">
+                    <img src="../../assets/image/Vector.png" alt="">
                 </div>
-                <div class="right-text">
-                    <p v-if="isNew">New Arivals</p>
+                <div class="right-text1">
+                    <p>New Arivals</p>
                 </div>
             </div>
         </div>
@@ -32,7 +33,7 @@
 </script>
 
 <style scoped>
-    .container{
+    .container1{
         width: 105px;
         height: 46px;
         padding: 10px;
@@ -46,7 +47,7 @@
         gap: 10px;
         background-color: #00A95D;
     }
-    .text{
+    .text1{
         width: 73px;
         height: 20px;
         gap: 4px;
@@ -55,22 +56,22 @@
         justify-content: center;
         position: relative;
     }
-    .icon{
+    .icon1{
         width: 16px;
         height: 16px;
     }
-    .right-text{
+    .right-text1{
         width: 53px;
         height: 20px;
 
     }
-    .right-text p{
+    .right-text1 p{
         font-size: 10px;
         font-weight: 400;
         line-height: 20px;
         color: #FFFFFF;
     }
-    .icon img{
+    .icon1 img{
         width: 13.33px;
         height: 12px;
         /* border: 1px solid white; */

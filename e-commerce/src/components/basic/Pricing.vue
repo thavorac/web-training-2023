@@ -1,8 +1,8 @@
 <template>
     <p class="pricing">
-        <span class="red">$228</span>
-        <span class="delete">$290</span>
-        <span class="disc">-10%</span>
+        <span class="red">{{ newPrice }}</span>
+        <span class="delete">{{ fullPrice}}</span>
+        <span class="disc">{{ discount }}</span>
     </p>
 
 </template>
@@ -11,6 +11,7 @@
 
     export default{
         name: 'Pricing',
+        props:['newPrice', 'fullPrice','discount'],
         data(){
             return{
 

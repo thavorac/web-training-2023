@@ -7,11 +7,11 @@
 
         </div>
         <div class="mid">
-            <img src="../assets/image/mid.png" alt="">
+            <img :src="productCardimage" alt="">
         </div>
         <div class="down">
-            <p>{{ productcard }}</p>
-            <p class="text1">{{ ptag }}</p>
+            <p>{{ brandName }}</p>
+            <p class="text1">{{ detail }}</p>
             <p class="icon">
                 <img src="../assets/image/stars.png" alt="">
                 <span>(54)</span>
@@ -29,11 +29,10 @@
 import Time from './basic/Time.vue';
     export default {
         name: 'ProductCard',
+        props : ['brandName' , 'detail', 'productCardimage'],
         data(){
 
             return {
-                productcard:'Tonny Black',
-                ptag : 'Shoulder bag-White-Plain'
             }
         },
         components:{
@@ -86,6 +85,7 @@ import Time from './basic/Time.vue';
         width: 241px;
         height: 129px;
         margin-left: 29px;
+        margin-top: 5px;
 
     }
     .down .red{

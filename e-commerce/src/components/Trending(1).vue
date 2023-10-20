@@ -1,5 +1,17 @@
 <template>
     <div class="container">
+        <div class="container1">
+        <div class="btn-green">
+            <div class="text1">
+                <div class="icon1">
+                    <img src="../assets/image/Vector.png" alt="">
+                </div>
+                <div class="right-text1">
+                    <p v-if="isNew">New Arivals</p>
+                </div>
+            </div>
+        </div>
+    </div>
         <div class="image">
             <img :src="image" alt="">
         </div>
@@ -9,7 +21,7 @@
                 <p class="second-text">{{ nameProduct }}</p>
             </div>
             <div class="button">
-                <Button :color="blue" :icon="price" style="margin-top: 8px;"></Button>
+                <Button :color="blue" :icon="price" style="margin-top: 2px;"></Button>
             </div>
         </div>
     </div>
@@ -20,7 +32,7 @@
 import Button from './basic/Button.vue';
 export default {
     name: 'Trending(1)',
-    props: ["isNew","image","price","nameProduct","category"],
+    props: ["isNew","image","price","nameProduct","category","isNew"],
     data(){
             return{
 
@@ -44,6 +56,7 @@ export default {
         width: 406.67px;
         height: 344px;
         border-radius: 8px 8px 0px 0px;
+        z-index: 1;
     }
     .content{
         background-color: yellow;
@@ -88,5 +101,57 @@ export default {
         border: 1px;
         /* background-color: white; */
     }
+    .container1{
+        width: 105px;
+        height: 46px;
+        /* padding: 10px; */
+        gap: 10px;
+        position: absolute;
+        padding-top: 10px;
+        padding-left: 15px;
+       
+        
+    }
+    .btn-green{
+        width: 85px;
+        height: 26px;
+        border-radius: 4px;
+        padding: 3px 6px;
+        gap: 10px;
+        background-color: #00A95D;
+    }
+    .text1{
+        width: 73px;
+        height: 20px;
+        gap: 4px;
+        display: flex;
+        flex-direction: row;
+        justify-content: center;
+        position: relative;
+    }
+    .icon1{
+        width: 16px;
+        height: 16px;
+    }
+    .right-text1{
+        width: 53px;
+        height: 20px;
+
+    }
+    .right-text1 p{
+        font-size: 10px;
+        font-weight: 400;
+        line-height: 20px;
+        color: #FFFFFF;
+    }
+    .icon1 img{
+        width: 13.33px;
+        height: 12px;
+        /* border: 1px solid white; */
+        position: absolute;
+        left: 1px;
+        top: 4px;
+    }
+
 
 </style>

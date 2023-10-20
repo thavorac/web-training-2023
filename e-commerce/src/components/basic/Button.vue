@@ -1,7 +1,7 @@
 <template>
   <div>
     <div class="fill" v-if="color" :style="{ background: color } ">
-      <img style="width: 24px; height: 24px;" src="../../assets/icon.png" alt="">
+      <img style="width: 24px; height: 24px;" src="../../assets/Icon.png" alt="">
       <span style="font-weight: 700;">{{ images }}</span>
       {{ text }}
     </div>
@@ -19,7 +19,7 @@ export default {
   data(){
     return { 
       text :"Shop Now",
-      image :" ",
+    
     }
   }
 };
@@ -60,8 +60,6 @@ export default {
   align-items: center;
   font-family: 'Lato', sans-serif;
 }
-
-
 
 
 </style>

@@ -2,13 +2,13 @@
     <div class="container">
         <div class="text">
             <section>
-                <p class="first-text">Never-Ending Summer</p>
-                <p class="second-text">Throwback Shirts & all-day dressed</p>
+                <p class="first-text">{{ category }}</p>
+                <p class="second-text"> {{ nameProduct }}</p>
             </section>
             <p class="third-text"><a href="#">Exlopre all category</a></p>
         </div>
         <div class="image">
-            <img src="../assets/image/Rectangle 1078.png" alt="">
+            <img :src="imageTopCard4" alt="">
         </div>
     </div>
 
@@ -18,6 +18,7 @@
 
     export default{
         name: 'Top100Card4',
+        props : ["nameProduct", "category","imageTopCard4"],
         data(){
             return{
 
@@ -28,13 +29,11 @@
 
 
 <style scoped>
-  @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
-
     .container{
         width: 620px;
         height: 383px;
         display: flex;
-        margin: 80px;     
+        margin: 0px;     
     }
 
     .text{
