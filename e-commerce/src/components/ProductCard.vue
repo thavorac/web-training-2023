@@ -14,22 +14,25 @@
             <p class="text1">{{ detail }}</p>
             <p class="icon">
                 <img src="../assets/image/stars.png" alt="">
-                <span>(54)</span>
-            </p>
-            <p class="pricing">
+                <span>{{ rating }}</span>
+            </p>    
+            <!-- <p class="pricing">
                 <span class="red">$69.99</span>
                 <span class="delete">$129.99</span>
                 <span><button>-40%</button></span>
-            </p>
-        </div>    
+            </p> -->
+        </div>  
+        <Pricing style="margin-left: 74px;" :newPrice="new_price" :fullPrice="full_price" :discount="discount_price"></Pricing>
+             
     </div>
 </template>
 
 <script>
 import Time from './basic/Time.vue';
+import Pricing from './basic/Pricing.vue';
     export default {
         name: 'ProductCard',
-        props : ['brandName' , 'detail', 'productCardimage'],
+        props : ['brandName' , 'detail', 'productCardimage','new_price','full_price','discount_price','rating'],
         data(){
 
             return {
@@ -37,6 +40,7 @@ import Time from './basic/Time.vue';
         },
         components:{
             Time,
+            Pricing,
         }
         
 
@@ -78,7 +82,7 @@ import Time from './basic/Time.vue';
     .card1 .down{
         /* background-color: pink; */
         width: 300px;
-        height: 128px;
+        height: 85px;
         padding: 16px, 40px, 16px, 40px ;
     }
     .card1 .mid img{
@@ -141,6 +145,7 @@ import Time from './basic/Time.vue';
         display: flex;
         justify-content:space-between;
         align-items: center;
+        
        
     }
     .down .icon span{

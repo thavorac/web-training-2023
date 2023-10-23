@@ -2,12 +2,12 @@
     <div class="card1"> 
         <div class="top"> </div>
         <div class="mid">
-            <img src="../assets/img/photo.png" alt="">
+            <img :src="top100Card" alt="">
         </div>
         <div class="down">
             <img src="../assets/img/Vector.png" alt="">
-            <p class="Mago">{{ productcard }}</p>
-            <p class="text1">{{ ptag }}</p>
+            <p class="Mago">{{ brandName }}</p>
+            <p class="text1">{{ detail }}</p>
             <p class="icon">
                 <img src="../assets/img/star.png" alt="">
                 <span>(289)</span>
@@ -24,10 +24,10 @@
 <script>
     export default {
         name: 'ProductCard',
+        props:['brandName', 'detail','top100Card'],
         data(){
             return {
-                productcard:'Mango',
-                ptag : 'Kimono&Caftan-Black-Regular fit'
+               
             }
         }
 

@@ -1,13 +1,13 @@
 <template>
     <div class="container">
-        <div class="container1">
+        <div v-if="isNew" class="container1">
         <div class="btn-green">
             <div class="text1">
                 <div class="icon1">
                     <img src="../assets/image/Vector.png" alt="">
                 </div>
                 <div class="right-text1">
-                    <p v-if="isNew">New Arivals</p>
+                    <p>New Arivals</p>
                 </div>
             </div>
         </div>
@@ -21,7 +21,7 @@
                 <p class="second-text">{{ nameProduct }}</p>
             </div>
             <div class="button">
-                <Button :color="blue" :icon="price" style="margin-top: 2px;"></Button>
+                <Button :color="blue" :icon="price" style="margin-top: 2px;" text="Shop Now"></Button>
             </div>
         </div>
     </div>
@@ -52,11 +52,11 @@ export default {
         width: 406.67px;
         height: 437px;
     }
-    .image{
+    .image {
         width: 406.67px;
         height: 344px;
         border-radius: 8px 8px 0px 0px;
-        z-index: 1;
+       
     }
     .content{
         background-color: yellow;

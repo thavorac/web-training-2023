@@ -1,6 +1,6 @@
 <template>
 
-    <div class="container">
+    <div :style="{backgroundColor:color}" class="container">
         <div class="arrow-left-right">
             <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" strokeWidth={1.5} stroke="currentColor" className="w-6 h-6">
                  <path strokeLinecap="round" strokeLinejoin="round" d="M15.75 19.5L8.25 12l7.5-7.5" />
@@ -28,7 +28,7 @@
 import '@fortawesome/fontawesome-free/css/all.css';
     export default{
         name: 'Banner',
-        props:["title" , "detail","image"],
+        props:["title" , "detail","image","color"],
         data(){
             return{
 
@@ -43,12 +43,13 @@ import '@fortawesome/fontawesome-free/css/all.css';
     .container{
         width: 991px;
         height: 221px;
-        padding: 0px 90px;
+        padding: 0px ;
         gap: 70px;
         background-color: #F7DDD0;
         display: flex;
         flex-direction: row;
         justify-content: center;
+        
     }
     .container .txt{
         width: 268.5px;

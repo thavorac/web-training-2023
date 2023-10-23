@@ -2,7 +2,7 @@
   <div>
     <div class="fill" v-if="color" :style="{ background: color } ">
       <img style="width: 24px; height: 24px;" src="../../assets/Icon.png" alt="">
-      <span style="font-weight: 700;">{{ images }}</span>
+      <!-- <span style="font-weight: 700;">{{ images }}</span> -->
       {{ text }}
     </div>
     <div v-else class="outline">
@@ -15,10 +15,9 @@
 <script>
 export default {
   name: 'Button',
-  props:["color","icon"],
+  props:["color","icon","text"],
   data(){
     return { 
-      text :"Shop Now",
     
     }
   }
@@ -60,6 +59,5 @@ export default {
   align-items: center;
   font-family: 'Lato', sans-serif;
 }
-
 
 </style>
