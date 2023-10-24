@@ -27,7 +27,7 @@
 .menu{
     width: 1440px;
     height: 52px;
-    justify-content: space-between;
+    justify-content: space-evenly;
     padding: 16px;
     display: flex;
 }

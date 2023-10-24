@@ -108,7 +108,7 @@ import Button from './basic/Button.vue';
         height: 163px;
         position: absolute;
         margin-top: 143px;
-        margin-left:442px;
+        margin-left:435px;
         z-index:100;
         
     }

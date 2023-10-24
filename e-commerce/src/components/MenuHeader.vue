@@ -32,13 +32,10 @@
 
         </div>
         <div class="menuList">
-            <ul>
-                <li>About us</li>
-                <li>Blog</li>
-                <li>Contact us</li>
-                <li>Help&support</li>
-            </ul>
-
+            <a href="#">About us</a>
+            <a href="#">Blog</a>
+            <a href="#">Contact us</a>
+            <a href="#">Help&support</a>
         </div>
         <div class="social">
             <div class="item">
@@ -150,7 +147,7 @@
         flex-direction: row;
     }
     .container .searchIcon .inside .categories select ,option{
-        width: 85px;
+        width: 108px;
         height: 20px;
         font-size: 14px;
         font-weight: 400;
@@ -181,23 +178,27 @@
         width: 420px;
         height: 20px;
         gap: 12px;
+        display: flex;
     }
-    .container .menuList ul{
+    /* .container .menuList ul{
         display: flex;
         font-family: 'Lato', sans-serif;
 
-    }
+    } */
 
-    .container .menuList ul li{
+    .container .menuList a{
         width: 96px;
         height: 20px;
         font-size: 14px;
         font-weight: 400;
         line-height: 20px;
         color: #555555;
-        list-style-type: none;
-      
-
+        font-family: 'Lato', sans-serif;
+    }
+    .container .menuList a:hover{
+        color: red;
+        background: white
+        
     }
     .container .social{
         width: 127.5px;
@@ -227,6 +228,8 @@
         height: 24px;
 
     }
+   
+    
 
 
 

@@ -56,7 +56,7 @@ import Pricing from './basic/Pricing.vue';
     .card1{
         width:300px;
         height:380px;
-        margin-top: 80px;
+        /* margin-top: 80px; */
         padding-left: -461px;
         border-radius: 8px;
         /* background-color: black; */
