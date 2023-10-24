@@ -1,13 +1,13 @@
 <template>
     <div class="container1">
-        <div class="parent">
+        <div v-if="isNew" class="parent">
             <div class="top_parent">
                 <div class="text_parent">
                     <div class="name_parent">
                         <p>Summer Essentials</p>
                     </div>
                     <div class="dis_parent">
-                        <p>20% off</p>
+                        <p>{{ discount }} off</p>
                     </div>
                 </div>
             </div>
@@ -41,6 +41,7 @@
 import Button from './basic/Button.vue';
     export default{
         name:'Advertising',
+        props: ['isNew','discount'],
         data(){
             return{
 

@@ -11,7 +11,7 @@
             <MenuProduct></MenuProduct>
         </div>
         <div class="advertising">
-            <Advertising></Advertising>
+            <Advertising :isNew="true" discount="20%"></Advertising>
         </div>
         <!-- <Viewall></Viewall> -->
         <div class="flash-sale">
