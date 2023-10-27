@@ -4,29 +4,29 @@
             <div class="top_parent">
                 <div class="text_parent">
                     <div class="name_parent">
-                        <p>Summer Essentials</p>
+                        <p>{{ advertisement.category }}</p>
                     </div>
                     <div class="dis_parent">
-                        <p>{{ discount }} off</p>
+                        <p>{{ advertisement.discount }} off</p>
                     </div>
                 </div>
             </div>
             <div class="bottom_parent">
                 <div class="date">
-                    19 Jul-30 Jul
+                    {{advertisement.until}}
                 </div>
             </div>
         </div>
         <div class="container">
         <div class="left">
-            <img src="../assets/image/left.png" alt="">
+            <img :src="advertisement.image" alt="Advertisement Image" />
         </div>
         <div class="right">
             <div class="name">
-               <p> KIMONOS, CAFTANS & PAREOS</p>
+               <p>{{ advertisement.title }}</p>
             </div>
             <div class="cost">
-                <p>Poolside glam included From $4.99</p>
+                <p>{{advertisement.description}}</p>
             </div>
             <div>
                 <Button style="margin-left: 340px;" color="#4172DC" text="Shop Now"></Button>
@@ -39,6 +39,8 @@
 
 <script>
 import Button from './basic/Button.vue';
+import { mapState } from "pinia";
+import { useGeneralStore } from "../stores/general";
     export default{
         name:'Advertising',
         props: ['isNew','discount'],
@@ -49,7 +51,10 @@ import Button from './basic/Button.vue';
         },
         components:{
             Button,
-        }
+        },
+        computed: {
+            ...mapState(useGeneralStore, ["advertisement"]),
+        },
     }
 
 </script>

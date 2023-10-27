@@ -27,13 +27,13 @@
                 </aside>
             </div>
             <div class="product_card">
-                <ProductCard new_price="$123" full_price="$231" discount_price="$101" rating="(54)" brandName="Tonny Black" detail="Shoulder bag-White-Plain" :productCardimage="productCardimage"/> 
-                <ProductCard new_price="$113" full_price="$142" discount_price="$213" rating="(100)" brandName="Reebok" detail="Women's Powder sneaker" :productCardimage="shoesMid1"/> 
-                <ProductCard new_price="$101" full_price="$321" discount_price="$213" rating="(83)" brandName="Patso" detail="Shoulder bag-Pink-Plain" :productCardimage="shoesMid2"/> 
-                <ProductCard new_price="$141" full_price="$114" discount_price="$250" rating="(29)" brandName="Sketchers" detail="Sport-shoe 2102" :productCardimage="shoesMid3"/> 
+                <ProductCard new_price="$123" full_price="$131" discount_price="10%" rating="(54)" brandName="Tonny Black" detail="Shoulder bag-White-Plain" :productCardimage="productCardimage"/> 
+                <ProductCard new_price="$113" full_price="$142" discount_price="13%" rating="(100)" brandName="Reebok" detail="Women's Powder sneaker" :productCardimage="shoesMid1"/> 
+                <ProductCard new_price="$101" full_price="$321" discount_price="21%" rating="(83)" brandName="Patso" detail="Shoulder bag-Pink-Plain" :productCardimage="shoesMid2"/> 
+                <ProductCard new_price="$141" full_price="$114" discount_price="25%" rating="(29)" brandName="Sketchers" detail="Sport-shoe 2102" :productCardimage="shoesMid3"/> 
         </div>
     </div>   
-    <div class="trending">
+    <!-- <div class="trending">
       <div>
         <MenuHeader />
       </div>
@@ -45,9 +45,9 @@
       </div>
       <div class="advertising">
         <Advertising></Advertising>
-      </div>
+      </div> -->
       <!-- <Viewall></Viewall> -->
-      <div class="flash-sale">
+      <!-- <div class="flash-sale">
         <div class="text">
           <aside class="ftext">Flash Sales</aside>
           <aside class="view-all">
@@ -69,8 +69,8 @@
               </svg>
             </p>
           </aside>
-        </div>
-        <div class="product_card">
+        </div> -->
+        <!-- <div class="product_card">
           <ProductCard
             new_price="$123"
             full_price="$231"
@@ -106,9 +106,9 @@
             brandName="Sketchers"
             detail="Sport-shoe 2102"
             :productCardimage="shoesMid3"
-          />
-        </div>
-      </div>
+          /> -->
+        <!-- </div> -->
+      <!-- </div> -->
       <div class="trending">
         <div class="text">
           <aside class="ftext">Trending must-haves</aside>
@@ -246,6 +246,7 @@
         <Top100Card41
           nameProduct1="Get in gym essentials"
           color="#0186C4"
+          height="341px"
           category1="The most famous sport brands"
           :imageTopCard41="shirtImage"
         />
@@ -261,6 +262,7 @@
     <PricingBtn discountBtn="-10%" newPriceBtn="$228" fullPriceBtn="$290" />
     <Time></Time>  -->
   </div>
+
 </template>
 
 <script>
@@ -329,6 +331,7 @@ export default {
   methods: {},
   computed: {
     ...mapState(useGeneralStore, ["categories"]),
+    ...mapState(useGeneralStore,["advertisement"]),
   },
 };
 </script>

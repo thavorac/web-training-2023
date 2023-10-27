@@ -1,6 +1,6 @@
 <template>
     <div class="container">
-        <div :style="{backgroundColor:color}" class="text">
+        <div :style="{backgroundColor:color,height:height}" class="text">
             <section>
                 <p class="first-text">{{ category1 }}</p>
                 <p class="second-text"> {{ nameProduct1 }}</p>
@@ -18,7 +18,7 @@
 
     export default{
         name: 'Top100Card41',
-        props : ["nameProduct1", "category1","imageTopCard41",'color'],
+        props : ["nameProduct1", "category1","imageTopCard41",'color','height'],
         data(){
             return{
 

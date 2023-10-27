@@ -1,7 +1,7 @@
 <template>
     <div class="card1"> 
         <div class="top">
-            <p>DEAL OF THE DAY</p>
+            <p>Deal the skd </p>
             
                 <Time style="margin: 0px auto; padding-top: 5px;"></Time>
 
@@ -10,17 +10,12 @@
             <img :src="productCardimage" alt="">
         </div>
         <div class="down">
-            <p>{{ brandName }}</p>
+            <p v-if="products">{{products.title}}</p>
             <p class="text1">{{ detail }}</p>
             <p class="icon">
                 <img src="../assets/image/stars.png" alt="">
                 <span>{{ rating }}</span>
             </p>    
-            <!-- <p class="pricing">
-                <span class="red">$69.99</span>
-                <span class="delete">$129.99</span>
-                <span><button>-40%</button></span>
-            </p> -->
         </div>  
         <Pricing style="margin-left: 74px;" :newPrice="new_price" :fullPrice="full_price" :discount="discount_price"></Pricing>
              
@@ -28,6 +23,8 @@
 </template>
 
 <script>
+import { mapState } from "pinia";
+import { useGeneralStore } from "../stores/general";
 import Time from './basic/Time.vue';
 import Pricing from './basic/Pricing.vue';
     export default {
@@ -41,6 +38,9 @@ import Pricing from './basic/Pricing.vue';
         components:{
             Time,
             Pricing,
+        },
+        computed:{
+            ...mapState(useGeneralStore,["products"]),
         }
         
 
