@@ -2,8 +2,9 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB; // Add this import statement
+use Illuminate\Support\Str;
 
 class CategorySeeder extends Seeder
 {
@@ -12,6 +13,8 @@ class CategorySeeder extends Seeder
      */
     public function run(): void
     {
-        DB::table('categories')
+        DB::table('categories')->insert([
+            'name' => Str::random(10)
+        ]);
     }
 }
