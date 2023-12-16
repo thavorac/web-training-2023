@@ -1,0 +1,16 @@
+2023-12-16 10:26:17.883 [info] 
+
+
+
+
+2023-12-16 10:26:17.907 [info] Extension host agent started.
+2023-12-16 10:26:18.146 [info] [127.0.0.1][4f86dc2f][ManagementConnection] New connection established.
+2023-12-16 10:26:19.028 [info] [127.0.0.1][219165ed][ExtensionHostConnection] New connection established.
+2023-12-16 10:26:19.259 [info] [127.0.0.1][219165ed][ExtensionHostConnection] <38728> Launched Extension Host Process.
+2023-12-16 10:27:15.366 [info] [127.0.0.1][c6ac6c55][ManagementConnection] New connection established.
+2023-12-16 10:27:15.779 [info] [127.0.0.1][47020467][ExtensionHostConnection] New connection established.
+2023-12-16 10:27:15.784 [info] [127.0.0.1][47020467][ExtensionHostConnection] <39117> Launched Extension Host Process.
+2023-12-16 12:56:36.518 [info] [127.0.0.1][c6ac6c55][ManagementConnection] The client has disconnected gracefully, so the connection will be disposed.
+2023-12-16 12:56:36.896 [info] [127.0.0.1][47020467][ExtensionHostConnection] <39117> Extension Host Process exited with code: 0, signal: null.
+2023-12-16 12:57:16.603 [info] [127.0.0.1][4f86dc2f][ManagementConnection] The client has disconnected gracefully, so the connection will be disposed.
+2023-12-16 12:57:16.852 [info] [127.0.0.1][219165ed][ExtensionHostConnection] <38728> Extension Host Process exited with code: 0, signal: null.

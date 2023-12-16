@@ -1,0 +1,28 @@
+2023-12-16 09:22:56.540 [info] Log level: Info
+2023-12-16 09:22:56.540 [info] Validating found git in: "git"
+2023-12-16 09:22:56.540 [info] Using git "2.25.1" from "git"
+2023-12-16 09:22:56.540 [info] > git rev-parse --show-toplevel [11ms]
+2023-12-16 09:22:56.547 [info] > git rev-parse --git-dir --git-common-dir [0ms]
+2023-12-16 09:22:56.563 [info] Open repository: /home/sopharong/web-training-2023
+2023-12-16 09:22:56.587 [info] > git config --get commit.template [14ms]
+2023-12-16 09:22:56.602 [info] > git rev-parse --show-toplevel [19ms]
+2023-12-16 09:22:56.609 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [11ms]
+2023-12-16 09:22:56.614 [warning] ENOENT: no such file or directory, open '/home/sopharong/web-training-2023/.git/refs/remotes/origin/main'
+2023-12-16 09:22:56.615 [info] > git rev-parse refs/remotes/origin/main [2ms]
+2023-12-16 09:22:56.686 [info] > git status -z -uall [64ms]
+2023-12-16 09:22:56.705 [info] > git config --get commit.template [4ms]
+2023-12-16 09:22:56.710 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [1ms]
+2023-12-16 09:22:56.713 [warning] ENOENT: no such file or directory, open '/home/sopharong/web-training-2023/.git/refs/remotes/origin/main'
+2023-12-16 09:22:56.715 [info] > git rev-parse refs/remotes/origin/main [1ms]
+2023-12-16 09:22:56.727 [info] > git status -z -uall [8ms]
+2023-12-16 09:22:57.096 [info] > git check-ignore -v -z --stdin [3ms]
+2023-12-16 09:22:57.629 [info] > git fetch [1066ms]
+2023-12-16 09:22:57.715 [info] > git config --get commit.template [21ms]
+2023-12-16 09:22:57.721 [info] > git for-each-ref --format=%(refname)%00%(upstream:short)%00%(objectname)%00%(upstream:track)%00%(upstream:remotename)%00%(upstream:remoteref) refs/heads/main refs/remotes/main [1ms]
+2023-12-16 09:22:57.725 [warning] ENOENT: no such file or directory, open '/home/sopharong/web-training-2023/.git/refs/remotes/origin/main'
+2023-12-16 09:22:57.726 [info] > git rev-parse refs/remotes/origin/main [1ms]
+2023-12-16 09:22:57.739 [info] > git status -z -uall [10ms]
+2023-12-16 09:23:02.055 [info] > git check-ignore -v -z --stdin [1ms]
+2023-12-16 09:23:13.577 [info] > git check-ignore -v -z --stdin [1ms]
+2023-12-16 09:23:21.820 [info] > git check-ignore -v -z --stdin [0ms]
+2023-12-16 09:23:24.216 [info] > git check-ignore -v -z --stdin [1ms]
