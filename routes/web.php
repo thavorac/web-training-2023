@@ -15,4 +15,15 @@ use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
     return view('welcome');
+//    $name = session('name');
+//    $token = session('token');
+//    if ($name) {
+//        return view('welcome', compact('name'));
+//    } else {
+//        session([
+//            'name' => 'Thavorac',
+//            'token', 'asdfafewrweasfasdf'
+//        ]);
+//        return view('welcome');
+//    }
 });
