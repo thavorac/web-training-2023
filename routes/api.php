@@ -4,6 +4,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\CategoryController;
 use App\Http\Controllers\ProductController;
+use App\Http\Controllers\AuthenticationController;
 
 /*
 |--------------------------------------------------------------------------
@@ -34,4 +35,7 @@ Route::post('/products', [ProductController::class, 'createProduct']);
 Route::get('/products/{productId}', [ProductController::class, 'getProduct']);
 Route::patch('/products/{productId}', [ProductController::class, 'updateProduct']);
 Route::delete('/products/{productId}', [ProductController::class, 'deleteProduct']);
+
+// -- Authentication api urls
+Route::post('/register', [AuthenticationController::class, 'register']);
 
