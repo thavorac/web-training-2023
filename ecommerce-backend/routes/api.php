@@ -8,6 +8,7 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Order_productsController;
+use App\Http\Controllers\AuthenticationController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -107,6 +108,7 @@ Route::get('/order_products/{order_productsId}',[Order_productsController::class
 Route::patch('/order_products/{order_productsId}',[Order_productsController::class , 'updateOrderProduct']);
 Route::delete('/order_products/{order_productsId}',[Order_productsController::class,'deleteOrderProduct']);
 
-
+// api for Authentication
+Route::post('/register',[AuthenticationController::class,'register']);
 
 
