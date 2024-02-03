@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use App\Mail\OtpMail;
 use App\Models\User;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
@@ -28,12 +29,30 @@ class AuthenticationController extends Controller
 
                 $user->save();
 
-                Mail::to($user->email)->send(new OtpMail("http://locahost:9000/verify_otp?user_id=".$user->id."&otp=".$user->otp));
+                $linkOTP = "http://localhost:9000/verify_otp?user_id=".$user->id."&otp=".$user->otp;
+                Mail::to($user->email)->send(new OtpMail($linkOTP));
 
                 return response(["message" => "good"]);
             } else {
                 return response(["message" => "Password and Confirm Password are not match"], 400);
             }
+        }
+    }
+
+    public function verifyOTP(Request $request) {
+        $user = User::find($request->query('user_id'));
+
+        if ($user) {
+           if ($user->otp == $request->query('otp')) {
+               $user->email_verified_at = Carbon::now();
+               $user->save();
+
+               return response(["message" => "Email is verified. You can start login"]);
+           } else {
+               return response(["message" => "OTP is invalid"], 400);
+           }
+        } else {
+            return response(["message" => "User not found"], 400);
         }
     }
 }
