@@ -1,8 +1,7 @@
 <template>
     <br><br>
     <div class="container">
-        <div class="row1">
-           
+        <div class="row1">       
          <div class="payment">
             <span class="logo1"><img src="../assets/image/Logo 1.png" alt=""></span>
             <span class="logo2"><img src="../assets/image/Logo 2.png" alt=""></span>
@@ -62,12 +61,14 @@
     .row1-right .text select,option{
         border: none;
         font-family: 'Lato', sans-serif;
+        margin-left: 275px;
 
     }
     .container{
-        width: 1440px;
+        /* width: 1440px; */
+        width: 1518px;
         height: 173px;
-        padding: 24px 100px;
+        /* padding: 24px 100px; */
         gap: 12px;
         background-color: #FFFFFF;
         display: flex;
@@ -122,12 +123,14 @@
         height: 19px;
     }
     .container .devider{
-        width: 1240px;
+        /* width: 1240px; */
+        width: 1520px;
         height: 2px;
         color: #D9D9D9;
     }
     .container .row2{
-        width: 1240px;
+        /* width: 1240px; */
+        width: 1518px;
         height: 69px;
         display: flex;
         flex-direction: row;
@@ -194,9 +197,4 @@
         height: 15.28px;
 
     }
-
-
- 
-
-
 </style>

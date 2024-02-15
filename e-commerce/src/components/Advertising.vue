@@ -68,16 +68,19 @@ import { useGeneralStore } from "../stores/general";
         box-sizing: border-box;
     }
     .container{
-        width: 1440px;
+        /* width: 1440px; */
+        width: 100%;
         height: 460px;
         display: flex;
     }
     .container .left{
-        width: 547px;
+        /* width: 547px; */
+        width: 36%;
         height: 460px;
     }
     .container .right{
-        width: 893px;
+        /* width: 893px; */
+        width: 64%;
         height: 460px;
         gap: 32px;
         background-color: #6386d1;

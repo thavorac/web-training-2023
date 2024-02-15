@@ -126,11 +126,5 @@ import PricingBtn from './basic/PricingBtn.vue';
         line-height: 25px;
         text-align: center;
         color: #555555;
-        
-        
-        
-        /* padding-left: 5px; */
-        /* padding-left: 30px; */
-        
     }
 </style>

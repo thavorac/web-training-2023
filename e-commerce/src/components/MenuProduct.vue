@@ -18,7 +18,8 @@ export default {
 </script>
 <style>
 .menu {
-  width: 1440px;
+  /* width: 1440px; */
+  width: 1518px;
   height: 52px;
   justify-content: space-evenly;
   padding: 16px;

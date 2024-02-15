@@ -33,82 +33,6 @@
                 <ProductCard new_price="$141" full_price="$114" discount_price="25%" rating="(29)" brandName="Sketchers" detail="Sport-shoe 2102" :productCardimage="shoesMid3"/> 
         </div>
     </div>   
-    <!-- <div class="trending">
-      <div>
-        <MenuHeader />
-      </div>
-      <div class="categoryHead">
-        <CategoriesHead />
-      </div>
-      <div class="menuProduct">
-        <MenuProduct></MenuProduct>
-      </div>
-      <div class="advertising">
-        <Advertising></Advertising>
-      </div> -->
-      <!-- <Viewall></Viewall> -->
-      <!-- <div class="flash-sale">
-        <div class="text">
-          <aside class="ftext">Flash Sales</aside>
-          <aside class="view-all">
-            <p class="all">View all</p>
-            <p class="icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-                strokeWidth="{1.5}"
-                stroke="currentColor"
-                className="w-6 h-6"
-              >
-                <path
-                  strokeLinecap="round"
-                  strokeLinejoin="round"
-                  d="M8.25 4.5l7.5 7.5-7.5 7.5"
-                />
-              </svg>
-            </p>
-          </aside>
-        </div> -->
-        <!-- <div class="product_card">
-          <ProductCard
-            new_price="$123"
-            full_price="$231"
-            discount_price="$101"
-            rating="(54)"
-            brandName="Tonny Black"
-            detail="Shoulder bag-White-Plain"
-            :productCardimage="productCardimage"
-          />
-          <ProductCard
-            new_price="$113"
-            full_price="$142"
-            discount_price="$213"
-            rating="(100)"
-            brandName="Reebok"
-            detail="Women's Powder sneaker"
-            :productCardimage="shoesMid1"
-          />
-          <ProductCard
-            new_price="$101"
-            full_price="$321"
-            discount_price="$213"
-            rating="(83)"
-            brandName="Patso"
-            detail="Shoulder bag-Pink-Plain"
-            :productCardimage="shoesMid2"
-          />
-          <ProductCard
-            new_price="$141"
-            full_price="$114"
-            discount_price="$250"
-            rating="(29)"
-            brandName="Sketchers"
-            detail="Sport-shoe 2102"
-            :productCardimage="shoesMid3"
-          /> -->
-        <!-- </div> -->
-      <!-- </div> -->
       <div class="trending">
         <div class="text">
           <aside class="ftext">Trending must-haves</aside>
@@ -255,12 +179,6 @@
         <Footer></Footer>
       </div>
     </div>
-
-    <!-- <Button image="images" color="#4172DC" text="Shop Now"></Button>  
-    <MenuItem text="Sign in"></MenuItem> 
-    <Pricing newPrice="$228" discount="-10%" fullPrice="$290"/> 
-    <PricingBtn discountBtn="-10%" newPriceBtn="$228" fullPriceBtn="$290" />
-    <Time></Time>  -->
   </div>
 
 </template>
@@ -347,12 +265,9 @@ export default {
   margin: 0px;
   padding: 0px;
 }
-/* #id{
-    /* width: 1440px; */
-/* height: 4283px; */
-
 .container {
-  width: 1440px;
+  /* width: 1440px; */
+  width: 1518px;
   /* height: auto; */
   background-color: #ffffff;
   box-shadow: 0px 0px 12px 0px #0000001a;
@@ -370,20 +285,16 @@ export default {
   /* background-color: #FFFFFF;
     color: black; */
 }
-/* .flash-sale{
-    margin-top: 67px;
-  }
-  .trending{
-    margin-top: 47px;
-  }
-  .top100{
-    margin-top: 47px;
-  } */
+.advertising{
+  width: 1518px;
+}
 .product_card {
-  width: 1260px;
+  /* width: 1260px; */
+  width: 1518px;
   height: 380px;
   display: flex;
-  gap: 20px;
+  /* gap: 20px; */
+  gap: 45px;
   padding-left: 88px;
   margin-top: 37px;
 }
@@ -391,7 +302,8 @@ export default {
   width: 1260px;
   height: 437px;
   display: flex;
-  gap: 20px;
+  /* gap: 20px; */
+  gap: 60px;
   padding-left: 88px;
   margin-top: 37px;
   /* margin-top: 200px; */
@@ -400,7 +312,8 @@ export default {
   width: 1260px;
   height: 480px;
   display: flex;
-  gap: 20px;
+  gap: 47px;
+  /* gap: 20px; */
   padding-left: 88px;
   margin-top: 37px;
 }
@@ -409,7 +322,8 @@ export default {
   height: 384px;
   padding: 0px 90px;
   display: flex;
-  gap: 20px;
+  gap: 101px;
+  /* gap: 20px; */
   padding-left: 88px;
   margin-top: 47px;
 }
@@ -421,7 +335,8 @@ export default {
   height: 347px;
   padding: 0px 90px;
   display: flex;
-  gap: 20px;
+  gap: 99px;
+ /* ? gap: 20px; */
   padding-left: 88px;
   margin-top: 47px;
 }
@@ -431,7 +346,8 @@ export default {
 
 /* Flash Sales */
 .flash-sale {
-  width: 1440px;
+  /* width: 1440px; */
+  width: 1518px;
   height: 448px;
   /* padding: 0px 90px; */
   gap: 48px;
@@ -469,6 +385,7 @@ export default {
   text-align: right;
   font-family: "Lato", sans-serif;
   color: #262626;
+  margin-left: 155px;
 }
 .flash-sale .text .view-all .icon {
   width: 16px;

@@ -10,9 +10,10 @@
             </div>
 
         </div>
-        <div class="searchIcon">
+        <form>
+            <div class="searchIcon">
             <div class="inside">
-                <p class="typeSearch">Search Products</p>
+                <input type="text" placeholder="Search Products">
                 <aside class="categories">
                    <select>
                         <option value=""> All categories</option>
@@ -31,6 +32,7 @@
             </p>
 
         </div>
+        </form>
         <div class="menuList">
             <a href="#">About us</a>
             <a href="#">Blog</a>
@@ -73,7 +75,7 @@
         width: 1440px;
         height: 96px;
         padding: 28px 90px;
-        gap: 80px;
+        gap: 147px;
         background-color: #FFFFFF;
         display: flex;
         flex-direction: row;
@@ -85,22 +87,12 @@
         gap: 6px;
         display: flex;
         flex-direction: row;
-        /* justify-content: space-between; */
     }
     .container .logo .icon img{
         width: 49px;
         height: 33px;
        
     }
-    /* .container .logo .icon img{
-        width: 10px;
-        height: 5px;
-        border: 1.5px;
-        border-color: #262626;
-        position: absolute;
-        top: 12.5px;
-        left: 7px;
-    } */
     .container .logo .name{
         width: 124px;
         height: 20px;
@@ -119,26 +111,24 @@
         padding: 8px 12px;
         color: #D9D9D9;
         display: flex;
-        
-
     }
     .container .searchIcon .inside{
         width: 277px;
         height: 24px;
         gap: 16px;
-        display: flex;
-
-        
+        display: flex;  
     }
-    .container .searchIcon .inside .typeSearch{
+    .container .searchIcon .inside input[type=text]{
         width: 152px;
         height: 20px;
         font-size: 14px;
         font-weight: 400;
         line-height: 20px;
         color: #9D9D9D;
+        border: none;
+        outline: none;
+        cursor: pointer;
         font-family: 'Lato', sans-serif;
-
     }
     .container .searchIcon .inside .categories{
         width: 109px;
@@ -154,8 +144,6 @@
         line-height: 20px;
         color: #262626;
         font-family: 'Lato', sans-serif;
-
-
     }
     .container .searchIcon .inside .categories {
         width: 24px;
@@ -168,9 +156,6 @@
     .container .searchIcon .search img{
         width: 17.54px;
         height: 17.54px;
-        /* position: absolute;
-        top: 1.23px;
-        left: 1.57px; */
         border: 1.5px;
         color: #262626;
     }
@@ -180,12 +165,6 @@
         gap: 12px;
         display: flex;
     }
-    /* .container .menuList ul{
-        display: flex;
-        font-family: 'Lato', sans-serif;
-
-    } */
-
     .container .menuList a{
         width: 96px;
         height: 20px;
@@ -216,22 +195,13 @@
     .container .social .item .instagram{
         width: 24px;
         height: 24px;
-
     }
     .container .social .item  .fb{
         width: 12px;
         height: 18px;
-
     }
     .container .social .item .telegram{
         width: 24px;
         height: 24px;
-
     }
-   
-    
-
-
-
-
 </style>
