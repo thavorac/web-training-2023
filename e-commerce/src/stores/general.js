@@ -5,14 +5,12 @@ export const useGeneralStore = defineStore("general", {
   state: () => {
     return {
       categories: [
-        { id: "1", name: "Male" },
-        { id: "2", name: "Woman" },
-        { id: "3", name: "Mother-child" },
-        { id: "4", name: "Home & Furniture" },
-        { id: "5", name: "LYli" },
-        { id: "6", name: "Nita" },
-        { id: "7", name: "Soriya" },
-        { id: "8", name: "Dara" },
+        { id: "1", name: "Woman" },
+        { id: "2", name: "Male" },
+        { id: "3", name: "Cosmetics" },
+        { id: "4", name: "Shoe & Bag" },
+        { id: "5", name: "Electronic" },
+        
       ],
       advertisement: {
         title: "KIMONOS, CAFTANS & PAREOS",
