@@ -35,6 +35,9 @@ Route::post('/products', [ProductController::class, 'createProduct']);
 Route::get('/products/{productId}', [ProductController::class, 'getProduct']);
 Route::patch('/products/{productId}', [ProductController::class, 'updateProduct']);
 Route::delete('/products/{productId}', [ProductController::class, 'deleteProduct']);
+Route::post('/carts', [ProductController::class, 'addProductToCart']);
+Route::delete('/carts', [ProductController::class, 'removeProductFromCart']);
+Route::get('/carts', [ProductController::class, 'getProductsFromCart']);
 
 // -- Authentication api urls
 Route::post('/register', [AuthenticationController::class, 'register']);

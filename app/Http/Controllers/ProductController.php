@@ -3,13 +3,14 @@
 namespace App\Http\Controllers;
 
 use App\Models\Product;
+use App\Models\Cart;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
     // -- GET /api/products
     public function getProducts() {
-        return "get list products";
+        return Product::all();
     }
 
     // -- POST /api/products
@@ -41,5 +42,33 @@ class ProductController extends Controller
     // -- DELETE /api/products/{productId}
     public function deleteProduct() {
         return "delete 1 product";
+    }
+
+    // -- Add product to cart
+    public function addProductToCart(Request $request) {
+        $cart = new Cart();
+
+        $cart->product_id = $request->get('product_id');
+        $cart->user_id = $request->get('user_id');
+        $cart->save();
+
+        return [ "message" => "success", "data" => $cart ];
+    }
+
+    // -- Remove product from cart
+    public function removeProductFromCart(Request $request) {
+        $success = Cart::where("product_id", $request->get('product_id'))
+                        ->where("user_id", $request->get('user_id'))
+                        ->delete();
+        if ($success) {
+            return ["message" => "success"];
+        } else {
+            return ["message" => "fail"];
+        }
+    }
+
+    public function getProductsFromCart(Request $request) {
+        $products = Cart::where("user_id", $request->get('user_id'))->get();
+        return $products;
     }
 }
