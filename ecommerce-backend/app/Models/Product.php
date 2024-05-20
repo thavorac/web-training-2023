@@ -18,4 +18,13 @@ class Product extends Model
     {
         return $this->belongsTo(Category::class);  // if we want to find that product belong to which category 
     }
+    public function images(){
+        return $this->hasMany(Image::class,'product_id','id');
+    }
+
+    // add new code 
+    public function firstImage()
+    {
+        return $this->hasOne(Image::class)->oldestOfMany();
+    }
 }

@@ -8,12 +8,16 @@ use App\Models\Category;
 class CategoryController extends Controller
 {
     // -- GET / api / categories
+    // public function getCategories(){
+    //     $categories = Category::all();
+    //     // $categories = Category::take(2)->get(); // get mean run query
+    //     return $categories;
+    //     // code to get from database
+    //     // return "get categories";
+    // }
     public function getCategories(){
         $categories = Category::all();
-        // $categories = Category::take(2)->get(); // get mean run query
         return $categories;
-        // code to get from database
-        // return "get categories";
     }
 
     // -- POST / api / categories == create category

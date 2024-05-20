@@ -18,7 +18,7 @@ class ProductSeeder extends Seeder
             'name' => 'Product 1',
             'pricing' => 19.99,
             'discount' => 5.00,
-            'tags' => 'Tag1,Tag2',
+            'p' => 'Tag1,Tag2',
             'promotion_date' => now(),
             'color' => 'Red',
             'rating' => 4,

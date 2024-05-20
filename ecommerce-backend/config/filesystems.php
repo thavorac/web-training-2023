@@ -33,6 +33,8 @@ return [
         'local' => [
             'driver' => 'local',
             'root' => storage_path('app'),
+            'url' => "http://localhost".'/storage',
+            'visibility' => 'public',
             'throw' => false,
         ],
 

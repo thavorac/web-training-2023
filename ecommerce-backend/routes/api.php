@@ -73,7 +73,14 @@ Route::get('/categories/{categoryId}/products', [CategoryController::class,'getP
 
 // products api urls
 Route::get('/products', [ProductController::class,'getProducts']);
-Route::post('/products', [ProductController::class,'createProduct']);
+Route::get('/products/{productId}/getFirstImage',[ProductController::class,'getFirstImage']);
+
+// create form 
+Route::get('/products/create', [ProductController::class, 'showCreateForm']);
+
+Route::middleware(['cors'])->group(function(){
+    Route::post('/products', [ProductController::class,'createProduct']);
+});
 Route::get('/products/{productId}', [ProductController::class,'getProduct']);
 Route::patch('/products/{productId}', [ProductController::class,'updateProduct']);
 Route::delete('/products/{productId}', [ProductController::class,'deleteProduct']);
@@ -85,10 +92,11 @@ Route::get('/suppliers',[SupplierController::class,'getSuppliers']);
 Route::post('/suppliers',[SupplierController::class , 'createSupplier']);
 Route::get('/suppliers/{supplierId}',[SupplierController::class ,'getSupplier']);
 Route::patch('/suppliers/{supplierId}',[SupplierController::class,'updateSupplier']);
-Route::delete('/suppliers/{supplierId}',[SupplierController::class,'deleteSupplier']);
+Route::delete('/suppliers/{supplierId}',[SupplierController::class,'deleteSupplier']);  
 
 //Images api urls 
 Route::get('/images',[ImageController::class, 'getImages']);
+
 Route::post('/images',[ImageController::class,'createImage']);
 Route::patch('/images/{imageId}',[ImageController::class,'updateImage']);
 Route::get('/images/{imageId}',[ImageController::class,'getImage']);
@@ -110,5 +118,11 @@ Route::delete('/order_products/{order_productsId}',[Order_productsController::cl
 
 // api for Authentication
 Route::post('/register',[AuthenticationController::class,'register']);
+
+
+// add product form 
+
+// need to create customer 
+
 
 
