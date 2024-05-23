@@ -12,8 +12,6 @@
                 </thead>
 
             </table>
-
-
         </div> -->
         <div class="lg:w-2/3 w-full mx-auto mt-8">
             <div class="flex flex-wrap -mx-2 mt-8">
