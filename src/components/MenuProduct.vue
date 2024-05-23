@@ -14,7 +14,6 @@ export default {
     };
   },
   methods: {
-    
     mouseOver(index, value) {
       this.selectIndex = index;
       if (value) {

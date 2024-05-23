@@ -2,6 +2,8 @@ import { createRouter, createWebHistory } from 'vue-router'
 import RoutingView from '@/views/RoutingView.vue'
 import MainPageView from '@/views/MainPageView.vue'
 
+
+
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
@@ -65,15 +67,22 @@ const router = createRouter({
       component: () => import('../components/Forgotpassword.vue')
     },
     {
+      path: '/reset-password/:token',
+      name: 'reset-password',
+      component: () => import('../components/ResetPassword.vue')
+    },
+
+    {
       path: '/sign-in',
       name: 'sigin',
-      component: () => import('../components/Signin.vue')
+      component: () => import('../components/SignInForm.vue')
     },
     {
       path: '/sign-up',
       name: 'signup',
-      component: () => import('../components/Signup.vue')
+      component: () => import('../components/SignUp.vue')
     },
+
     {
       path: '/signIn',
       name: 'signIn',

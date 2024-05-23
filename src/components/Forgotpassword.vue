@@ -1,57 +1,91 @@
 <template>
-  <div class="container-fluid ">
-    <!-- <AddToCardButton color="#0000FF" colorText="#FFFFFF" width="300px" height="100px" text="Shop Now"></AddToCardButton> -->
+  <div class="container-fluid">
     <div class="container">
       <div class="row justify-content-center">
         <div class="col-6">
-          <form class="shadow-lg p-3 bg-white rounded" action="" method="post">
-            <h1>Forgot password</h1>
-            <p>Enter your email adress to reacquisition to your password.</p>
+          <div v-if="!resetToken">
+            <form class="shadow-lg p-3 bg-white rounded" @submit.prevent="requestReset">
+              <h1>Forgot Password</h1>
+              <p>Enter your email address to reset your password.</p>
+              <p v-if="statusMessage" class="status-message">{{ statusMessage }}</p>
+              <div class="container form-group">
+                <label for="email"><b>Email</b></label>
+                <input type="email" v-model="email" id="email" placeholder="Enter your email" required>
+              </div>
+              <div class="container form-group">
+                <router-link to="/sign-in">
+                  <button type="button" class="cancelbtn">Cancel</button>
+                </router-link>
+                <button type="submit" class="float-end">Submit</button>
+              </div>
+              <span class="psw">Don't have an account?<router-link to="/sign-up">Sign Up</router-link></span>
+            </form>
+          </div>
+          <div v-if="resetToken && !passwordReset">
             <div class="container">
-              <label for="uname"><b>Username</b></label>
-              <input type="text" placeholder="Enter Username" name="uname" required>
-
-              <label for="psw"><b>New Password</b></label>
-              <input type="password" placeholder="Enter Password" name="psw" required>
-
-              <label for="cpsw"><b>Confirm new Password</b></label>
-              <input type="password" placeholder="Enter confirm Password" name="cpsw" required>
-
-
-
+              <h2>Email</h2>
+              <p>We sent an email to {{ email }} with a link to reset password</p>
             </div>
+          </div>
+            <div class="modal fade" ref="modal" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel"
+              aria-hidden="true">
+              <div class="modal-dialog">
+                <div class="modal-content">
+                  <div class="modal-header">
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                  </div>
+                  <div class="modal-body">
+                    <div class="message">
+                      <h2>Email</h2>
+                      <p>Forgot email success! <br> Please check your email to confirm reset password.</p>
+                      <div class="icon-container">
+                        <!-- Use the CheckIcon component here -->
+                        <CheckIcon class="icon" />
+                      </div>
+                    </div>
 
-            <div class="container">
-              <RouterLink to="/sign-in">
-                <button type="button" class="cancelbtn">Cancel</button>
-              </RouterLink>
-              <button type="submit" class="float-end">Save</button>
+                  </div>
+                  <div class="modal-footer">
+                    <button type="button" class="btn btn-primary" data-bs-dismiss="modal">Close</button>
+                  </div>
+                </div>
+              </div>
             </div>
-            <span class="psw">Don't have an account?<RouterLink to="/sign-up">Sign Up</RouterLink></span>
-          </form>
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
 
-<script>
-import { RouterLink } from 'vue-router';
+<script setup>
+import { onMounted, ref } from 'vue';
+import axios from 'axios';
+import CheckIcon from "./icons/CheckIcon.vue";
+import{Modal} from "bootstrap/dist/js/bootstrap";//
 
-// import AddToCardButton from "./basic/AddToCardButton.vue";
-export default {
-  name: 'Forgotpassword',
-  data() {
-    return {
+const email = ref('');
+const statusMessage = ref('');
+const showSuccessModal = ref(false);
+const modal = ref(null)//
+const newModal = ref(null)//
 
-    }
-  },
-  components: {
-    // AddToCardButton,
+const requestReset = async () => {
+  try {
+    const response = await axios.post('http://localhost:80/api/forgot-password', { email: email.value });
+    console.log(response.data); // Log response data for debugging
+    statusMessage.value = response.data.message;
+    showSuccessModal.value = true; // Show success modal
+    newModal.value.show();
+  } catch (error) {
+    console.error('Request failed:', error);
+    // Handle error
+    statusMessage.value = 'Failed to send reset password email';
   }
-}
+};
+onMounted(()=>{
+  newModal.value= new Modal(modal.value)
+})//
 </script>
 
 <style scoped lang="scss">
@@ -59,6 +93,7 @@ export default {
   width: 100%;
   height: 100%;
   margin-top: 20px;
+  padding: 16px;
 }
 
 form {
@@ -72,7 +107,6 @@ form {
 
 .form-group {
   margin-top: 40px;
-  // width: 80%;
 }
 
 body {
@@ -80,14 +114,14 @@ body {
 }
 
 input[type=text],
-input[type=password] {
+input[type=password],
+input[type=email] {
   width: 100%;
   padding: 10px 20px;
   margin: 5px 0;
   display: inline-block;
   border: 1px solid #ccc;
   box-sizing: border-box;
-
 }
 
 h1,
@@ -95,16 +129,14 @@ p {
   text-align: center;
 }
 
-button {
+button[type=submit] {
   background-color: #04AA6D;
   color: white;
   width: auto;
   padding: 10px 18px;
-  //   padding: 14px 20px;
   margin: 8px 0;
   border: none;
   cursor: pointer;
-  //   width: 100%;
 }
 
 button:hover {
@@ -122,17 +154,7 @@ button:hover {
   margin: 24px 0 12px 0;
 }
 
-img.avatar {
-  width: 40%;
-  border-radius: 50%;
-}
-
-.container {
-  padding: 16px;
-}
-
 span.psw {
-  // float: right;
   margin-left: 135px;
   padding-top: 16px;
 }
@@ -147,5 +169,27 @@ span.psw {
   .cancelbtn {
     width: 100%;
   }
+}
+
+.status-message {
+  text-align: center;
+  color: red;
+}
+
+.message {
+  text-align: center;
+}
+
+.icon-container {
+  display: flex;
+  justify-content: center;
+  margin-top: 20px;
+  /* Adjust margin as needed */
+  margin-bottom: 10px;
+}
+
+.icon {
+  /* Add any styles specific to your icon */
+  color: #11a7f2;
 }
 </style>

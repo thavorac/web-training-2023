@@ -44,45 +44,48 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue';
+<script>
 import axios from 'axios';
-import { useRouter } from 'vue-router';
 
-const username = ref('');
-const email = ref('');
-const password = ref('');
-const confirmPassword = ref('');
-// const phoneNumber = ref('');
-// const gender = ref('');
+export default {
+  data() {
+    return {
+      username: '',
+      email: '',
+      // phoneNumber: '',
+      password: '',
+      confirmPassword: '',
+      // gender: ''
+    };
+  },
+  methods: {
+    register() {
+      if (this.password !== this.confirmPassword) {
+        alert("Password and Confirm Password do not match");
+        return;
+      }
 
-const router = useRouter();
-
-const register = () => {
-  if (password.value !== confirmPassword.value) {
-    alert("Password and Confirm Password do not match");
-    return;
+      axios.post('http://localhost:80/api/register', {
+        username: this.username,
+        email: this.email,
+        // phone_number: this.phoneNumber,
+        password: this.password,
+        confirm_password: this.confirmPassword,
+        // gender: this.gender
+      })
+        .then(response => {
+          alert(response.data.message); // Assuming the server returns a message
+          // Redirect to login page or do other actions as needed
+        })
+        .catch(error => {
+          console.error('Error during registration:', error);
+          alert('Registration failed. Please try again.');
+        });
+    }
   }
-
-  axios.post('http://localhost:80/api/register', {
-    username: username.value,
-    email: email.value,
-    // phone_number: phoneNumber.value,
-    password: password.value,
-    confirm_password: confirmPassword.value,
-    // gender: gender.value
-  })
-    .then(response => {
-      alert(response.data.message); // Assuming the server returns a message
-      // Redirect to login page or do other actions as needed
-      router.push('/sign-in');
-    })
-    .catch(error => {
-      console.error('Error during registration:', error);
-      alert('Registration failed. Please try again.');
-    });
-};
+}
 </script>
+
 
 <style scoped lang="scss">
 .container {
@@ -93,11 +96,11 @@ const register = () => {
 
 .container-fluid {
   background-image: url("/src/assets/image/abstract-1264071_1920.png");
+  min-height: 715px;
   background-position: center;
   background-repeat: no-repeat;
   background-size: cover;
   position: relative;
-
 }
 
 h1 {
