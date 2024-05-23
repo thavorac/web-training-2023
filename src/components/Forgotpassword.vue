@@ -7,7 +7,7 @@
             <form class="shadow-lg p-3 bg-white rounded" @submit.prevent="requestReset">
               <h1>Forgot Password</h1>
               <p>Enter your email address to reset your password.</p>
-              <p v-if="statusMessage" class="status-message">{{ statusMessage }}</p>
+              <!-- <p v-if="statusMessage" class="status-message">{{ statusMessage }}</p> -->
               <div class="container form-group">
                 <label for="email"><b>Email</b></label>
                 <input type="email" v-model="email" id="email" placeholder="Enter your email" required>
@@ -120,8 +120,9 @@ input[type=email] {
   padding: 10px 20px;
   margin: 5px 0;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 1px solid #4aafa3;
   box-sizing: border-box;
+
 }
 
 h1,

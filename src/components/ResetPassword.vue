@@ -53,6 +53,9 @@ export default {
 
         if (response.status === 200) {
           successMessage.value = response.data.message;
+          setTimeout(() => {
+            router.push('/sign-in');
+          }, 2000);
         } else {
           throw new Error(response.data.message || 'Password reset failed');
         }
@@ -103,7 +106,7 @@ input[type=password] {
   padding: 10px 20px;
   margin: 5px 0;
   display: inline-block;
-  border: 1px solid #ccc;
+  border: 1px solid #4aafa3;
   box-sizing: border-box;
 }
 
