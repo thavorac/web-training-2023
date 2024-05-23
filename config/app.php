@@ -15,7 +15,7 @@ return [
     | any other location as required by the application or its packages.
     |
     */
-
+    'url_front'=> env('APP_FRONT','http://localhost:5174'),
     'name' => env('APP_NAME', 'Laravel'),
 
     /*

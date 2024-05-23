@@ -2,7 +2,6 @@
 
 namespace App\Mail;
 
-
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
@@ -39,7 +38,7 @@ class OtpMail extends Mailable
     {
         return new Content(
             view: 'mail.otp_mail',
-            with:['activateLink'=>$this->activateLink],
+            with: ['activateLink' => $this->activateLink],
         );
     }
 
