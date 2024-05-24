@@ -8,40 +8,59 @@ use App\Models\Supplier;
 class SupplierController extends Controller
 {
     public function getSuppliers(){
-        $supplier = Supplier:: all();
-        return $supplier;
+        $suppliers = Supplier::all();
+
+        return $suppliers;
     }
+
     public function createSupplier(Request $request){
         $supplier = new Supplier();
+
         $supplier->name = $request->get('name');
-        $supplier->adress = $request->get('adress');
-        $request->phone = $request->get('phone');
-        $request->email = $request->get('email');
+        $supplier->address = $request->get('address');
+        $supplier->phone = $request->get('phone');
+        $supplier->email = $request->get('email');
 
         $supplier->save();
-        return["message"=>"Create success!","data" => $supplier];
+
+        return ["message"=>"success", "data"=>$supplier];
     }
-    public function getSuppliers($supplierId){
+
+    public function getSupplier($supplierId){
         $supplier = Supplier::find($supplierId);
+        
         if($supplier){
             return $supplier;
         }else{
-            return respone(["message"=>"Product not found!"],400);
+            return response(["message"=>"Supplier not Found"],400);
         }
+        
     }
-    public function updateSupplier(Reques $reques , $supplierId){
+
+    public function updateSupplier(Request $request , $supplierId){
         $supplier = Supplier::find($supplierId);
+
         if($supplier){
-            $supplier = new Supplier();
             $supplier->name = $request->get('name');
-            $supplier->adress = $request->get('adress');
-            $request->phone = $request->get('phone');
-            $request->email = $request->get('email');
-    
+
             $supplier->save();
-            return $supplier;
+
+            return ["message"=>"Updated" , "data"=>$supplier];
         }else{
-            return response(["message"=>"Supplier Not found!"],400);
+            return response(["message"=>"Supplier not Found"],400);
+        }
+        
+    }
+
+    public function deleteSupplier($supplierId){
+        $supplierFound = Supplier::find($supplierId);
+
+        if($supplierFound){
+            $supplierFound->delete();
+
+            return ["message"=>"delete supplier success","data"=>$supplierFound];
+        }else{
+            return response(["message"=>"Supplier not Found"],400);
         }
     }
 }

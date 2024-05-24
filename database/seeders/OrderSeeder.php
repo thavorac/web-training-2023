@@ -4,7 +4,7 @@ namespace Database\Seeders;
 
 use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; // Add this import statement
 
 class OrderSeeder extends Seeder
 {
@@ -14,8 +14,8 @@ class OrderSeeder extends Seeder
     public function run(): void
     {
         DB::table('orders')->insert([
-            'order_number' => 3,
-            'status'=> 'This is order number3',
+            'order_number' => '123456',
+            'status' => 'pending',
             'created_at' => now(),
             'updated_at' => now(),
         ]);

@@ -2,9 +2,10 @@
 
 namespace Database\Seeders;
 
-use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 use Illuminate\Database\Seeder;
-use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\DB; // Add this import statement
+use Illuminate\Support\Str;
+use Illuminate\Database\Console\Seeds\WithoutModelEvents;
 
 class CategorySeeder extends Seeder
 {
@@ -14,9 +15,10 @@ class CategorySeeder extends Seeder
     public function run(): void
     {
         DB::table('categories')->insert([
-            'name' => 'abc',
-            'created_at' => now(),
-            'updated_at' => now(),
+            //'name' => Str::random(10)
+            'name'=>'ABC',
+            'created_at' =>now(),
+            'updated_at' =>now(),
         ]);
     }
 }

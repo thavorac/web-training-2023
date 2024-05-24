@@ -1,8 +1,11 @@
 <?php
 
-use App\Http\Controllers\ProfileController;
-use App\Http\Controllers\ProductController;
 use Illuminate\Support\Facades\Route;
+use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\StripeController;
+use App\Http\Controllers\StudentController;
+use App\Http\Controllers\ProductController;
+
 
 /*
 |--------------------------------------------------------------------------
@@ -19,16 +22,33 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('/dashboard', function () {
-    return view('dashboard');
-})->middleware(['auth', 'verified'])->name('dashboard');
+// API URL for Authentication
+Route::get('/verify_otp', [AuthenticationController::class, 'verifyOTP']);
 
-Route::middleware('auth')->group(function () {
-    Route::get('/profile', [ProfileController::class, 'edit'])->name('profile.edit');
-    Route::patch('/profile', [ProfileController::class, 'update'])->name('profile.update');
-    Route::delete('/profile', [ProfileController::class, 'destroy'])->name('profile.destroy');
-});
+// Test Stripe
+// Route::get('/checkout', [StripeController::class, 'checkout']);
+// Route::match(['get', 'post'], '/session', [StripeController::class, 'session'])->name('session');
+// Route::get('/success', [StripeController::class, 'success'])->name('success');
 
-require __DIR__.'/auth.php';
+// Student Routes
+// Route::get('/student', [StudentController::class, 'displayform']);
+// Route::post('/add_data', [StudentController::class, 'save']);
+// Route::get('/studentview',[StudentController::class,'viewform']);
+// Route::get('/studentview',[StudentController::class,'index']);
+// Route::get('/studentadd',[StudentController::class,'displayform']);
+// Route::get('click_edit/{id}',[StudentController::class,'edit_function']);
+// Route::get('click_delete/{id}',[StudentController::class,'delete_function']);
+// Route::post('/update/{id}',[StudentController::class,'update_function']);
 
-Route::get('/api/products', [ProductController::class, 'index']);
+// Route::post('api/products/create', [ProductController::class, 'create']);// just add
+// Route::get('/product',[ProductController::class,'displayform1']);
+// Route::post('/add_product',[ProductController::class,'createProduct']);
+// Route::get('/productview',[ProductController::class,'viewform1']);
+// Route::get('/productadd',[ProductController::class,'displayform1']);
+
+// Route::get('click_edit/{id}',[ProductController::class,'edit_function']);
+// Route::get('click_delete/{id}',[ProductController::class,'delete_function']);
+// Route::post('/update/{id}',[ProductController::class,'update_function']);
+
+// Route::get('/products', [App\Http\Controllers\ProductController::class, 'showProductView'])->name('products.index');
+
