@@ -143,7 +143,7 @@ const router = createRouter({
     {
       path: '/adress',
       name: 'adress',
-      component: () => import('../views/Adress.vue')
+      component: () => import('../views/Address.vue')
     },
     {
       path: "/products-cart",
