@@ -27,7 +27,7 @@ import SubFooter from '../components/SubFooter.vue';
                 <Share />
             </ProductDetail1>
         </div>
-        <div>
+        <div class="mt-5">
 
         </div>
         <div>

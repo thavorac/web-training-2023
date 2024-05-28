@@ -1,5 +1,5 @@
 <template>
-    <div class="container shadow float-end" style="background-color: white;">
+    <div class="container border" style="background-color: white;">
         <div class="row">
             <div class="col-sm-3">
                 <img style="margin-top: 130px;" src="../assets/image/01.png" alt="">
@@ -52,7 +52,7 @@
                         </div>
                     </div>
                     <hr style="border:1px solid #EBE9F1; width: 535px; height: 1px;">
-                    <div class="button mb-4">
+                    <div class="button mb-4 gap-2">
                         <AddToCardButton class="addtocard" color="#7367F0" text="Add To Cart" colorText="#ffffff"
                             width="155px" height="38px" raduis="2px">
                             <ShopOutline />
@@ -61,8 +61,9 @@
                             raduis="3px" border="1px solid #7367F0">
                             <Heart class="heart" />
                         </AddToCardButton>
-                        <button style="border: 1px solid #7367F0; background-color: white; color: #EBE9F1 ;">
-                            <slot></slot>
+                        <button
+                            style="border: 1px solid #7367F0; background-color: white; color: #EBE9F1 ; border-radius: 3px; height: 38px;">
+                            <Share></Share>
                         </button>
                     </div>
 
@@ -72,13 +73,14 @@
     </div>
 </template>
 
-<script>
+<script setup>
 import ButtonShipping from './basic/ButtonShipping.vue';
 import ShopIcon from './basic/ShopIcon.vue';
 import Shipping from './basic/Shipping.vue';
 import AddToCardButton from './basic/AddToCardButton.vue';
 import Heart from './basic/Heart.vue';
 import ShopOutline from './basic/ShopOutline.vue';
+import Share from './basic/Share.vue';
 
 </script>
 

@@ -1,8 +1,7 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RoutingView from '@/views/RoutingView.vue'
 import MainPageView from '@/views/MainPageView.vue'
-
-
+import { adminRouter } from './admin'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,8 +9,7 @@ const router = createRouter({
     {
       path: '/getImage',
       name: 'Image',
-      component: () =>import('../API/GetImages.vue')
-
+      component: () => import('../API/GetImages.vue')
     },
     {
       path: '/',
@@ -46,6 +44,8 @@ const router = createRouter({
       name: 'advertising',
       component: () => import('../components/AdvertiseSlide.vue')
     },
+
+    // ========================== Product Detail call from component DetailView.vue in folder views =====================================
     {
       path: '/product-detail1',
       name: 'product-detail1',
@@ -56,11 +56,11 @@ const router = createRouter({
       name: 'buttonshop',
       component: () => import('../components/basic/ButtonShop.vue')
     },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: () => import('../components/AdminLogin.vue')
-    },
+    // {
+    //   path: '/admin',
+    //   name: 'admin',
+    //   component: () => import('../components/AdminLogin.vue')
+    // },
     {
       path: '/forgot-password',
       name: 'forgot-password',
@@ -80,7 +80,7 @@ const router = createRouter({
     {
       path: '/sign-up',
       name: 'signup',
-      component: () => import('../components/SignUp.vue')
+      component: () => import('../components/Signup.vue')
     },
 
     {
@@ -112,25 +112,23 @@ const router = createRouter({
     //   component: () => import('../API/Student/StudentCreate.vue')
     // },
     // ++++++++++++++++++++++++++++++++++++++++++ GET PRODUCT ++++++++++++++++++++++++++++++++++++++
- 
-  // {
-  //   path:'/admin-layout',
-  //   name : 'Admin-Layout',
-  //   component: () => import('../views/LayoutSidebar.vue')
-  // },
 
-   // ++++++++++++++++++++++++++++++++++++++++++ END GET PRODUCT ++++++++++++++++++++++++++++++++++++++
+    // {
+    //   path:'/admin-layout',
+    //   name : 'Admin-Layout',
+    //   component: () => import('../views/LayoutSidebar.vue')
+    // },
 
+    // ++++++++++++++++++++++++++++++++++++++++++ END GET PRODUCT ++++++++++++++++++++++++++++++++++++++
 
-   
-  // ++++++++++++++++++++++++++++++++++++++++++ GET CATEGORY ++++++++++++++++++++++++++++++++++++++
+    // ++++++++++++++++++++++++++++++++++++++++++ GET CATEGORY ++++++++++++++++++++++++++++++++++++++
     {
       path: '/form-category',
       name: 'createFormCategory',
       component: () => import('../API/Categories/CreateFormCategory.vue')
     },
     {
-      path:'/getCategory',
+      path: '/getCategory',
       name: 'Category',
       component: () => import('../API/Categories/GetCategory.vue')
     },
@@ -140,12 +138,12 @@ const router = createRouter({
       path: '/main-layout',
       name: 'MainLayout',
       component: () => import('../layout/MainLayout.vue'),
-      children :[
+      children: [
         {
           path: '/edit-category/:id',
-          name : 'Edit-category',
-          component : () => import('../API/Categories/EditCategory.vue'),
-          props:true,
+          name: 'Edit-category',
+          component: () => import('../API/Categories/EditCategory.vue'),
+          props: true
         },
         {
           path: '/product-form',
@@ -153,10 +151,10 @@ const router = createRouter({
           component: () => import('../API/Products/ProductForm.vue')
         },
         {
-          path:'/getCategory',
+          path: '/getCategory',
           name: 'Category',
           component: () => import('../API/Categories/GetCategory.vue')
-        },  
+        },
         {
           path: '/getProducts',
           name: 'get-product',
@@ -164,58 +162,67 @@ const router = createRouter({
         },
         {
           path: '/edit-product/:id',
-          name : 'Edit-product',
-          component : () => import('../API/Products/EditProduct.vue'),
-          props:true,
+          name: 'Edit-product',
+          component: () => import('../API/Products/EditProduct.vue'),
+          props: true
         },
         {
           path: '/form-category',
           name: 'createFormCategory',
           component: () => import('../API/Categories/CreateFormCategory.vue')
-        },
+        }
       ]
     },
 
+    // ++++++++++++++++++++++++++++++++++++++++++END GET CATEGORY ++++++++++++++++++++++++++++++++++++++
 
-     // ++++++++++++++++++++++++++++++++++++++++++END GET CATEGORY ++++++++++++++++++++++++++++++++++++++
-
-{
-  path : '/category-page',
-  name : 'CategoryPage',
-  component: () => import('../views/CategoryPage.vue'),
-
-}
+    {
+      path: '/category-page',
+      name: 'CategoryPage',
+      component: () => import('../views/CategoryPage.vue')
+    },
+    ...adminRouter,
 
     // {
     //   path: '/getCategories',
     //   name : 'Categories',
     //   component: () => import('../API/Categories/GetCategories.vue')
     // }
-        // {
-        //   path : '/reporte',
-        //   name : 'report',
-        //   component : () => import('../API/Student/ReportView.vue')
-        // },
-        // {
-        //   path: '/edit-product/:id',
-        //   name: 'reporteEdit',
-        //   // route level code-splitting
-        //   // this generates a separate chunk (About.[hash].js) for this route
-        //   // which is lazy-loaded when the route is visited.
-        //   component: () => import('../API/Student/StudentEdit.vue'),
-        //   props:true,
-        // },
-        // {
-        //   path: '/reporte/create',
-        //   name: 'reporteCreate',
-        //   component: () => import('../API/Student/StudentCreate.vue')
-        // },
-          // {
-        //   path: '/getProducts',
-        //   name: 'Get-Product',
-        //   component: () => import('../API/Products/GetProduct.vue')
-        // } ,
-  
+    // {
+    //   path : '/reporte',
+    //   name : 'report',
+    //   component : () => import('../API/Student/ReportView.vue')
+    // },
+    // {
+    //   path: '/edit-product/:id',
+    //   name: 'reporteEdit',
+    //   // route level code-splitting
+    //   // this generates a separate chunk (About.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import('../API/Student/StudentEdit.vue'),
+    //   props:true,
+    // },
+    // {
+    //   path: '/reporte/create',
+    //   name: 'reporteCreate',
+    //   component: () => import('../API/Student/StudentCreate.vue')
+    // },
+    // {
+    //   path: '/getProducts',
+    //   name: 'Get-Product',
+    //   component: () => import('../API/Products/GetProduct.vue')
+    // } ,
+
+    {
+      path: '/testing',
+      name: 'testing',
+      component: () => import('../views/Testing/IndexView.vue')
+    },
+    {
+      path: '/wishlist-page',
+      name: 'wishlistPage',
+      component: () => import('../views/Wishlist/WishListPage.vue')
+    }
   ]
 })
 

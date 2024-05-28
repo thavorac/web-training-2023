@@ -1,65 +1,65 @@
 <template>
     <div class="w-screen h-screen flex ">
         <div class="w-[280px] h-[calc(100vh-0px)] text-white " v-show="showSide" style="background-color: #52b8ef;">
-          <nav>
-              <ul>
-                  <li>
-                      <a href="#" class="logo">
-                          <img src="../assets/image/profile.jpg" alt="">
-                          <span class="nav-item">TOUN DINA</span>
-                      </a>
-                  </li>
-                  <li>
-                      <RouterLink to="/getProducts">
-                          <ManagePdIcon class="icon"/>
-                          <span class="nav-item">Product</span>
-                      </RouterLink>
-                  </li>
-                  <!-- <li>
+            <nav>
+                <ul>
+                    <li>
+                        <a href="#" class="logo">
+                            <img src="../assets/image/profile.jpg" alt="">
+                            <span class="nav-item">TOUN DINA</span>
+                        </a>
+                    </li>
+                    <li>
+                        <RouterLink to="/getProducts">
+                            <ManagePdIcon class="icon" />
+                            <span class="nav-item">Product</span>
+                        </RouterLink>
+                    </li>
+                    <!-- <li>
                       <RouterLink to="/dashboard">
                           <DashBoardIcon class="icon"/>
                           <span class="nav-item">Dashboard</span>
                       </RouterLink>
                   </li> -->
-                  <li>
-                      <a href="#">
-                          <ListIcon class="icon"/>
-                          <span class="nav-item">Order</span>
-                      </a>
-                  </li>
-                  <li>
-                      <a href="#">
-                          <CustomerIcon class="icon" />
-                          <span class="nav-item">Customer</span>
-                      </a>
-                  </li>
-                  <li>
-                    <RouterLink to="/getCategory">
-                         <ControlIcon class="icon"/>
-                          <span class="nav-item">Category</span>
-                          
-                    </RouterLink>
-                  </li>
-                  <li>
-                      <a href="#">
-                          <SettingIcon class="icon"/>
-                          <span class="nav-item">Setting</span>
-                      </a>
-                  </li>
-                  <!-- <li>
+                    <li>
+                        <a href="#">
+                            <ListIcon class="icon" />
+                            <span class="nav-item">Order</span>
+                        </a>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <CustomerIcon class="icon" />
+                            <span class="nav-item">Customer</span>
+                        </a>
+                    </li>
+                    <li>
+                        <RouterLink to="/getCategory">
+                            <ControlIcon class="icon" />
+                            <span class="nav-item">Category</span>
+
+                        </RouterLink>
+                    </li>
+                    <li>
+                        <a href="#">
+                            <SettingIcon class="icon" />
+                            <span class="nav-item">Setting</span>
+                        </a>
+                    </li>
+                    <!-- <li>
                       <a href="#" class="logout">
                           <LogOutIcon class="icon"/>
                           <span class="nav-item">Log out</span>
                       </a>
                   </li> -->
-              </ul>
-          </nav>
-      </div>
-      <div class="w-full h-full bg-gray-400">
+                </ul>
+            </nav>
+        </div>
+        <div class="w-full h-full bg-gray-400">
             <div class="h-[50px] bg-gray-100 flex items-center shadow-sm px-[20px] w-full py-[10px] z-10 border-b">
                 <!-- menu -->
                 <div class="cursor-pointer w-[30px]" @click="toggleSideBar">
-                    <DashBoardIcon/>
+                    <DashBoardIcon />
                     <!-- <div class="float-right">
                         <a href="#" class="logo">
                           <img src="../assets/image/profile.jpg" alt="">
@@ -71,7 +71,7 @@
             </div>
             <div class="h-[calc(100vh-50px)] bg-gray-50 p-[20px]">
                 <div class="border border-gray-300 rounded-md pe-2 p-[20px] h-full">
-                    <RouterView/>
+                    <RouterView />
                 </div>
             </div>
         </div>
@@ -99,6 +99,8 @@
         </div>
     </div>
     -->
+
+
     </div>
     <!-- Main -->
 </template>
@@ -106,7 +108,7 @@
 
 
 <script setup>
-import { RouterLink ,RouterView} from 'vue-router';
+import { RouterLink, RouterView } from 'vue-router';
 import DashBoardIcon from '@/components/icons/DashBoardIcon.vue';
 import ListIcon from '@/components/icons/ListIcon.vue';
 import CustomerIcon from '@/components/icons/CustomerIcon.vue';
@@ -122,7 +124,7 @@ import { ref } from 'vue';
 const showSide = ref(true);
 
 const toggleSideBar = () => {
-  showSide.value = !showSide.value;
+    showSide.value = !showSide.value;
 };
 
 // export default {
@@ -141,22 +143,22 @@ const toggleSideBar = () => {
 </script>
 
 <style scoped>
-  /* Google Fonts - Poppins */
-  * {
-      margin: 0;
-      padding: 0;
-      box-sizing: border-box;
-      /* font-family: "Poppins", sans-serif; */
-      border: none;
-      text-decoration: none;
-      outline: none;
-  }
+/* Google Fonts - Poppins */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    /* font-family: "Poppins", sans-serif; */
+    border: none;
+    text-decoration: none;
+    outline: none;
+}
 
-  body {
-      background-color: #dfe9f5;
-  }
+body {
+    background-color: #dfe9f5;
+}
 
-  /* nav {
+/* nav {
      
       position: absolute;
       top: 0px;
@@ -171,72 +173,73 @@ const toggleSideBar = () => {
       z-index: 99999;
   } */
 
-  .logo {
-      text-align: center;
-      display: flex;
-      transition: all 0.5s ease;
-      margin: 10px 0 0 10px;
-  }
+.logo {
+    text-align: center;
+    display: flex;
+    transition: all 0.5s ease;
+    margin: 10px 0 0 10px;
+}
 
-  .logo img {
-      width: 45px;
-      height: 45px;
-      border-radius: 50%;
-  }
+.logo img {
+    width: 45px;
+    height: 45px;
+    border-radius: 50%;
+}
 
-  .logo span {
-      
-      font-weight: bold;
-      padding: 15px;
-      font-size: 18px;
-      text-transform: uppercase;
-  }
+.logo span {
 
-  a {
-      position: relative;
-      color: rgb(85, 83, 83);
-      font-size: 17px;
-      display: table;
-      width: 300px;
-      padding: 13px;
+    font-weight: bold;
+    padding: 15px;
+    font-size: 18px;
+    text-transform: uppercase;
+}
 
-  }
+a {
+    position: relative;
+    color: rgb(85, 83, 83);
+    font-size: 17px;
+    display: table;
+    width: 300px;
+    padding: 13px;
 
-  a .icon {
-      margin-left: 20px;
-     font-weight: bold;
-     color: black;
-  }
+}
 
-  .fas {
-      position: relative;
-      width: 70px;
-      height: 40px;
-      top: 14px;
-      font-size: 20px;
-      text-align: center;
-  }
-  .nav-item {
-      position: absolute;
-      bottom: 10px;
-      left: 50px;
-      margin-left: 30px;
-  }
+a .icon {
+    margin-left: 20px;
+    font-weight: bold;
+    color: black;
+}
 
-  a:hover {
-      width: 285px;
-      border-end-end-radius: 20px;
-      background-color: whitesmoke;
-      
-  }
+.fas {
+    position: relative;
+    width: 70px;
+    height: 40px;
+    top: 14px;
+    font-size: 20px;
+    text-align: center;
+}
 
-  /* nav:hover {
+.nav-item {
+    position: absolute;
+    bottom: 10px;
+    left: 50px;
+    margin-left: 30px;
+}
+
+a:hover {
+    width: 285px;
+    border-end-end-radius: 20px;
+    background-color: whitesmoke;
+
+}
+
+/* nav:hover {
       width: 280px;
       transition: all 0.5s, ease;
   } */
 
-  .logout {
-      position: absolute;
-      bottom: 0;
-  }
+.logout {
+    position: absolute;
+    bottom: 0;
+}
 </style>

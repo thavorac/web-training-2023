@@ -29,7 +29,7 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AddToCardButton from './basic/AddToCardButton.vue';
 import ShopIcon from './basic/ShopIcon.vue';
 import CartIcon from './basic/CartIcon.vue';
