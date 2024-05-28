@@ -141,6 +141,7 @@ const router = createRouter({
     },
     {
       path: '/address',
+      path: '/address',
       name: 'adress',
       component: () => import('../views/Address.vue')
     },
@@ -164,6 +165,7 @@ const router = createRouter({
       name: "OrderList",
       component: () => import('../views/OrderList.vue')
     },
+
 
   ]
 })
