@@ -93,11 +93,12 @@ const register = () => {
 
 .container-fluid {
   background-image: url("/src/assets/image/abstract-1264071_1920.png");
+  min-height: 715px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
-  position: relative;
+  background-size: 100% 100%;
 
+  position: relative;
 }
 
 h1 {
@@ -130,7 +131,7 @@ input[type=email] {
   display: inline-block;
   box-sizing: border-box;
   border-radius: 7px;
-  border: 1px solid #c53636;
+  border: 1px solid #4aafa3;
 }
 
 .gender {
@@ -149,6 +150,10 @@ button {
   cursor: pointer;
   width: 25%;
   margin-bottom: 20px;
+}
+
+input {
+  padding-top: 10px;
 }
 
 button:hover {
