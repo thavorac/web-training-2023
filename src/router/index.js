@@ -1,7 +1,6 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RoutingView from '@/views/RoutingView.vue'
 import MainPageView from '@/views/MainPageView.vue'
-import Adress from '@/views/Adress.vue'
 import ProductsCart from "../views/cart/index.vue"
 
 const router = createRouter({
@@ -141,7 +140,7 @@ const router = createRouter({
       component: () => import('../views/RecipeView.vue')
     },
     {
-      path: '/adress',
+      path: '/address',
       name: 'adress',
       component: () => import('../views/Address.vue')
     },
@@ -150,6 +149,22 @@ const router = createRouter({
       name: "products-cart",
       component: ProductsCart,
     },
+    {
+      path: "/customerList",
+      name: "CustomerList",
+      component: () => import('../views/CustomerList.vue')
+    },
+    {
+      path: "/customer-detail",
+      name: "CustomerDitai",
+      component: () => import('../views/CustomerDetail.vue')
+    },
+    {
+      path: "/order-list",
+      name: "OrderList",
+      component: () => import('../views/OrderList.vue')
+    },
+
 
   ]
 })

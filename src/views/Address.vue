@@ -1,145 +1,143 @@
 <template>
     <div class="w-full">
-        <!-- <div class="lg:w-2/3 w-full mx-auto mt-8 overflow-auto">
-            <table class="table-auto w-full text-left whitespace-no-wrap">
-                <thead>
-                    <tr>
-                        <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 rounded-tl rounded-bl">Item</th>
-                        <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 ">Q</th>
-                        <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 ">Item</th>
-                        <th class="px-4 py-3 title-font tracking-wider font-medium text-gray-900 text-sm bg-gray-200 ">Item</th>
-                    </tr>
-                </thead>
-
-            </table>
-        </div> -->
         <div class="lg:w-2/3 w-full mx-auto mt-8">
+            <div>
+                    <h4>Add New Adress</h4>
+                    Be sure to check "Deliver to this address" when you have finished
+                </div>
             <div class="flex flex-wrap -mx-2 mt-8">
                 <div class="p-2 w-1/3">
                     <div class="relative">
-                        <label for="first_name" class="leading-7 text-sm text-gray-600">First Name</label>
+                        <label for="full_name" class="leading-7 text-sm text-gray-600">Full Name:</label>
+                        <input
+                            type="text"
+                            id="full_name"
+                            name="full_name"
+                            class="w-full bg-gray-100 rounded border border-gray-300 py-2"
+                            v-model="customer.full_name"
+                            :disabled="paymentProcessing"
+                        >
+                    </div>
+                </div>
+                <div class="p-2 w-1/3">
+                    <div class="relative">
+                        <label for="birth_day" class="leading-7 text-sm text-gray-600">Phone Number:</label>
+                        <input
+                            type="text"
+                            id="birth_day"
+                            name="birth_day"
+                            class="w-full bg-gray-100 rounded border border-gray-300 py-2"
+                            v-model="customer.birth_day"
+                            :disabled="paymentProcessing"
+                        >
+                    </div>
+                </div>
+                <div class="p-2 w-1/3">
+                    <div class="relative">
+                        <label for="email_address" class="leading-7 text-sm text-gray-600">Email Address:</label>
                         <input
                             type="email"
-                            id="zip_code"
-                            name="zip_code"
-                            class="w-full bg-gray-100 rounded border border-gray-300"
-                            v-model="customer.zip_code"
+                            id="email_address"
+                            name="email_address"
+                            class="w-full bg-gray-100 rounded border border-gray-300 py-2"
+                            v-model="customer.email_address"
                             :disabled="paymentProcessing"
                         >
                     </div>
                 </div>
                 <div class="p-2 w-1/3">
                     <div class="relative">
-                        <label for="first_name" class="leading-7 text-sm text-gray-600">Last Name</label>
+                        <label for="flat_house_no" class="leading-7 text-sm text-gray-600">Flat, House No:</label>
                         <input
                             type="text"
-                            id="first_name"
-                            name="first_name"
-                            class="w-full bg-gray-100 rounded border border-gray-300"
-                            v-model="customer.first_name"
+                            id="flat_house_no"
+                            name="flat_house_no"
+                            class="w-full bg-gray-100 rounded border border-gray-300 py-2"
+                            v-model="customer.flat_house_no"
                             :disabled="paymentProcessing"
                         >
-
                     </div>
-
                 </div>
                 <div class="p-2 w-1/3">
                     <div class="relative">
-                        <label for="first_name" class="leading-7 text-sm text-gray-600">Email Adress</label>
+                        <label for="landmark" class="leading-7 text-sm text-gray-600">Landmark (e.g. near Boeung Baitong Market):</label>
                         <input
                             type="text"
-                            id="last_name"
-                            name="last_name"
-                            class="w-full bg-gray-100 rounded border border-gray-300"
-                            v-model="customer.last_name"
+                            id="landmark"
+                            name="landmark"
+                            class="w-full bg-gray-100 rounded border border-gray-300 py-2"
+                            v-model="customer.landmark"
                             :disabled="paymentProcessing"
                         >
-
                     </div>
-
-                </div>
-                <div class="p-2 w-1/3">
-                    <div class="relative">
-                        <label for="first_name" class="leading-7 text-sm text-gray-600">Street Adress</label>
-                        <input
-                            type="email"
-                            id="email"
-                            name="email"
-                            class="w-full bg-gray-100 rounded border border-gray-300"
-                            v-model="customer.email"
-                            :disabled="paymentProcessing"
-                        >
-
-                    </div>
-
-                </div>
-                <div class="p-2 w-1/3">
-                    <div class="relative">
-                        <label for="first_name" class="leading-7 text-sm text-gray-600">City</label>
-                        <input
-                            type="text"
-                            id="adress"
-                            name="adress"
-                            class="w-full bg-gray-100 rounded border border-gray-300"
-                            v-model="customer.adress"
-                            :disabled="paymentProcessing"
-                        >
-
-                    </div>
-
                 </div>
                 <div class="p-2 w-1/6">
                     <div class="relative">
-                        <label for="first_name" class="leading-7 text-sm text-gray-600">State</label>
+                        <label for="town_city" class="leading-7 text-sm text-gray-600">Town/City:</label>
                         <input
                             type="text"
-                            id="city"
-                            name="city"
-                            class="w-full bg-gray-100 rounded border border-gray-300"
-                            v-model="customer.city"
+                            id="town_city"
+                            name="town_city"
+                            class="w-full bg-gray-100 rounded border border-gray-300 py-2"
+                            v-model="customer.town_city"
                             :disabled="paymentProcessing"
                         >
-
                     </div>
-
                 </div>
                 <div class="p-2 w-1/6">
                     <div class="relative">
-                        <label for="first_name" class="leading-7 text-sm text-gray-600">Zip Code</label>
+                        <label for="address_type" class="leading-7 text-sm text-gray-600">Address Type:</label>
                         <input
                             type="text"
-                            id="city"
-                            name="city"
-                            class="w-full bg-gray-100 rounded border border-gray-300"
-                            v-model="customer.city"
+                            id="address_type"
+                            name="address_type"
+                            class="w-full bg-gray-100 rounded border border-gray-300 py-2"
+                            v-model="customer.address_type"
                             :disabled="paymentProcessing"
                         >
-
                     </div>
-
                 </div>
-
+                <div class="p-2 ">
+                    <button 
+                        class=" bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded" 
+                        :disabled="paymentProcessing"
+                        @click="saveAddress"
+                    >
+                        Save Address
+                    </button>
+                </div>
             </div>
-
         </div>
-
     </div>
 </template>
+
 <script>
-    export default{
-        data(){
-            return{
-                customer:{
-                    first_name: '',
-                    last_name: '',
-                    email: '',
-                    address: '',
-                    city: '',
-                    state: '',
-                    zip_code: '',
+    export default {
+        data() {
+            return {
+                customer: {
+                    full_name: '',
+                    birth_day: '',
+                    email_address: '',
+                    flat_house_no: '',
+                    landmark: '',
+                    town_city: '',
+                    address_type: ''
                 },
                 paymentProcessing: false
+            }
+        },
+        methods: {
+            saveAddress() {
+                // Add logic to save address here
+                console.log('Address saved:', this.customer);
             }
         }
     }
 </script>
+
+<style scoped>
+    .w-full {
+        max-width: 1500px;
+    }
+</style>
