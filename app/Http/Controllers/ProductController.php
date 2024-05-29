@@ -8,7 +8,7 @@ use App\Models\Product;
 class ProductController extends Controller
 {
 
-    public function getProducts(){
+        public function getProducts(){
             $products = Product::with('images')->get();
             // ->orderBy('id','desc')->get();// ->paginate()
             return $products;
