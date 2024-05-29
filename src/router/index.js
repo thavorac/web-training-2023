@@ -165,7 +165,6 @@ const router = createRouter({
       component: () => import('../views/OrderList.vue')
     },
 
-
   ]
 })
 

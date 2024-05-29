@@ -16,14 +16,12 @@
             Phnom Penh
           </address>
         </aside>
-
         <dl id="informations">
           <dt>Invoice number</dt>
           <dd>12345</dd>
           <dt>Date</dt>
           <dd>March 31, 2018</dd>
         </dl>
-
         <!-- Invoice items table -->
         <div>
           <table>
@@ -63,7 +61,6 @@
             </tbody>
           </table>
         </div>
-
         <!-- Total footer -->
         <div class="footer-total">
           <footer>
@@ -86,7 +83,6 @@
           </footer>
         </div>
       </div>
-
       <!-- Buttons -->
       <div class="d-flex p-5 ps-5 gap-6">
         <div v-show="!showInvoice">
@@ -119,10 +115,8 @@ export default {
       elementsToPrint.forEach((element) => {
         element.style.display = 'block'; // Ensure element is visible during printing
       });
-
       // Trigger browser's print dialog
       window.print();
-
       // Reset display styles after printing
       elementsToPrint.forEach((element) => {
         element.style.display = ''; // Reset display to default
