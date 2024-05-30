@@ -1,6 +1,6 @@
 <script setup lang="ts">
 import { useFetch } from '@/composable/useFetch';
-import CategoryView from '../../views/CategoryView.vue';
+import ProductView from '../../views/ProductView.vue';
 import IconSkLoading from '@/components/loading/SmsLoading.vue';
 import IconCategories from '../icons/IconCategories.vue';
 import IconsCirclePlus from '../icons/IconCirclePlus.vue';
@@ -26,7 +26,7 @@ const handleCancel = () => {
 </script>
 
 <template>
-    <CategoryView :subtitle="'Admin Profile'">
+    <ProductView :subtitle="'Admin Profile'">
         <div class="w-full selection:bg-gray-100 py-10 px-10 mt-10 rounded-lg bg-gray-200 shadow-md">
             <div class="w-full bg-white rounded-md p-2">
                 <template v-if="!showCreateForm">
@@ -165,5 +165,5 @@ const handleCancel = () => {
             </div>
             <div class="text-xl text-right font-semibold text-black">Categories and sub-categories</div>
         </div>
-    </CategoryView>
+    </ProductView>
 </template>

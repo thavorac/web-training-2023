@@ -6,22 +6,40 @@ import IconCategories from '../icons/IconCategories.vue';
 import IconsCirclePlus from '../icons/IconCirclePlus.vue';
 import IconSearch from '../icons/IconSearch.vue';
 import CreateFormCategory from './CreateFormCategory.vue'; // Import the CreateFormCategory component
-import { ref, toValue } from 'vue';
+import { ref, toRefs } from 'vue';
+import ActionButton from '../CrudAction/ActionButton.vue';
 
-const page = ref(1);
-const search = ref("");
-const showCreateForm = ref(false); // State to toggle between list and create form
+interface Product {
+    // Define your Product interface here if not already defined
+}
 
-const { loading, data } = useFetch<any>(`${import.meta.env.VITE_BACKEND}/api/categories?page=${toValue(page)}&search=${toValue(search)}`);
+const { page, search, showCreateForm } = toRefs({
+    page: ref(1),
+    search: ref(""),
+    showCreateForm: ref(false)
+});
 
+// const { loading, data } = useFetch<any>(`${import.meta.env.VITE_BACKEND}/api/categories?page=${toValue(page)}&search=${toValue(search)}`);
+const { loading, data } = useFetch<any>(import.meta.env.VITE_BACKEND + `/api/categories?page=${page.value}&search=${search.value}`);
 // Method to toggle the create form
 const toggleCreateForm = () => {
-    showCreateForm.value = true;
+    showCreateForm.value = !showCreateForm.value;
 };
 
 // Method to handle cancel event
 const handleCancel = () => {
     showCreateForm.value = false;
+};
+const handleEdit = (product: Product) => {
+    console.log('Edit product:', product);
+};
+
+const handleDelete = (product: Product) => {
+    console.log('Delete product:', product);
+};
+
+const handleDetail = (product: Product) => {
+    console.log('View details of product:', product);
 };
 </script>
 
@@ -39,7 +57,7 @@ const handleCancel = () => {
                             <template v-else>
                                 <div class="flex flex-col">
                                     <span class="text-sm font-semibold">Total</span>
-                                    <span class="font-sans font-semibold text-2xl">{{ data?.meta.total }}</span>
+                                    <span class="font-sans font-semibold text-2xl">{{ data?.total }}</span>
                                 </div>
                             </template>
                             <button @click="toggleCreateForm"
@@ -67,6 +85,8 @@ const handleCancel = () => {
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-lg font-sans">Category Name</th>
                                     <th scope="col" class="px-6 py-3 text-lg">Description</th>
+                                    <th scope="col" class="px-6 py-3 text-lg">Created_At</th>
+                                    <th scope="col" class="px-6 py-3 text-lg">Updated_At</th>
                                     <th scope="col" class="px-6 py-3 text-lg">Action</th>
                                 </tr>
                             </thead>
@@ -82,10 +102,20 @@ const handleCancel = () => {
                                         :key="index">
                                         <th scope="row" class="px-6 py-6 font-medium text-gray-800">{{ category?.name }}
                                         </th>
-                                        <td>
-                                            <div class="flex items-center w-11/12">{{ category?.description }}</div>
+                                        <td class="px-6 py-6">
+                                            {{ category?.description }}
                                         </td>
-                                        <td></td>
+                                        <td class="px-6 py-6">
+                                            {{ category?.created_at }}
+                                        </td>
+                                        <td class="px-6 py-6">
+                                            {{ category?.updated_at }}
+                                        </td>
+                                        <!-- You need to define the 'product' variable or pass it as a prop -->
+                                        <td class="">
+                                            <ActionButton @edit="handleEdit" @delete="handleDelete"
+                                                @detail="handleDetail" />
+                                        </td>
                                     </tr>
                                 </template>
                             </tbody>

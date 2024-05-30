@@ -11,14 +11,15 @@ import 'sweetalert2/src/sweetalert2.scss'
 
 // using antd to create an adminSideBar
 
-import Antd from "ant-design-vue";
-import 'ant-design-vue/dist/reset.css';
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/reset.css'
 
 import 'vue-toastification/dist/index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
 import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import Toast from 'vue-toastification'
+
 // import ElectronicView from './views/ElectronicView.vue'
 // import DetailView from './views/DetailView.vue'
 // import WishListView from './views/WishListView.vue'

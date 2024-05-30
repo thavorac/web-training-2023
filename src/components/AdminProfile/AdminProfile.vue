@@ -3,7 +3,7 @@
 <template>
     <div class="container p-0 m-0 ">
         <div class="row ms-4">
-            <div class="col-xl-12 mt-2">
+            <div class="col-xl-12 mt-2 mb-2">
                 <p class="s1">Setting</p>
             </div>
         </div>
