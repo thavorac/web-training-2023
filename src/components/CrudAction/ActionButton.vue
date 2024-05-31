@@ -23,7 +23,7 @@ interface Product {
     status: string;
 }
 
-const props = defineProps < { product: Product } > ();
+const props = defineProps<{ product: Product }>();
 const emits = defineEmits(['edit', 'delete', 'detail']);
 
 const handleEdit = () => {

@@ -15,6 +15,12 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             path: '',
             name: 'ListCategory',
             component: () => import('../../components/Category/ListCategory.vue')
+          },
+          {
+            path: '/edit-category/:id',
+            name: 'editFormCategory',
+            component: () => import('../../components/Category/EditFormCategory.vue'),
+            props: true
           }
           // {
           //   path: 'create',

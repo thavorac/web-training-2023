@@ -1,47 +1,63 @@
 <script setup lang="ts">
-import { defineEmits } from 'vue';
+import { defineEmits, ref, onMounted } from 'vue';
 import axios from 'axios';
-import { useRouter } from 'vue-router';
+import { useRouter, useRoute } from 'vue-router';
 
 const emit = defineEmits(['cancel']);
 const router = useRouter();
+const categoryId = ref<string>(''); // Ensure categoryId is explicitly defined as a string
+
+const model = ref({
+    category: {
+        name: '',
+        description: '',
+    }
+});
+
+const route = useRoute();
+
+onMounted(() => {
+    // Ensure that route.params.id is explicitly assigned as a string
+    categoryId.value = String(route.params.id);
+    console.log(route.params.id);
+});
 
 const handleCancel = () => {
     emit('cancel');
 };
 
-// =================== create category ======================
-const model = {
-    category: {
-        name: '',
-        description: '',
-
-    }
+const updateCategoryData = (categoryId: string) => {
+    axios.put(`http://localhost/api/categories/${categoryId}`, model.value.category)
+        .then(res => {
+            console.log(res.data.data);
+        });
 };
 
 const createCategory = () => {
-    axios.post('http://localhost/api/categories', model.category)
+    axios.post('http://localhost/api/categories', model.value.category)
         .then(res => {
             console.log(res.data);
             alert(res.data.message);
-            model.category = {
+            model.value.category = {
                 name: '',
                 description: '',
-
             };
             // Redirect to the ProductItem page
             // router.push('/product');
-        })
-        .catch(error => {
-            console.error('Error saving student:', error);
         });
 };
+
+// const categoryId = props.categoryId;
 </script>
+
 
 <template>
     <div class="container mx-auto p-4">
         <form action="">
             <div class="mb-4">
+                <div class="block text-green-500 mb-2 font-bold text-2xl uppercase">Edit Form Category</div>
+                <br>
+
                 <label for="category-name" class="block mb-2 font-semibold text-xl">Category's Name</label>
                 <input id="category-name" v-model="model.category.name" type="text"
                     class="form-control border-black shadow-sm w-full max-w-md" placeholder="men">

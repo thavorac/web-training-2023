@@ -6,40 +6,58 @@ import IconCategories from '../icons/IconCategories.vue';
 import IconsCirclePlus from '../icons/IconCirclePlus.vue';
 import IconSearch from '../icons/IconSearch.vue';
 import CreateFormCategory from './CreateFormCategory.vue'; // Import the CreateFormCategory component
+import EditFormCategory from './EditFormCategory.vue'; // Import the EditFormCategory component
 import { ref, toRefs } from 'vue';
-import ActionButton from '../CrudAction/ActionButton.vue';
+// import ActionButton from '../CrudAction/ActionButton.vue';
+import IconEdit from '../icons/IconEdit.vue';
+import IconDelete from '../icons/IconDelete.vue';
+import IconDetail from '../icons/IconDetail.vue';
 
-interface Product {
+interface Category {
     // Define your Product interface here if not already defined
 }
 
-const { page, search, showCreateForm } = toRefs({
+const { page, search, showCreateForm, showEditForm, selectedCategory } = toRefs({
     page: ref(1),
     search: ref(""),
-    showCreateForm: ref(false)
+    showCreateForm: ref(false),
+    showEditForm: ref(false),
+    selectedCategory: ref<Category | null>(null) // Variable to hold the category being edited
 });
 
 // const { loading, data } = useFetch<any>(`${import.meta.env.VITE_BACKEND}/api/categories?page=${toValue(page)}&search=${toValue(search)}`);
 const { loading, data } = useFetch<any>(import.meta.env.VITE_BACKEND + `/api/categories?page=${page.value}&search=${search.value}`);
+
 // Method to toggle the create form
 const toggleCreateForm = () => {
     showCreateForm.value = !showCreateForm.value;
+    showEditForm.value = false;
+};
+
+// Method to toggle the edit form
+const toggleEditForm = (category: Category) => {
+    selectedCategory.value = category;
+    showEditForm.value = true;
+    showCreateForm.value = false;
 };
 
 // Method to handle cancel event
 const handleCancel = () => {
     showCreateForm.value = false;
-};
-const handleEdit = (product: Product) => {
-    console.log('Edit product:', product);
-};
-
-const handleDelete = (product: Product) => {
-    console.log('Delete product:', product);
+    showEditForm.value = false;
+    selectedCategory.value = null;
 };
 
-const handleDetail = (product: Product) => {
-    console.log('View details of product:', product);
+const handleEdit = (category: Category) => {
+    toggleEditForm(category);
+};
+
+const handleDelete = (category: Category) => {
+    console.log('Delete product:', category);
+};
+
+const handleDetail = (category: Category) => {
+    console.log('View details of category:', category);
 };
 </script>
 
@@ -47,7 +65,7 @@ const handleDetail = (product: Product) => {
     <CategoryView :subtitle="'Category'">
         <div class="w-full selection:bg-gray-100 py-10 px-10 mt-10 rounded-lg bg-gray-200 shadow-md">
             <div class="w-full bg-white rounded-md p-2">
-                <template v-if="!showCreateForm">
+                <template v-if="!showCreateForm && !showEditForm">
                     <div class="flex">
                         <div class="bg-gray-100 flex items-center py-3 px-3 space-x-4 rounded-md">
                             <IconCategories :w="'12'" :h="'12'" className="text-[#F66603]" />
@@ -111,11 +129,18 @@ const handleDetail = (product: Product) => {
                                         <td class="px-6 py-6">
                                             {{ category?.updated_at }}
                                         </td>
-                                        <!-- You need to define the 'product' variable or pass it as a prop -->
-                                        <td class="">
-                                            <ActionButton @edit="handleEdit" @delete="handleDelete"
-                                                @detail="handleDetail" />
+                                        <td class="px-6 py-6 flex space-x-2">
+                                            <IconEdit @click="handleEdit" class="w-6 h-6 text-blue-500 cursor-pointer"
+                                                @edit="handleEdit(category)" />
+                                            <IconDelete class="w-6 h-6 text-red-500 cursor-pointer"
+                                                @click="handleDelete" />
+                                            <IconDetail class="w-6 h-6 text-green-500 cursor-pointer"
+                                                @click="handleDetail" />
                                         </td>
+                                        <!-- <td class="">
+                                            <ActionButton @edit="handleEdit(category)" @delete="handleDelete(category)"
+                                                @detail="handleDetail(category)" />
+                                        </td> -->
                                     </tr>
                                 </template>
                             </tbody>
@@ -124,8 +149,13 @@ const handleDetail = (product: Product) => {
                     </div>
                 </template>
 
-                <template v-else>
+                <template v-else-if="showCreateForm">
                     <CreateFormCategory @cancel="handleCancel" /> <!-- Listen for cancel event -->
+                </template>
+
+                <template v-else-if="showEditForm">
+                    <EditFormCategory :category="selectedCategory" @cancel="handleCancel" />
+                    <!-- Listen for cancel event -->
                 </template>
             </div>
             <div class="text-xl text-right font-semibold text-black">Categories and sub-categories</div>

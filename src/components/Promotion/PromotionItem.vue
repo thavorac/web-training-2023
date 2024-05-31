@@ -1,22 +1,60 @@
 <script setup lang="ts">
-import { useFetch } from '@/composable/useFetch';
-import CategoryView from '../../views/CategoryView.vue';
+import { ref, computed, toValue } from 'vue';
+import ProductView from '../../views/ProductView.vue';
 import IconSkLoading from '@/components/loading/SmsLoading.vue';
 import IconCategories from '../icons/IconCategories.vue';
 import IconsCirclePlus from '../icons/IconCirclePlus.vue';
 import IconSearch from '../icons/IconSearch.vue';
+import EditFormCategory from '../../components/Category/EditFormCategory.vue';
+
 import ActionButton from '../CrudAction/ActionButton.vue';
-import CreateFormPromotion from './CreateFormPromotion.vue'; // Import the CreateFormCategory component
-import { ref, toValue } from 'vue';
+import Datepicker from 'vue3-datepicker'; // Import the datepicker component
+import { useFetch } from '@/composable/useFetch';
+
+interface Product {
+    id: number;
+    name: string;
+    description: string;
+    qty: number;
+    date: string;
+    revenue: number;
+    netProfit: number;
+    status: string;
+}
+
+// const { loading, data } = useFetch<any>(import.meta.env.VITE_BACKEND + `/api/categories?page=${toValue(page)}&search=${toValue(search)}`);
 
 const page = ref(1);
 const search = ref("");
-const showCreateForm = ref(false); // State to toggle between list and create form
+const showCreateForm = ref(false);
+const startDate = ref<Date | null>(null);
+const endDate = ref<Date | null>(null);
 
-interface Product {
-    // Define your Product interface here if not already defined
-}
-// const { loading, data } = useFetch<any>(`${import.meta.env.VITE_BACKEND}/api/products?page=${toValue(page)}&search=${toValue(search)}`);
+const mockData = ref<Product[]>([
+    { id: 1, name: 'Product A', description: 'Description A', qty: 10, date: '2023-01-01', revenue: 100, netProfit: 20, status: 'Available' },
+    { id: 2, name: 'Product A', description: 'Description A', qty: 10, date: '2023-01-01', revenue: 100, netProfit: 20, status: 'Available' },
+    { id: 3, name: 'Product B', description: 'Description B', qty: 5, date: '2023-02-01', revenue: 200, netProfit: 50, status: 'Available' },
+    { id: 4, name: 'Product C', description: 'Description C', qty: 8, date: '2023-03-01', revenue: 150, netProfit: 30, status: 'Unavailable' },
+    // Add more mock products as needed
+]);
+
+const filteredData = computed(() => {
+    let filtered = mockData.value;
+
+    if (search.value) {
+        filtered = filtered.filter(product => product.name.toLowerCase().includes(search.value.toLowerCase()));
+    }
+
+    if (startDate.value) {
+        filtered = filtered.filter(product => new Date(product.date) >= startDate.value);
+    }
+
+    if (endDate.value) {
+        filtered = filtered.filter(product => new Date(product.date) <= endDate.value);
+    }
+
+    return filtered;
+});
 
 // Method to toggle the create form
 const toggleCreateForm = () => {
@@ -27,6 +65,7 @@ const toggleCreateForm = () => {
 const handleCancel = () => {
     showCreateForm.value = false;
 };
+
 const handleEdit = (product: Product) => {
     console.log('Edit product:', product);
 };
@@ -38,141 +77,233 @@ const handleDelete = (product: Product) => {
 const handleDetail = (product: Product) => {
     console.log('View details of product:', product);
 };
+
+// Method to reset all filters
+const resetFilters = () => {
+    search.value = "";
+    startDate.value = null;
+    endDate.value = null;
+};
 </script>
 
 <template>
-    <CategoryView :subtitle="'Product'">
-        <div class="w-full selection:bg-gray-100 py-10 px-10 mt-10 rounded-lg bg-gray-200 shadow-md">
+    <ProductView :subtitle="'Product'">
+        <div class="w-full py-10 px-10 mt-10 rounded-lg bg-gray-200 shadow-md">
             <div class="w-full bg-white rounded-md p-2">
                 <template v-if="!showCreateForm">
-                    <div class="flex">
-                        <div class="bg-gray-100 flex items-center py-3 px-3 space-x-4 rounded-md">
-                            <IconCategories :w="'12'" :h="'12'" className="text-[#F66603]" />
-                            <template v-if="loading">
-                                <IconSkLoading className="w-6 h-6" />
-                            </template>
-                            <template v-else>
-                                <div class="flex flex-col">
-                                    <span class="text-sm font-semibold">Total</span>
-                                    <span class="font-sans font-semibold text-2xl">{{ data?.total }}</span>
+                    <div class="flex items-center py-3 px-3 space-x-4 rounded-md bg-gray-100">
+                        <IconCategories :w="'12'" :h="'12'" class="text-[#F66603]" />
+                        <!-- laoding -->
+                        <!-- <template v-if="loading">
+                            <IconSkLoading className="w-6 h-6" />
+                        </template> -->
+                        <div class="flex flex-col">
+                            <span class="text-sm font-semibold">Total</span>
+                            <span class="font-sans font-semibold text-2xl">{{ filteredData.length }}</span>
+                        </div>
+                        <button @click="toggleCreateForm"
+                            class="bg-[#7367F0] no-underline px-4 py-2 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
+                            <IconsCirclePlus class="w-10 h-10" stroke="2.0" />
+                            <span class="text-xl font-semibold">Add Product</span>
+                        </button>
+                    </div>
+
+                    <div class="flex pr-4 mt-4 space-x-1 justify-between">
+                        <!-- filter date -->
+                        <!-- Datepicker for start date -->
+                        <div class="flex items-center space-x-4">
+                            <div class="relative">
+                                <div class="absolute z-30 inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                    </svg>
                                 </div>
-                            </template>
-                            <button @click="toggleCreateForm"
-                                class="bg-[#7367F0] no-underline px-4 py-2 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
-                                <IconsCirclePlus className="w-10 h-10" stroke="2.0" />
-                                <span class="text-xl font-semibold">Add Product</span>
+                                <Datepicker v-model="startDate"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Select date start" />
+                            </div>
+                            <span class="mx-2 text-gray-500">to</span>
+                            <!-- Datepicker for end date -->
+                            <div class="relative">
+                                <div class="absolute z-30 inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
+                                    <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true"
+                                        xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
+                                        <path
+                                            d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z" />
+                                    </svg>
+                                </div>
+                                <Datepicker v-model="endDate"
+                                    class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5  dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
+                                    placeholder="Select date end" />
+                            </div>
+                        </div>
+                        <!-- search field -->
+                        <div class="relative text-gray-400 space-x-4 ">
+                            <div class="absolute inset-y-0 left-0 flex items-center pl-5 pointer-events-none">
+                                <IconSearch class="w-6 h-6" stroke="2.0" />
+                            </div>
+                            <input v-model="search" type="text" placeholder="Search"
+                                class="appearance-none pl-12 rounded-md placeholder:text-gray-400 shadow-md font-semibold text-gray-700 hover:shadow-md outline-none border-none focus:ring-0" />
+                            <!-- button reset filter -->
+                            <button @click="resetFilters" class=" ">
+                                <div class="flex items-center">
+                                    <span class="font-medium text-sm text-blue-500 cursor-pointer">All Products</span>
+                                    <a class="pt-1" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20"
+                                            fill="#1E90FF" class="size-5">
+                                            <path fill-rule="evenodd"
+                                                d="M2 10a.75.75 0 0 1 .75-.75h12.59l-2.1-1.95a.75.75 0 1 1 1.02-1.1l3.5 3.25a.75.75 0 0 1 0 1.1l-3.5 3.25a.75.75 0 1 1-1.02-1.1l2.1-1.95H2.75A.75.75 0 0 1 2 10Z"
+                                                clip-rule="evenodd" />
+                                        </svg>
+                                    </a>
+                                </div>
                             </button>
                         </div>
                     </div>
-
-                    <div class="flex pr-4 mt-4">
-                        <div class="flex-grow"></div>
-                        <div class="relative text-gray-400">
-                            <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                                <IconSearch className="w-6 h-6" stroke="2.0" />
-                            </div>
-                            <input type="text" placeholder="Search"
-                                class="appearance-none ps-12 rounded-md placeholder:text-gray-400 shadow-md font-semibold text-gray-700 hover:shadow-md outline-0 hover:outline-0 focus:outline-0 focus:ring-0 focus:border-0 border-0" />
-                        </div>
-                    </div>
-
                     <div class="relative overflow-auto shadow-md sm:rounded-lg mt-4">
-                        <table class="w-full overflow-auto text-sm text-left rtl:text-right text-gray-500">
+                        <table class="w-full text-sm text-left text-gray-500">
                             <thead class="text-xs text-gray-700 bg-gray-50">
                                 <tr>
                                     <th scope="col" class="px-6 py-3 text-lg font-sans text-[#8E95A9]">Product ID</th>
+                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">Image</th>
                                     <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">Product Name</th>
-                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">
-                                        <div class="flex items-center text-[#8E95A9]">
-                                            Qty
-                                            <a href="#"><svg class="w-3 h-3 ms-1.5" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="#8E95A9"
-                                                    viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                                                </svg></a>
-                                        </div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">
-                                        <div class="flex items-center text-[#8E95A9]">
-                                            Pricing
-                                            <a href="#"><svg class="w-3 h-3 ms-1.5" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="#8E95A9"
-                                                    viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                                                </svg></a>
-                                        </div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">
-                                        <div class="flex items-center text-[#8E95A9]">
-                                            Color
-                                            <a href="#"><svg class="w-3 h-3 ms-1.5" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="#8E95A9"
-                                                    viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                                                </svg></a>
-                                        </div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">
-                                        <div class="flex items-center text-[#8E95A9]">
-                                            Size
-                                            <a href="#"><svg class="w-3 h-3 ms-1.5" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="#8E95A9"
-                                                    viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                                                </svg></a>
-                                        </div>
-                                    </th>
-                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">
-                                        <div class="flex items-center text-[#8E95A9]">
-                                            Action
-                                            <a href="#"><svg class="w-3 h-3 ms-1.5" aria-hidden="true"
-                                                    xmlns="http://www.w3.org/2000/svg" fill="#8E95A9"
-                                                    viewBox="0 0 24 24">
-                                                    <path
-                                                        d="M8.574 11.024h6.852a2.075 2.075 0 0 0 1.847-1.086 1.9 1.9 0 0 0-.11-1.986L13.736 2.9a2.122 2.122 0 0 0-3.472 0L6.837 7.952a1.9 1.9 0 0 0-.11 1.986 2.074 2.074 0 0 0 1.847 1.086Zm6.852 1.952H8.574a2.072 2.072 0 0 0-1.847 1.087 1.9 1.9 0 0 0 .11 1.985l3.426 5.05a2.123 2.123 0 0 0 3.472 0l3.427-5.05a1.9 1.9 0 0 0 .11-1.985 2.074 2.074 0 0 0-1.846-1.087Z" />
-                                                </svg></a>
-                                        </div>
-                                    </th>
+                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">Qty</th>
+                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">Date</th>
+                                    <!-- <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">Revenue</th> -->
+                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">Net Profit</th>
+                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">Status</th>
+                                    <th scope="col" class="px-6 py-3 text-lg text-[#8E95A9]">Action</th>
                                 </tr>
                             </thead>
                             <tbody>
-                                <tr v-if="loading">
-                                    <th colspan="3">
-                                        <IconSkLoading className="w-6 h-6" />
-                                    </th>
-                                </tr>
+                                <template v-if="filteredData.length === 0">
+                                    <tr>
+                                        <td colspan="8" class="px-6 py-6 text-center text-gray-500">No products found
+                                        </td>
+                                    </tr>
+                                </template>
                                 <template v-else>
-                                    <tr v-for="(product, index) in data?.data"
-                                        :class="`bg-white ${index == data?.data.length ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`"
-                                        :key="index">
-                                        <th scope="row" class="px-6 py-6 font-medium text-gray-800">{{ index + 1 }}
+                                    <tr v-for="(product, index) in filteredData"
+                                        :class="`bg-white ${index == filteredData.length - 1 ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`"
+                                        :key="product.id">
+                                        <th scope="row" class="px-6 py-6 font-medium text-gray-800">{{ product.id }}
                                         </th>
                                         <td class="px-6 py-6">{{ product.name }}</td>
-                                        <td class="px-6 py-6"></td>
-                                        <td class="px-6 py-6">{{ product.pricing }}</td>
-                                        <td class="px-6 py-6">{{ product.color }}</td>
+                                        <td class="px-6 py-6">{{ product.image }}</td>
+                                        <td class="px-6 py-6">{{ product.qty }}</td>
+                                        <td class="px-6 py-6">{{ product.date }}</td>
                                         <!-- <td class="px-6 py-6">{{ product.revenue }}</td> -->
-                                        <td class="px-6 py-6">{{ product.size }}</td>
-                                        <!-- <td class="px-6 py-6">{{ product.status }}</td> -->
+                                        <td class="px-6 py-6">{{ product.netProfit }}</td>
+                                        <td class="px-6 py-6">{{ product.status }}</td>
                                         <ActionButton :product="product" @edit="handleEdit" @delete="handleDelete"
                                             @detail="handleDetail" />
                                     </tr>
                                 </template>
                             </tbody>
                         </table>
-                        <!-- paginate -->
                     </div>
                 </template>
-
                 <template v-else>
-                    <CreateFormPromotion @cancel="handleCancel" /> <!-- Listen for cancel event -->
+                    <edit-form-category @cancel="handleCancel" />
                 </template>
             </div>
-            <div class="text-xl text-right font-semibold text-black">Product </div>
+            <div class="text-xl text-right font-semibold text-black">Product</div>
         </div>
-    </CategoryView>
+    </ProductView>
 </template>
+
+<!-- <script>
+import axios from 'axios';
+
+export default {
+    name: 'students',
+    data() {
+        return {
+            stduents: []
+        }
+    },
+    mounted() {
+        this.getStudents();
+        console.log('i am herh')
+    },
+    methods: {
+        getStudents() {
+            axios.get('http://localhost/api/categories').then(res => {
+                this.stduents = res.data.stduents
+                console.log(this.stduents)
+            })
+        }
+    }
+}
+</script> -->
+
+<!-- <script setup>
+import { ref, onMounted } from 'vue';
+import axios from 'axios';
+
+const students = ref([]);
+
+const getStudents = () => {
+  axios.get('http://localhost/api/categories').then(res => {
+    students.value = res.data.students;
+    console.log(students.value);
+  });
+};
+
+onMounted(() => {
+  getStudents();
+  console.log('i am here');
+});
+</script> -->
+
+<input type="text" v-model="model.student.name">
+<button @click="saveStudent">Save</button>
+
+<script>
+export default {
+    name : 'studentCreate',
+    data(){
+        return{
+            studentID : '',
+            model:{
+                student:{
+                    name: '',
+                    course:'',
+                    email:'',
+
+                }
+            }
+        },
+        mounted(){
+            this.studentId = this.$route.params.id;
+            console.log(this.$route.params.id);
+            updateCategoryData(categoryId){
+                axios.put(`..../${categoryId}`,this.model.student).then(res => {
+                    console.log(res.data.data);
+                    //this.model.student = res.data.student.name
+                    
+                });
+            },
+            
+        }
+        methods:{
+            saveStudent(){
+                axios.post('.....',this.model.student)
+                .then(res => {
+                    console.log(res.data)
+                    alert(res.data.message)
+
+                    this.model.student = {
+                        name: '',
+                    course:'',
+                    email:'',
+
+                    }
+                })
+               
+            }
+        }
+    },
+}
+</script>

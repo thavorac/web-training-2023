@@ -139,12 +139,12 @@ const router = createRouter({
       name: 'MainLayout',
       component: () => import('../layout/MainLayout.vue'),
       children: [
-        {
-          path: '/edit-category/:id',
-          name: 'Edit-category',
-          component: () => import('../API/Categories/EditCategory.vue'),
-          props: true
-        },
+        // {
+        //   path: '/edit-category/:id',
+        //   name: 'Edit-category',
+        //   component: () => import('../API/Categories/EditCategory.vue'),
+        //   props: true
+        // },
         {
           path: '/product-form',
           name: 'product-form',
@@ -223,6 +223,8 @@ const router = createRouter({
       name: 'wishlistPage',
       component: () => import('../views/Wishlist/WishListPage.vue')
     }
+
+    // ==================================================== // Edit Form Category ==============================================
   ]
 })
 
