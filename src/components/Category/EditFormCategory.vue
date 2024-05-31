@@ -2,7 +2,7 @@
 import { defineEmits, ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
-
+import { RouterView } from 'vue-router';
 const emit = defineEmits(['cancel']);
 const router = useRouter();
 const categoryId = ref<string>(''); // Ensure categoryId is explicitly defined as a string
@@ -39,6 +39,7 @@ const createCategory = () => {
             console.log(res.data);
             alert(res.data.message);
             model.value.category = {
+
                 name: '',
                 description: '',
             };
