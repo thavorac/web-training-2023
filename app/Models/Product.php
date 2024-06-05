@@ -27,4 +27,11 @@ class Product extends Model
     {
         return $this->hasOne(Image::class)->oldestOfMany();
     }
+
+
+    // Add this method to format dates
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
+    }
 }

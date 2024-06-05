@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Category;
+use App\Resources\CategoryResource;
 
 class CategoryController extends Controller
 {
@@ -16,8 +17,7 @@ class CategoryController extends Controller
     //     // return "get categories";
     // }
     public function getCategories(){
-        $categories = Category::all();
-        return $categories;
+        return   Category::orderBy('id','desc')->paginate(10);
     }
 
     // -- POST / api / categories == create category
@@ -25,6 +25,7 @@ class CategoryController extends Controller
         // dd($request);
         $category = new Category(); // create model instand
         $category->name = $request->get('name'); // assign value to model instand
+        $category->description = $request->get('description'); // assign value to model instand
         $category->save(); // save data into database
         return [ "message" => "success" , "data"=>$category];// return data that have already save
 
@@ -51,6 +52,7 @@ class CategoryController extends Controller
 
         if($category){
             $category->name = $request->get('name');
+            $category->description = $request->get('description');
 
             $category->save();
 

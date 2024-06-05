@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Models;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\HasMany;
@@ -9,16 +10,25 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name'];  // mas assignment ( like id we don't need to save show we use  mas assignment to set array that we want to save )
+    protected $fillable = ['name', 'description']; 
 
     public function products(): HasMany
     {
         return $this->hasMany(Product::class);
-    } // this products() function mean that 1 category hasMany products inside it
+    }
 
+    // Accessor for created_at timestamp
+    public function getCreatedAtAttribute($value)
+    {
+        // Format the timestamp to yy/mm/dd
+        return date('Y/m/d', strtotime($value));
+    }
 
-    // public function category(): BelongsTo
-    // {
-    //     return $this->belongsTo(Category::class);  // if we want to find that product belong to which category 
-    // }
+    // Accessor for updated_at timestamp
+    public function getUpdatedAtAttribute($value)
+    {
+        // Format the timestamp to yy/mm/dd
+        return date('Y/m/d', strtotime($value));
+    }
 }
+
