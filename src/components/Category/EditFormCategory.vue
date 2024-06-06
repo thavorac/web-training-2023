@@ -2,11 +2,15 @@
 import { defineEmits, ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
-import { RouterView } from 'vue-router';
+
 const emit = defineEmits(['cancel']);
 const router = useRouter();
-const categoryId = ref<string>(''); // Ensure categoryId is explicitly defined as a string
 
+const handleCancel = () => {
+    router.push('/admin/category');
+};
+
+const categoryId = ref<string>(''); // Ensure categoryId is explicitly defined as a string
 const model = ref({
     category: {
         name: '',
@@ -20,37 +24,35 @@ onMounted(() => {
     // Ensure that route.params.id is explicitly assigned as a string
     categoryId.value = String(route.params.id);
     console.log(route.params.id);
+
+    // Fetch category data by categoryId
+    axios.get(`http://localhost/api/categories/${categoryId.value}`)
+        .then(res => {
+            model.value.category = res.data; // Assuming response contains category object
+        })
+        .catch(error => {
+            console.error('Error fetching category data:', error);
+        });
 });
 
-const handleCancel = () => {
-    emit('cancel');
-};
+const updateCategoryData = () => {
+    // Capture data from input fields before sending the PUT request
+    const updatedCategoryData = {
+        name: model.value.category.name,
+        description: model.value.category.description
+    };
 
-const updateCategoryData = (categoryId: string) => {
-    axios.put(`http://localhost/api/categories/${categoryId}`, model.value.category)
+    axios.put(`http://localhost/api/categories/${categoryId.value}`, updatedCategoryData)
         .then(res => {
             console.log(res.data.data);
+            alert("Category updated successfully!");
+        })
+        .catch(error => {
+            console.error('Error updating category data:', error);
+            alert("Error updating category data. Please try again later.");
         });
 };
-
-const createCategory = () => {
-    axios.post('http://localhost/api/categories', model.value.category)
-        .then(res => {
-            console.log(res.data);
-            alert(res.data.message);
-            model.value.category = {
-
-                name: '',
-                description: '',
-            };
-            // Redirect to the ProductItem page
-            // router.push('/product');
-        });
-};
-
-// const categoryId = props.categoryId;
 </script>
-
 
 <template>
     <div class="container mx-auto p-4">
@@ -73,8 +75,8 @@ const createCategory = () => {
                 <button type="button" @click="handleCancel"
                     class="text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                     CANCEL</button>
-                <button type="button" @click="createCategory"
-                    class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">CREATE</button>
+                <button type="button" @click="updateCategoryData"
+                    class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">UPDATE</button>
             </div>
         </form>
     </div>

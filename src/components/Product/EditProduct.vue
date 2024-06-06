@@ -1,57 +1,68 @@
+<script setup lang="ts">
+import { useRouter } from 'vue-router';
+const emit = defineEmits(['cancel']);
+const router = useRouter();
+
+const handleCancel = () => {
+    router.push('/admin');
+};
+
+</script>
 <template>
     <section class="bg-white dark:bg-gray-900">
-        <div class="py-3 px-4 max-w-2xl lg:py-16">
-            <p class="mb-4 font-semibold text-xl dark:text-white text-[#58AB5D]">Add a new product</p>
-            <form @submit.prevent="createProduct">
+        <div class="py-3  px-4 max-w-2xl lg:py-16">
+            <p class="mb-4 font-semibold text-xl dark:text-white text-[#58AB5D]">Edit Product</p>
+            <form action="">
                 <div class="pt-1 grid gap-4 sm:grid-cols-2 sm:gap-6">
                     <div class="sm:col-span-2">
                         <label for="name" class="block mb-2 font-semibold text-gray-900 dark:text-white">Product
                             Name</label>
-                        <input v-model="form.name" type="text" name="name" id="name"
+                        <input type="text" name="name" id="name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Type product name" required>
+                            placeholder="Type product name" required="">
                     </div>
                     <div class="w-full">
                         <label for="brand" class="block mb-2 font-semibold text-gray-900 dark:text-white">Brand</label>
-                        <select v-model="form.brand" id="brand"
+                        <select id="brand"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option value="" disabled>Select brand</option>
-                            <option value="Apple">Apple</option>
-                            <option value="Samsung">Samsung</option>
-                            <option value="Sony">Sony</option>
-                            <option value="Nike">Nike</option>
-                            <option value="Adidas">Adidas</option>
-                            <option value="Sara">Sara</option>
-                            <option value="Nivea">Nivea</option>
-                            <option value="Dove">Dove</option>
-                            <option value="Chanel">Chanel</option>
-                            <option value="Reebok">Reebok</option>
-                            <option value="Puma">Puma</option>
+                            <option selected="">Select brand</option>
+                            <option value="AP">Apple</option>
+                            <option value="SM">Samsung</option>
+                            <option value="SN">Sony</option>
+                            <option value="NK">Nike</option>
+                            <option value="AD">Adidas</option>
+                            <option value="SR">Sara</option>
+                            <option value="NV">Nivea</option>
+                            <option value="DV">Dove</option>
+                            <option value="CN">Chanel</option>
+                            <option value="RB">Rebok</option>
+                            <option value="PM">Puma</option>
                         </select>
                     </div>
                     <div class="w-full">
-                        <label for="price" class="block mb-2 font-semibold text-gray-900 dark:text-white">Price</label>
-                        <input v-model="form.price" type="number" name="price" id="price"
+                        <label for="price" class="block mb-2  font-semibold text-gray-900 dark:text-white">Price</label>
+                        <input type="number" name="price" id="price"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="$2999" required>
+                            placeholder="$2999" required="">
                     </div>
                     <div>
                         <label for="category"
                             class="block mb-2 font-semibold text-gray-900 dark:text-white">Category</label>
-                        <select v-model="form.category" id="category"
+                        <select id="category"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option value="" disabled>Select category</option>
-                            <option value="TV/Monitors">TV/Monitors</option>
+                            <option selected="">Select category</option>
+                            <option value="TV">TV/Monitors</option>
                             <option value="PC">PC</option>
-                            <option value="Gaming/Console">Gaming/Console</option>
-                            <option value="Phones">Phones</option>
+                            <option value="GA">Gaming/Console</option>
+                            <option value="PH">Phones</option>
                         </select>
                     </div>
+
                     <div>
                         <label for="size" class="block mb-2 font-semibold text-gray-900 dark:text-white">Size</label>
-                        <select v-model="form.size" id="size"
+                        <select id="category"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option value="" disabled>Select size</option>
+                            <option selected="">Select size</option>
                             <option value="XS">XS</option>
                             <option value="S">S</option>
                             <option value="M">M</option>
@@ -61,91 +72,38 @@
                         </select>
                     </div>
                     <div class="sm:col-span-2">
+
                         <label class="block mb-2 font-semibold text-gray-900 dark:text-white"
                             for="multiple_files">Upload multiple files</label>
-                        <input @change="handleFileUpload" type="file" multiple
+                        <input
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                            id="multiple_files">
+                            id="multiple_files" type="file" multiple>
+
                     </div>
+                    <!-- <div class="sm:col-span-2">
+                        <label for="description"
+                            class="block mb-2 font-semibold text-gray-900 dark:text-white">Description</label>
+                        <textarea id="description" rows="8"
+                            class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="Your description here"></textarea>
+                    </div> -->
                 </div>
                 <div class="flex flex-col md:flex-row justify-end mt-5 space-y-2 md:space-y-0 md:space-x-2">
-                    <button type="button" @click="cancel"
+                    <button type="button" @click="handleCancel"
                         class="text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
-                        CANCEL
-                    </button>
-                    <button type="submit"
-                        class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">
-                        CREATE
-                    </button>
+                        CANCEL</button>
+                    <button type="button" @click="createCategory"
+                        class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">CREATE</button>
                 </div>
             </form>
         </div>
     </section>
 </template>
 
-<script setup>
-import { reactive } from 'vue';
-
-const form = reactive({
-    name: '',
-    brand: '',
-    price: '',
-    category: '',
-    size: '',
-    files: null
-});
-
-const handleFileUpload = (event) => {
-    form.files = event.target.files;
-};
-
-const createProduct = async () => {
-    try {
-        const formData = new FormData();
-        formData.append('name', form.name);
-        formData.append('brand', form.brand);
-        formData.append('price', form.price);
-        formData.append('category', form.category);
-        formData.append('size', form.size);
-        if (form.files) {
-            for (let i = 0; i < form.files.length; i++) {
-                formData.append('files[]', form.files[i]);
-            }
-        }
-
-        const response = await fetch('http://localhost:8000/api/products', {
-            method: 'POST',
-            body: formData
-        });
-
-        if (!response.ok) {
-            throw new Error(`Network response was not ok: ${response.statusText}`);
-        }
-
-        const data = await response.json();
-        console.log('Product created:', data);
-        // Handle successful product creation (e.g., navigate to a different page or show a success message)
-    } catch (error) {
-        console.error('There was a problem with the fetch operation:', error);
-    }
-};
-
-const cancel = () => {
-    form.name = '';
-    form.brand = '';
-    form.price = '';
-    form.category = '';
-    form.size = '';
-    form.files = null;
-};
-</script>
-
-
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 label,
-p,
 button {
     font-family: "Rubik", sans-serif;
 }

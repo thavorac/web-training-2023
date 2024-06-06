@@ -67,9 +67,11 @@ const formData = ref({
 
 const submitForm = async () => {
     try {
-        // const response = await axios.get('/api/products',formData.value,{headers:{
-        //     "Content-Type":"application/json"
-        // }});
+        const response = await axios.get('/api/products', formData.value, {
+            headers: {
+                "Content-Type": "application/json"
+            }
+        });
         successMessage.value = response.data.message; // Assuming the response contains a success message
         // Clear form data after successful submission
         clearFormData();

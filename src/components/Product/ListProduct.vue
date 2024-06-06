@@ -17,19 +17,19 @@ import Datepicker from 'vue3-datepicker'; // Import the datepicker component
 const page = ref(1);
 const search = ref('');
 
-const getCategories = () => {
-    axios.get("http://localhost/api/categories").then(res => {
-        category.value = res.data.data;
+const getProdcuts = () => {
+    axios.get("http://localhost/api/products").then(res => {
+        product.value = res.data.data;
     });
 };
 
 // Function to delete a category
-const deleteCategory = (categoryId) => {
-    return axios.delete(`http://localhost/api/categories/${categoryId}`);
+const deleteProduct = (productId) => {
+    return axios.delete(`http://localhost/api/products/${productId}`);
 };
 
 // Function to confirm deletion using SweetAlert
-const confirmDelete = (categoryId: number) => {
+const confirmDelete = (productId: number) => {
     Swal.fire({
         title: "Are you sure?",
         text: "You won't be able to revert this!",
@@ -40,21 +40,21 @@ const confirmDelete = (categoryId: number) => {
         confirmButtonText: "Yes, delete it!"
     }).then((result) => {
         if (result.isConfirmed) {
-            deleteCategory(categoryId)
+            deleteProduct(productId)
                 .then(() => {
                     // Fetch data again after deletion
                     page.value = 1; // Reset page to 1
-                    useFetch(`${import.meta.env.VITE_BACKEND}/api/categories?page=${page.value}&search=${search.value}`);
+                    useFetch(`${import.meta.env.VITE_BACKEND}/api/products?page=${page.value}&search=${search.value}`);
                     Swal.fire(
                         "Deleted!",
-                        "Your category has been deleted.",
+                        "Your product has been deleted.",
                         "success"
                     );
                 })
                 .catch((error) => {
                     Swal.fire(
                         "Error!",
-                        "An error occurred while deleting the category.",
+                        "An error occurred while deleting the product.",
                         "error"
                     );
                 });
@@ -62,30 +62,34 @@ const confirmDelete = (categoryId: number) => {
     });
 };
 
-// Define the Category interface
-interface Category {
+// Define the Product interface
+interface Product {
     id: number;
     name: string;
+    brand: string;
+    pricing: number;
+    category_id: number;
+    size: string;
+    image: string; // Corrected the type from 'text' to 'string'
     description: string;
-    createdAt?: string;
-    updatedAt?: string;
+    created_at?: string; // Updated to match the API response field
 }
 
 const startDate = ref<Date | null>(null);
 const endDate = ref<Date | null>(null);
 
-const category = ref<Category[]>([]);
+const product = ref<Product[]>([]);
 
 const filteredData = computed(() => {
-    let filtered = category.value;
+    let filtered = product.value;
 
     if (search.value) {
-        filtered = filtered.filter(category => category.name.toLowerCase().includes(search.value.toLowerCase()));
+        filtered = filtered.filter(product => product.name.toLowerCase().includes(search.value.toLowerCase()));
     }
 
     if (startDate.value && endDate.value) {
-        filtered = filtered.filter(category => {
-            const createdAt = new Date(category.created_at);
+        filtered = filtered.filter(product => {
+            const createdAt = new Date(product.created_at);
             return createdAt >= startDate.value && createdAt <= endDate.value;
         });
     }
@@ -98,11 +102,11 @@ const resetFilters = () => {
     search.value = "";
     startDate.value = null;
     endDate.value = null;
-    getCategories(); // Refetch data after resetting filters
+    getProducts(); // Refetch data after resetting filters
 };
 
 // Initial data fetching
-getCategories();
+getProdcuts();
 
 // const deleteCategory = (categoryId) => {
 
@@ -166,10 +170,10 @@ getCategories();
                     <span class=" font-sans font-semibold text-2xl">{{ filteredData.length }}</span>
                 </div>
             </template>
-            <RouterLink to="/admin/category/create"
+            <RouterLink to="/admin/create"
                 class="bg-[#7367F0] no-underline px-4 py-2 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
                 <IconsCirclePlus className="w-10 h-10" stroke="2.0" />
-                <span class="text-xl font-semibold "> Category</span>
+                <span class="text-xl font-semibold "> Product</span>
             </RouterLink>
         </div>
 
@@ -215,7 +219,7 @@ getCategories();
             <!-- button reset filter -->
             <button @click="resetFilters" class=" ">
                 <div class="flex items-center">
-                    <span class="font-medium text-sm text-blue-500 cursor-pointer">All Categories</span>
+                    <span class="font-medium text-sm text-blue-500 cursor-pointer">All Products</span>
                     <a class="pt-1" href="#"><svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 20 20" fill="#1E90FF"
                             class="size-5">
                             <path fill-rule="evenodd"
@@ -235,17 +239,30 @@ getCategories();
                         ID
                     </th>
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
-                        Category Name
+                        Name
                     </th>
-                    <th scope="col" class="px-6 py-3 text-lg">
+                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Brand
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Price
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Category
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Size
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Image
+                    </th>
+                    <!-- <th scope="col" class="px-6 py-3 text-lg">
                         Description
-                    </th>
+                    </th> -->
                     <th scope="col" class="px-6 py-3 text-lg">
                         Created_At
                     </th>
-                    <th scope="col" class="px-6 py-3 text-lg">
-                        Updated_At
-                    </th>
+
                     <th scope="col" class="px-6 py-3 text-lg">Action</th>
                 </tr>
             </thead>
@@ -257,33 +274,40 @@ getCategories();
                 </tr>
                 <template v-if="filteredData.length === 0">
                     <tr>
-                        <td colspan="8" class="px-6 py-6 text-center text-gray-500">No categories found
+                        <td colspan="8" class="px-6 py-6 text-center text-gray-500">No products found
                         </td>
                     </tr>
                 </template>
                 <template v-else>
-                    <tr v-for="(category, index) in filteredData"
+                    <tr v-for="(product, index) in filteredData"
                         :class="`bg - white ${index == filteredData.length - 1 ? '' : 'border-b'} border - gray - 200 cursor - pointer hover: bg - gray - 100`"
                         :key="index">
                         <td class="px-6 py-6">
-                            {{ category?.id }}
+                            {{ product?.id }}
                         </td>
-                        <th scope="row" class="px-6 py-6 font-medium text-gray-800">{{ category?.name }}
+                        <th scope="row" class="px-6 py-6 font-medium text-gray-800">{{ product?.name }}
                         </th>
-                        <td class="px-6 py-6">
-                            {{ category?.description }}
+                        <td class="px-6 py-6">{{ product?.brand }}
                         </td>
-                        <td class="px-6 py-6">
-                            {{ category?.created_at }}
+                        <td class="px-6 py-6">{{ product?.pricing }}
                         </td>
+                        <td class="px-6 py-6">{{ product?.category_id }}
+                        </td>
+                        <td class="px-6 py-6">{{ product?.size }}
+                        </td>
+                        <td class="px-6 py-6">{{ product?.image }}
+                        </td>
+                        <!-- <td class="px-6 py-6">
+                            {{ product?.description }}
+                        </td> -->
                         <td class="px-6 py-6">
-                            {{ category?.updated_at }}
+                            {{ product?.created_at }}
                         </td>
                         <td class="px-6 py-6 flex space-x-2">
-                            <RouterLink :to="`/admin/category/${category.id}/edit`">
+                            <RouterLink :to="`/admin/${product.id}/edit`">
                                 <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
                             </RouterLink>
-                            <IconDelete @click="confirmDelete(category.id)"
+                            <IconDelete @click="confirmDelete(product.id)"
                                 class=" w-6 h-6 text-red-500 cursor-pointer" />
                             <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
                         </td>

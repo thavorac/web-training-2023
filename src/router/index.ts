@@ -181,6 +181,11 @@ const router = createRouter({
       name: 'CategoryPage',
       component: () => import('../views/CategoryPage.vue')
     },
+    {
+      path: '/list-categories',
+      name: 'listcategory',
+      component: () => import('../components/Category/ListCategory.vue')
+    },
     ...adminRouter,
 
     // {

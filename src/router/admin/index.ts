@@ -1,3 +1,4 @@
+import { Components } from 'ant-design-vue/es/date-picker/generatePicker'
 import type { RouteRecordRaw } from 'vue-router'
 
 const adminRouter: Readonly<RouteRecordRaw[]> = [
@@ -17,22 +18,45 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             component: () => import('../../components/Category/ListCategory.vue')
           },
           {
-            path: '/:categoryId/edit',
+            path: 'create',
+            name: 'CreateCategory',
+            component: () => import('../../components/Category/CreateFormCategory.vue')
+          },
+          {
+            path: 'delete',
+            name: 'DeleteCategory',
+            component: () => import('../../components/Category/DeleteCategory.vue')
+          },
+          {
+            path: ':categoryId/edit',
             name: 'CategoryEdit',
             component: () => import('../../components/Category/EditFormCategory.vue'),
             props: true
           }
-          // {
-          //   path: 'create',
-          //   name: 'CreateCategory',
-          //   component: () => import('../../components/Category/CreateFormCategory.vue')
-          // }
         ]
       },
       {
-        path: 'product',
+        path: '',
         name: 'AdminProduct',
-        component: () => import('../../components/Product/ProductItem.vue')
+        component: () => import('../../components/Product/ProductItem.vue'),
+        children: [
+          {
+            path: '',
+            name: 'ListProduct',
+            component: () => import('../../components/Product/ListProduct.vue')
+          },
+          {
+            path: 'create',
+            name: 'CreateProduct',
+            component: () => import('../../components/Product/CreateFormProduct.vue')
+          },
+          {
+            path: ':productId/edit',
+            name: 'ProductEdit',
+            component: () => import('../../components/Product/EditProduct.vue'),
+            props: true
+          }
+        ]
       },
       {
         path: 'setting',
@@ -57,4 +81,5 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
     ]
   }
 ]
+
 export { adminRouter }

@@ -1,34 +1,31 @@
 <script setup lang="ts">
-import { defineEmits } from 'vue';
+import { defineEmits, ref } from 'vue';
 import axios from 'axios';
 import { useRouter } from 'vue-router';
 
 const emit = defineEmits(['cancel']);
 const router = useRouter();
 
-const handleCancel = () => {
-    emit('cancel');
-};
-
-// =================== create category ======================
-const model = {
+// Initialize model
+const model = ref({
     category: {
         name: '',
         description: '',
-
     }
+});
+
+const handleCancel = () => {
+    router.push('/admin/category');
 };
 
 const createCategory = () => {
-    axios.post('http://localhost/api/categories', model.category)
+    axios.post('http://localhost/api/categories', model.value.category)
         .then(res => {
             console.log(res.data);
             alert(res.data.message);
-            model.category = {
-                name: '',
-                description: '',
-
-            };
+            // Clear the form inputs
+            model.value.category.name = '';
+            model.value.category.description = '';
             // Redirect to the ProductItem page
             // router.push('/product');
         })
@@ -39,6 +36,7 @@ const createCategory = () => {
 </script>
 
 <template>
+    <!-- Your template code here -->
     <div class="container mx-auto p-4">
         <form action="">
             <div class="mb-4">
