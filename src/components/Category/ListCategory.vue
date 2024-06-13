@@ -280,7 +280,7 @@ getCategories();
                             {{ category?.updated_at }}
                         </td>
                         <td class="px-6 py-6 flex space-x-2">
-                            <RouterLink :to="`/admin/category/${category.id}/edit`">
+                            <RouterLink :to="'/edit-category/' + category.id">
                                 <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
                             </RouterLink>
                             <IconDelete @click="confirmDelete(category.id)"
@@ -291,6 +291,7 @@ getCategories();
                 </template>
             </tbody>
         </table>
+
         <!-- paginate -->
     </div>
 </template>

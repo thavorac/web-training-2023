@@ -1,11 +1,8 @@
 <template>
     <div class="container ms-3">
-        <div class="jumbotron  w-96" style="margin-top: 5%">
+        <div class="jumbotron w-96" style="margin-top: 5%">
             <h1>Create Category</h1>
             <hr>
-            <div v-if="successMessage" class="alert alert-success mb-1">
-                <h4>{{ successMessage }}</h4>
-            </div>
             <form @submit.prevent="submitForm">
                 <div class="form-group">
                     <label>Name</label>
@@ -22,25 +19,32 @@
 import { ref } from 'vue';
 import { useRouter } from 'vue-router';
 import axios from 'axios';
-
+import Swal from 'sweetalert2'; // Import SweetAlert2
 
 const submitForm = async () => {
     try {
-        const response = await axios.post('http://localhost:80/api/categories', formData.value,{
-            headers:{
-                "Content-Type":"application/json",
+        const response = await axios.post('http://localhost:80/api/categories', formData.value, {
+            headers: {
+                "Content-Type": "application/json",
             },
-          
         });
         console.log(response.data); // Handle response as needed
+        Swal.fire({
+            icon: 'success',
+            title: 'Category Added Successfully!',
+            text: 'Create Successfully'
+        });
         clearFormData();
     } catch (error) {
+        Swal.fire({
+            icon: 'error',
+            title: 'Failed to Add Category',
+            text: error.message || 'Something went wrong!',
+        });
         console.error(error);
-        // Handle error
     }
 };
 
-const successMessage = ref('');
 const formData = ref({
     name: '',
 });
@@ -48,43 +52,10 @@ const formData = ref({
 const clearFormData = () => {
     // Clear form data
     formData.value = {
-      name: '',
+        name: '',
     };
-  };
+};
 
-// const submitForm = async () => {
-//     try {
-//         // Make a POST request to create the product
-//         const response = await fetch('/api/products/create', {
-//             method: 'POST',
-//             headers: {
-//                 'Content-Type': 'application/json'
-//             },
-//             body: JSON.stringify(formData.value)
-//         });
-
-//         if (response.ok) {
-//             successMessage.value = 'Product created successfully!';
-//             // Clear form data
-//             formData.value = {
-//                 name: '',
-//                 pricing: '',
-//                 discount: '',
-//                 color: '',
-//                 size: '',
-//                 brand: '',
-//                 category_id: '',
-//                 supplier_id: ''
-//             };
-//         } else {
-//             throw new Error('Failed to create product');
-//         }
-//     } catch (error) {
-//         console.error(error);
-//         // Handle error
-//         successMessage.value = 'Failed to create product';
-//     }
-// };
 </script>
 
 <style scoped>

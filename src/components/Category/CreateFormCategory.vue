@@ -14,6 +14,9 @@ const model = ref({
     }
 });
 
+// Reactive variable to control alert visibility
+let showAlert = ref(false);
+
 const handleCancel = () => {
     router.push('/admin/category');
 };
@@ -22,30 +25,36 @@ const createCategory = () => {
     axios.post('http://localhost/api/categories', model.value.category)
         .then(res => {
             console.log(res.data);
-            alert(res.data.message);
+            showAlert.value = true; // Show the alert
             // Clear the form inputs
             model.value.category.name = '';
             model.value.category.description = '';
-            // Redirect to the ProductItem page
-            // router.push('/product');
+            setTimeout(() => {
+                showAlert.value = false; // Hide the alert after 3 seconds
+            }, 3000);
         })
         .catch(error => {
-            console.error('Error saving student:', error);
+            console.error('Error saving category:', error);
         });
 };
 </script>
 
 <template>
-    <!-- Your template code here -->
     <div class="container mx-auto p-4">
-        <form action="">
+        <!-- Alert -->
+        <div v-if="showAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+            Category created successfully!
+            <button type="button" class="btn-close" @click="showAlert = false" aria-label="Close"></button>
+        </div>
+
+        <form>
             <div class="mb-4">
                 <label for="category-name" class="block mb-2 font-semibold text-xl">Category's Name</label>
                 <input id="category-name" v-model="model.category.name" type="text"
                     class="form-control border-black shadow-sm w-full max-w-md" placeholder="men">
             </div>
             <div class="mt-4">
-                <p><label for="description" class="block mb-2 font-semibold text-xl">Description</label></p>
+                <label for="description" class="block mb-2 font-semibold text-xl">Description</label>
                 <textarea id="description" v-model="model.category.description"
                     class="form-control border-black shadow-sm w-full max-w-md h-40"
                     placeholder="Lorem Ipsum Is A Dummy Text"></textarea>
