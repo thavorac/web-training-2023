@@ -91,13 +91,11 @@ class AuthenticationController extends Controller
         $user->reset_password_created_at = now();
         $user->save();
 
-        // Send email with reset password link (you'll need to implement this)
+        
         Mail::to($user->email)->send(new ResetPasswordMail($token));
 
         return response()->json(['message' => 'Reset password link sent to your email', 'token' => $token]);
     }
-
-    
     public function resetPassword(Request $request)
     {
         $user = User::where('reset_password_token', $request->input('token'))
@@ -120,6 +118,13 @@ class AuthenticationController extends Controller
         $user->save();
     
         return response()->json(['message' => 'Password reset successfully']);
+    }
+    public function logout(Request $request) {
+        Auth::logout();
+        $request->session()->invalidate();
+        $request->session()->regenerateToken();
+        
+        return response()->json(['message' => 'Logout successful']);
     }
     
     

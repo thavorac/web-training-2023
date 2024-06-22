@@ -6,6 +6,6 @@
     <title>Document</title>
 </head>
 <body>
-    Wellcome to E-commerce web serve 
+    Welcome to Ecommerce Web Server
 </body>
 </html>

@@ -102,7 +102,7 @@ class PromotionController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Promotion created successfully', 'promotion' => $promotion, 'product_prices' => $productData], 201);
+            return response()->json(['message' => 'Promotion created successfully', 'product_prices' => $productData], 201);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'Failed to create promotion', 'error' => $e->getMessage()], 500);
@@ -167,7 +167,7 @@ class PromotionController extends Controller
 
             DB::commit();
 
-            return response()->json(['message' => 'Promotion updated successfully', 'promotion' => $promotion, 'product_prices' => $productData ?? []], 200);
+            return response()->json(['message' => 'Promotion updated successfully', 'product_prices' => $productData ?? []], 200);
         } catch (\Exception $e) {
             DB::rollBack();
             return response()->json(['message' => 'Failed to update promotion', 'error' => $e->getMessage()], 500);
@@ -202,7 +202,7 @@ class PromotionController extends Controller
     /**
      * Get all promotions.
      */
-    public function showAll()
+    public function index()
     {
         $this->updatePromotionStatuses(); // Update statuses before retrieving all promotions
 
@@ -216,49 +216,35 @@ class PromotionController extends Controller
     }
 
     /**
-     * Get a single promotion by ID.
-     */
-    public function show($promotionId)
-    {
-        $this->updatePromotionStatuses(); // Update statuses before retrieving a promotion
-
-        try {
-            $promotion = Promotion::findOrFail($promotionId);
-
-            return response()->json(['promotion' => $promotion], 200);
-        } catch (\Exception $e) {
-            return response()->json(['message' => 'Failed to retrieve promotion', 'error' => $e->getMessage()], 500);
-        }
-    }
-
-    /**
      * Get promotion history with products.
      */
-    public function history($promotionId)
+    public function history()
     {
         $this->updatePromotionStatuses(); // Update statuses before retrieving promotion history
 
         try {
-            $promotion = Promotion::with('products')->findOrFail($promotionId);
+            $promotions = Promotion::with('products')->get();
 
-            $promotionHistory = [
-                'id' => $promotion->id,
-                'name' => $promotion->name,
-                'discount_percentage' => $promotion->discount_percentage,
-                'discount_amount' => $promotion->discount_amount,
-                'start_date' => $promotion->start_date,
-                'end_date' => $promotion->end_date,
-                'status' => $promotion->status,
-                'description' => $promotion->description,
-                'products' => $promotion->products->map(function ($product) {
-                    return [
-                        'id' => $product->id,
-                        'name' => $product->name,
-                        'price' => $product->price,
-                        'discount_price' => $product->pivot->discount_price,
-                    ];
-                }),
-            ];
+            $promotionHistory = $promotions->map(function ($promotion) {
+                return [
+                    'id' => $promotion->id,
+                    'name' => $promotion->name,
+                    'discount_percentage' => $promotion->discount_percentage,
+                    'discount_amount' => $promotion->discount_amount,
+                    'start_date' => $promotion->start_date,
+                    'end_date' => $promotion->end_date,
+                    'status' => $promotion->status,
+                    'description' => $promotion->description,
+                    'products' => $promotion->products->map(function ($product) {
+                        return [
+                            'id' => $product->id,
+                            'name' => $product->name,
+                            'price' => $product->price,
+                            'discount_price' => $product->pivot->discount_price,
+                        ];
+                    }),
+                ];
+            });
 
             return response()->json(['promotion_history' => $promotionHistory], 200);
         } catch (\Exception $e) {
@@ -266,3 +252,4 @@ class PromotionController extends Controller
         }
     }
 }
+

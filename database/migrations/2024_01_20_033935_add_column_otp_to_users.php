@@ -11,11 +11,8 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('orders', function (Blueprint $table) {
-            $table->id();
-            $table->string('order_number');
-            $table->string('status', 255)->default('pending');
-            $table->timestamps();
+        Schema::table('users', function (Blueprint $table) {
+            $table->integer('otp');
         });
     }
 
@@ -24,6 +21,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('orders');
+        Schema::table('users', function (Blueprint $table) {
+            $table->dropColumn('otp');
+            
+        });
     }
 };

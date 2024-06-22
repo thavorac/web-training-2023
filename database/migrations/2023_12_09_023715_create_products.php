@@ -15,23 +15,24 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->double('pricing');
-            $table->double('discount')->nullable;
-            $table->string('tags')->nullable;
-            $table->timestamp('promotion_date')->nullable;
+            $table->double('discount')->nullable();
+            $table->string('tags')->nullable();
+            $table->timestamp('promotion_date')->nullable();
             $table->string('color');
-            $table->integer('rating')->default;
-            $table->integer('purschased_num')->default;
+            $table->integer('rating')->default(0);
+            $table->integer('purchased_num')->default(0);
             $table->string('size');
-            $table->string('brand')->default;
-            $table->string('style');
-            $table->string('model')->nullable;
-            $table->string('shipping')->nullable;
+            $table->string('brand');
+            $table->string('style')->nullable();
+            $table->string('model')->nullable();
+            $table->string('shipping')->nullable();
             $table->timestamps();
 
-
             $table->bigInteger('category_id')->unsigned();
-            $table->foreign('category_id')->references('id')->on('categories');//forengkey and from categoies table
+            $table->foreign('category_id')->references('id')->on('categories');
 
+            $table->bigInteger('supplier_id')->unsigned();
+            $table->foreign('supplier_id')->references('id')->on('suppliers');
         });
     }
 
