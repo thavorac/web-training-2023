@@ -7,12 +7,14 @@ use Illuminate\Database\Eloquent\Model;
 
 class Promotion extends Model
 {
-    protected $fillable = ['name', 'discount_percentage', 'discount_amount', 'start_date', 'end_date', 'status', 'description'];
+    protected $fillable = ['discount_percentage', 'start_date', 'end_date', 'status'];
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'promotion_product')
-                    ->withPivot('discount_price')
-                    ->withTimestamps();
+        return $this->belongsToMany(Product::class, 'product_promotion')->withPivot('discount_price');
     }
+
+    protected $casts = [
+        'status' => 'boolean',
+    ];
 }

@@ -10,20 +10,15 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\ResetPasswordMail;
-
-
 use Illuminate\Support\Str;
-
-
 
 class AuthenticationController extends Controller
 {
     public function register(Request $request) {
         // 1. Make sure that email is not used yet
-        // $user = User::where("email", $request->get("email"))->get(); // return as []
-        $userFound = User::where("email", $request->get("email"))->first(); // return as {}
+        $userFound = User::where("email", $request->get("email"))->first();
         if ($userFound) {
-            return response(["message" => "This email already exist"], 400);
+            return response(["message" => "This email already exists"], 400);
         } else {
             // 2. Compare password with confirm password
             if ($request->get("password") == $request->get("confirm_password")) {
@@ -32,18 +27,16 @@ class AuthenticationController extends Controller
                 $user->name = $request->get("username");
                 $user->email = $request->get("email");
                 $user->password = Hash::make($request->get("password"));
-                // $user->phone_number = $request->get("phone_number");
-                // $user->gender
                 $user->otp = mt_rand(100000, 999999);
 
                 $user->save();
 
-                $linkOTP = "http://localhost:80/verify_otp?user_id=".$user->id."&otp=".$user->otp;
+                $linkOTP = "http://localhost:9000/verify_otp?user_id=".$user->id."&otp=".$user->otp;
                 Mail::to($user->email)->send(new OtpMail($linkOTP));
 
-                return response(["message" => "good"]);
+                return response(["message" => "Registration successful"]);
             } else {
-                return response(["message" => "Password and Confirm Password are not match"], 400);
+                return response(["message" => "Password and Confirm Password do not match"], 400);
             }
         }
     }
@@ -64,6 +57,7 @@ class AuthenticationController extends Controller
             return response(["message" => "User not found"], 400);
         }
     }
+
     public function login(Request $request) {
         $credentials = $request->only('email', 'password');
     
@@ -75,6 +69,7 @@ class AuthenticationController extends Controller
             return response(["message" => "Invalid credentials"], 401);
         }
     }
+
     public function forgotPassword(Request $request)
     {
         $user = User::where('email', $request->input('email'))->first();
@@ -91,11 +86,11 @@ class AuthenticationController extends Controller
         $user->reset_password_created_at = now();
         $user->save();
 
-        
         Mail::to($user->email)->send(new ResetPasswordMail($token));
 
         return response()->json(['message' => 'Reset password link sent to your email', 'token' => $token]);
     }
+
     public function resetPassword(Request $request)
     {
         $user = User::where('reset_password_token', $request->input('token'))
@@ -119,6 +114,7 @@ class AuthenticationController extends Controller
     
         return response()->json(['message' => 'Password reset successfully']);
     }
+
     public function logout(Request $request) {
         Auth::logout();
         $request->session()->invalidate();
@@ -126,7 +122,4 @@ class AuthenticationController extends Controller
         
         return response()->json(['message' => 'Logout successful']);
     }
-    
-    
-
 }
