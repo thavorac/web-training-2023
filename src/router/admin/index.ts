@@ -6,6 +6,9 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
     path: '/admin',
     name: 'AdminLayout',
     component: () => import('../../layout/AdminLayout.vue'),
+    redirect: (to) => {
+      return { name: 'ListProduct' }
+    },
     children: [
       {
         path: 'category',
@@ -17,6 +20,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             name: 'ListCategory',
             component: () => import('../../components/Category/ListCategory.vue')
           },
+
           {
             path: 'create',
             name: 'CreateCategory',
@@ -36,7 +40,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
         ]
       },
       {
-        path: '',
+        path: 'product',
         name: 'AdminProduct',
         component: () => import('../../components/Product/ProductItem.vue'),
         children: [
