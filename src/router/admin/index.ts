@@ -79,9 +79,32 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
       },
       {
         path: 'promotion',
-        name: 'Promotion',
+        name: 'promotion',
         component: () => import('../../components/Promotion/PromotionItem.vue')
-      }
+      },
+      {
+        path: 'promotion',
+        name: 'promotion',
+        component: () => import('../../components/Promotion/PromotionItem.vue'),
+        children: [
+          {
+            path: '',
+            name: 'ListPromotion',
+            component: () => import('../../components/Promotion/ListPromotion.vue')
+          },
+          {
+            path: 'create',
+            name: 'CreatePromotion',
+            component: () => import('../../components/Promotion/CreatePromotion.vue')
+          },
+          {
+            path: ':promotionId/edit',
+            name: 'promotionEdit',
+            component: () => import('../../components/Promotion/EditPromotion.vue'),
+            props: true
+          }
+        ]
+      },
     ]
   }
 ]
