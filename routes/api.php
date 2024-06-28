@@ -66,8 +66,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // categories api urls
 Route::get('/categories', [CategoryController::class,'getCategories']);
 Route::post('/categories', [CategoryController::class,'createCategory']);
-Route::get('/categories/{categoryId}', [CategoryController::class,'getCategory']);
-Route::patch('/categories/{categoryId}', [CategoryController::class,'updateCategory']);
+// Route::get('/categories/{categoryId}', [CategoryController::class,'getCategory']);
+// Route::patch('/categories/{categoryId}', [CategoryController::class,'updateCategory']);
+Route::get('/categories/{categoryId}', [CategoryController::class, 'getCategory']);
+Route::patch('/categories/{categoryId}', [CategoryController::class, 'updateCategory']);
+
 Route::delete('/categories/{categoryId}', [CategoryController::class,'deleteCategory']);
 Route::get('/categories/{categoryId}/products', [CategoryController::class,'getProductsOfCategory']);
 

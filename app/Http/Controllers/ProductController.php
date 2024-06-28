@@ -60,39 +60,49 @@ class ProductController extends Controller
     }
 
     // -- POST / api/products
-    // public function createProduct(Request $request){
-    //     $product = new Product();
-    //     $product->name = $request->get('name');
-    //     $product->pricing = $request->get('pricing');
-    //     $product->discount = $request->get('discount');
-   public function createProduct(Request $request)
-    {
-        $validated = $request->validate([
-            'name' => 'required|string|max:255',
-            'pricing' => 'required|numeric',
-            // 'discount' => 'nullable|numeric',
-            // 'color' => 'required|string|max:255',
-            'size' => 'required|string|max:255',
-            'brand' => 'required|string|max:255',
-            'category_id' => 'required|exists:categories,id',
-            // 'supplier_id' => 'required|exists:suppliers,id',
-        ]);
-
+    public function createProduct(Request $request){
         $product = new Product();
-        $product->name = $validated['name'];
-        $product->pricing = $validated['pricing'];
-        // $product->discount = $validated['discount'];
-        // $product->color = $validated['color'];
-        $product->size = $validated['size'];
-        $product->brand = $validated['brand'];
-        $product->category_id = $validated['category_id'];
-        // $product->supplier_id = $validated['supplier_id'];
+        $product->name = $request->get('name');
+        $product->pricing = $request->get('pricing');
+        $product->discount = $request->get('pricing');
+        $product->color = $request->get('color');
+        $product->size = $request->get('size');
+        $product->brand = $request->get('brand');
+        $product->category_id = $request->get('category_id');
+        $product->supplier_id = $request->get('supplier_id');
 
         $product->save();
 
-        return response()->json(['message' => 'success', 'data' => $product]);
-    }    //     $product->color = $request->get('color');
-    //     $product->size = $request->get('size');
+        return ["message" => "success","data"=>$product];
+    }
+//    public function createProduct(Request $request)
+//     {
+//         $validated = $request->validate([
+//             'name' => 'required|string|max:255',
+//             'pricing' => 'required|numeric',
+//             // 'discount' => 'nullable|numeric',
+//             // 'color' => 'required|string|max:255',
+//             'size' => 'required|string|max:255',
+//             'brand' => 'required|string|max:255',
+//             'category_id' => 'required|exists:categories,id',
+//             // 'supplier_id' => 'required|exists:suppliers,id',
+//         ]);
+
+//         $product = new Product();
+//         $product->name = $validated['name'];
+//         $product->pricing = $validated['pricing'];
+//         // $product->discount = $validated['discount'];
+//         // $product->color = $validated['color'];
+//         $product->size = $validated['size'];
+//         $product->brand = $validated['brand'];
+//         $product->category_id = $validated['category_id'];
+//         // $product->supplier_id = $validated['supplier_id'];
+
+//         $product->save();
+
+//         return response()->json(['message' => 'success', 'data' => $product]);
+//     }    //     $product->color = $request->get('color');
+//     //     $product->size = $request->get('size');
     //     $product->brand = $request->get('brand');
     //     $product->category_id = $request->get('category_id');
     //     $product->supplier_id = $request->get('supplier_id');
