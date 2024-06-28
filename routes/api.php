@@ -150,10 +150,6 @@ Route::post('/logout', [AuthenticationController::class, 'logout']);
 // Route::post('/resetPassword', [AuthenticationController::class, 'resetPassword']);
 
 
-
-
-
-
 Route::prefix('promotions')->group(function () {
     Route::post('/create', [PromotionController::class, 'create']);
     Route::put('/update/{id}', [PromotionController::class, 'update']);
