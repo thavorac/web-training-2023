@@ -8,12 +8,13 @@ use Illuminate\Foundation\Console\Kernel as ConsoleKernel;
 class Kernel extends ConsoleKernel
 {
     protected $commands = [
-        Commands\UpdatePromotionStatuses::class,
+        Commands\CheckPromotionsStatus::class,
     ];
+    
 
     protected function schedule(Schedule $schedule)
     {
-        $schedule->command('promotion:update-statuses')->daily();
+        $schedule->command('promotions:check')->daily();
     }
 
     protected function commands()

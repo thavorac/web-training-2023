@@ -9,6 +9,7 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Order_productsController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\PromotionController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -145,18 +146,9 @@ Route::get('reset-password/{token}', [AuthenticationController::class, 'showRese
 Route::post('reset-password', [AuthenticationController::class, 'resetPassword']);
 Route::post('/logout', [AuthenticationController::class, 'logout']);
 
-
-
-// Route::post('/resetPassword', [AuthenticationController::class, 'resetPassword']);
-
-
-Route::prefix('promotions')->group(function () {
-    Route::post('/create', [PromotionController::class, 'create']);
-    Route::put('/update/{id}', [PromotionController::class, 'update']);
-    Route::delete('/delete/{id}', [PromotionController::class, 'destroy']);
-    Route::get('/{promotionId}/history', [PromotionController::class, 'history']);
-    Route::get('/all', [PromotionController::class, 'showAll']);
-
-});
-
-
+//promotion
+Route::post('/promotions', [PromotionController::class, 'createPromotion']);
+Route::get('/promotions', [PromotionController::class, 'getAllPromotions']);
+Route::put('/promotions/{id}', [PromotionController::class, 'updatePromotion']);
+Route::delete('/promotions/{id}', [PromotionController::class, 'deletePromotion']);
+Route::get('/discount-history', [PromotionController::class, 'discountHistory']);

@@ -12,7 +12,6 @@ class CreatePromotionsTable extends Migration
             $table->string('name');
             $table->text('description')->nullable();
             $table->decimal('discount_percentage', 5, 2)->nullable();
-            $table->decimal('discount_amount', 8, 2)->nullable();
             $table->dateTime('start_date');
             $table->dateTime('end_date');
             $table->boolean('status')->default(true);
