@@ -1,229 +1,259 @@
-<script setup lang="ts">
-import { ref, computed } from 'vue';
+<script setup>
+import { defineEmits, defineProps } from 'vue';
+import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import Datepicker from 'vue3-datepicker';
-import IconCategories from '../icons/IconCategories.vue';
-import IconsCirclePlus from '../icons/IconCirclePlus.vue';
-import IconSkLoading from '@/components/loading/SmsLoading.vue';
-import { RouterLink } from 'vue-router';
-import IconEdit from '../icons/IconEdit.vue';
-import IconDelete from '../icons/IconDelete.vue';
-import IconDetail from '../icons/IconDetail.vue';
 
-// Define reactive variables
-const promotions = ref<Promotion[]>([]);
-const loading = ref(false);
-const startDate = ref<Date | null>(null);
-const endDate = ref<Date | null>(null);
-
-interface Promotion {
-    id: number;
-    discount_percentage: string;
-    status: boolean;
-    start_date: string;
-    end_date: string;
-}
-
-// Function to fetch promotions
-const fetchPromotions = () => {
-    loading.value = true;
-    axios.get<{ promotions: Promotion[] }>('http://localhost:8000/api/promotions/all')
-        .then(response => {
-            promotions.value = response.data.promotions;
-        })
-        .catch(error => {
-            console.error('Error fetching promotions:', error);
-        })
-        .finally(() => {
-            loading.value = false;
-        });
-};
-
-// Computed property to filter promotions by date range
-const filteredData = computed(() => {
-    let filtered = promotions.value;
-
-    if (startDate.value && endDate.value) {
-        filtered = filtered.filter(promotion => {
-            const createdAt = new Date(promotion.start_date);
-            return createdAt >= startDate.value! && createdAt <= endDate.value!;
-        });
-    }
-
-    return filtered;
+const emit = defineEmits(['cancel']);
+const props = defineProps({
+  promotionId: {
+    type: Number,
+    required: true
+  }
 });
 
-// Function to confirm promotion deletion
-const confirmDelete = (promotionId: number) => {
-    Swal.fire({
-        title: 'Are you sure?',
-        text: 'You will not be able to recover this promotion!',
-        icon: 'warning',
-        showCancelButton: true,
-        confirmButtonColor: '#d33',
-        cancelButtonColor: '#3085d6',
-        confirmButtonText: 'Yes, delete it!'
-    }).then((result) => {
-        if (result.isConfirmed) {
-            onDeletePromotion(promotionId);
-        }
-    });
+const handleCancel = () => {
+    emit('cancel');
 };
 
-// Function to handle deletion request
-const onDeletePromotion = (promotionId: number) => {
-    axios.delete(`http://localhost:8000/api/promotions/delete/${promotionId}`)
-        .then(response => {
-            handleSuccessfulDeletion(); // Handle successful deletion
-        })
-        .catch(error => {
-            handleFailedDeletion(error); // Handle deletion failure
+const selectedCategory = ref('');
+const selectedProducts = ref([]);
+const categories = ref([]);
+const products = ref([]);
+const discountPercentage = ref(0);
+const startDate = ref('');
+const endDate = ref('');
+const alertMessage = ref('');
+const alertClass = ref('');
+const isActive = ref(true);
+
+const promotionName = ref('');
+const promotionDescription = ref('');
+
+const API_URL = 'http://localhost:80/api';
+
+const endpoints = {
+    promotion: (id) => `${API_URL}/promotions/${id}`,
+    categories: `${API_URL}/categories`,
+    productsByCategory: (categoryId) => `${API_URL}/categories/${categoryId}/products`
+};
+
+const fetchCategories = async () => {
+    try {
+        const response = await axios.get(endpoints.categories);
+        categories.value = response.data.data;
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+    }
+};
+
+const fetchProducts = async () => {
+    if (!selectedCategory.value) {
+        products.value = [];
+        return;
+    }
+
+    try {
+        const response = await axios.get(endpoints.productsByCategory(selectedCategory.value));
+        products.value = response.data;
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
+};
+
+const fetchPromotion = async () => {
+    try {
+        const response = await axios.get(endpoints.promotion(props.promotionId));
+        const promotion = response.data.promotion;
+        
+        promotionName.value = promotion.name;
+        promotionDescription.value = promotion.description;
+        discountPercentage.value = promotion.discount_percentage;
+        startDate.value = promotion.start_date;
+        endDate.value = promotion.end_date;
+        isActive.value = promotion.status;
+
+        // Assuming promotion has a category_id field to preselect the category
+        selectedCategory.value = promotion.category_id;
+
+        // Fetch products after setting the category
+        await fetchProducts();
+        
+        // Preselect the products
+        selectedProducts.value = promotion.products.map(product => product.id);
+    } catch (error) {
+        console.error('Error fetching promotion:', error);
+    }
+};
+
+onMounted(() => {
+    fetchCategories();
+    fetchPromotion();
+});
+
+const productsByCategory = computed(() => {
+    if (!selectedCategory.value) {
+        return [];
+    }
+    return products.value.filter(product => product.category_id === selectedCategory.value);
+});
+
+const updatePromotion = async () => {
+    const currentDate = new Date();
+    const endDateValue = new Date(endDate.value);
+    const status = endDateValue >= currentDate && isActive.value;
+
+    try {
+        const response = await axios.put(endpoints.promotion(props.promotionId), {
+            name: promotionName.value,
+            description: promotionDescription.value,
+            discount_percentage: discountPercentage.value,
+            start_date: startDate.value,
+            end_date: endDate.value,
+            products: selectedProducts.value,
+            status: status
         });
+        alertMessage.value = response.data.message;
+        alertClass.value = 'alert alert-success';
+    } catch (error) {
+        if (error.response && error.response.status === 422) {
+            alertMessage.value = error.response.data.error || 'Validation error';
+            alertClass.value = 'alert alert-danger';
+        } else {
+            alertMessage.value = error.response.data.message || 'Failed to update promotion';
+            alertClass.value = 'alert alert-danger';
+        }
+    } finally {
+        // Hide the alert message after 5 seconds
+        setTimeout(() => {
+            alertMessage.value = '';
+            alertClass.value = '';
+        }, 5000);
+    }
 };
-
-// Function to handle successful deletion
-const handleSuccessfulDeletion = () => {
-    Swal.fire(
-        'Deleted!',
-        'Your promotion has been deleted.',
-        'success'
-    );
-    fetchPromotions(); // Optionally, update promotions list after deletion
-};
-
-// Function to handle deletion failure
-const handleFailedDeletion = (error: any) => {
-    console.error('Error deleting promotion:', error);
-    Swal.fire(
-        'Error!',
-        'Failed to delete the promotion.',
-        'error'
-    );
-};
-
-// Initial data fetching
-fetchPromotions();
 </script>
 
 <template>
-    <div class="flex flex-col space-y-4">
-        <!-- Header Section -->
-        <div class="bg-gray-100 flex items-center py-3 px-3 space-x-4 rounded-md">
-            <IconCategories :w="'12'" :h="'12'" className="text-[#F66603]" />
-            <template v-if="loading">
-                <IconSkLoading className="w-6 h-6" />
-            </template>
-            <template v-else>
-                <div class="flex flex-col">
-                    <span class="text-sm font-semibold">Total Promotions:</span>
-                    <span class="font-sans font-semibold text-2xl">{{ filteredData.length }}</span>
-                </div>
-            </template>
-            <RouterLink
-                to="/admin/promotion/create-promotion"
-                class="bg-[#7367F0] no-underline px-4 py-2 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md"
-            >
-                <IconsCirclePlus className="w-10 h-10" stroke="2.0" />
-                <span class="text-xl font-semibold">Create Promotion</span>
-            </RouterLink>
-        </div>
+  <div class="container">
+    <div v-if="alertMessage" :class="alertClass">{{ alertMessage }}</div>
 
-        <!-- Filters Section -->
-        <div class="flex pr-4 mt-4 space-x-1">
-            <div class="flex items-center space-x-1">
-                <!-- Datepickers for start and end dates -->
-                <div class="relative">
-                    <div class="absolute z-30 inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg
-                            class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
-                            />
-                        </svg>
-                    </div>
-                    <Datepicker
-                        v-model="startDate"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Select start date"
-                    />
-                </div>
-                <span class="mx-1 text-gray-500">to</span>
-                <div class="relative">
-                    <div class="absolute z-30 inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                        <svg
-                            class="w-4 h-4 text-gray-500 dark:text-gray-400"
-                            aria-hidden="true"
-                            xmlns="http://www.w3.org/2000/svg"
-                            fill="currentColor"
-                            viewBox="0 0 20 20"
-                        >
-                            <path
-                                d="M20 4a2 2 0 0 0-2-2h-2V1a1 1 0 0 0-2 0v1h-3V1a1 1 0 0 0-2 0v1H6V1a1 1 0 0 0-2 0v1H2a2 2 0 0 0-2 2v2h20V4ZM0 18a2 2 0 0 0 2 2h16a2 2 0 0 0 2-2V8H0v10Zm5-8h10a1 1 0 0 1 0 2H5a1 1 0 0 1 0-2Z"
-                            />
-                        </svg>
-                    </div>
-                    <Datepicker
-                        v-model="endDate"
-                        class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
-                        placeholder="Select end date"
-                    />
-                </div>
-            </div>
+    <h2>Update Promotion</h2>
+    <form @submit.prevent="updatePromotion" class="form">
+      <div class="form-group">
+        <label for="promotionName">Promotion Name:</label>
+        <input type="text" v-model="promotionName" id="promotionName" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="promotionDescription">Description:</label>
+        <textarea v-model="promotionDescription" id="promotionDescription" class="form-control"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <select v-model="selectedCategory" @change="fetchProducts" id="category" class="form-control">
+          <option value="" disabled>Select a category</option>
+          <option v-for="category in categories" :key="category.id" :value="category.id">
+            {{ category.name }}
+          </option>
+        </select>
+      </div>
+      <div v-if="selectedCategory" class="form-group">
+        <label>Products:</label>
+        <div v-for="product in productsByCategory" :key="product.id" class="form-check">
+          <input type="checkbox" v-model="selectedProducts" :value="product.id" :id="`product-${product.id}`" class="form-check-input">
+          <label :for="`product-${product.id}`" class="form-check-label">{{ product.name }}</label>
         </div>
-
-        <!-- Promotions Table -->
-        <div class="relative overflow-auto shadow-md sm:rounded-lg mt-4">
-            <table class="w-full overflow-auto text-sm text-left rtl:text-right text-gray-500">
-                <thead class="text-xs text-gray-700 bg-gray-50">
-                    <tr>
-                        <th scope="col" class="px-6 py-3 text-lg font-sans">ID</th>
-                        <th scope="col" class="px-6 py-3 text-lg font-sans">Discount Percentage</th>
-                        <th scope="col" class="px-6 py-3 text-lg font-sans">Status</th>
-                        <th scope="col" class="px-6 py-3 text-lg font-sans">Start Date</th>
-                        <th scope="col" class="px-6 py-3 text-lg font-sans">End Date</th>
-                        <th scope="col" class="px-6 py-3 text-lg">Action</th>
-                    </tr>
-                </thead>
-                <tbody>
-                    <tr v-if="loading">
-                        <td colspan="6" class="text-center py-4">Loading...</td>
-                    </tr>
-                    <template v-else-if="filteredData.length === 0">
-                        <tr>
-                            <td colspan="6" class="text-center py-4 text-gray-500">No promotions found</td>
-                        </tr>
-                    </template>
-                    <template v-else>
-                        <tr
-                            v-for="(promotion, index) in filteredData"
-                            :key="promotion.id"
-                            :class="`bg-white ${index === filteredData.length - 1 ? '' : 'border-b border-gray-200'} cursor-pointer hover:bg-gray-100`"
-                        >
-                            <td class="px-6 py-4">{{ promotion.id }}</td>
-                            <td class="px-6 py-4">{{ promotion.discount_percentage }}</td>
-                            <td class="px-6 py-4">{{ promotion.status ? 'Active' : 'Inactive' }}</td>
-                            <td class="px-6 py-4">{{ promotion.start_date }}</td>
-                            <td class="px-6 py-4">{{ promotion.end_date }}</td>
-                            <td class="px-6 py-4 flex space-x-2">
-                                <RouterLink :to="'/edit-promotion/' + promotion.id">
-                                    <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
-                                </RouterLink>
-                                <IconDelete
-                                    class="w-6 h-6 text-red-500 cursor-pointer"
-                                    @click="confirmDelete(promotion.id)"
-                                />
-                                <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
-                            </td>
-                        </tr>
-                    </template>
-                </tbody>
-            </table>
+      </div>
+      <div class="form-group">
+        <label for="discountPercentage">Discount Percentage:</label>
+        <input type="number" v-model.number="discountPercentage" id="discountPercentage" class="form-control" required min="0" max="100">
+      </div>
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" v-model="startDate" id="startDate" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" v-model="endDate" id="endDate" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <input type="checkbox" v-model="isActive" id="isActive" class="form-check-input">
+        <label for="isActive" class="form-check-label">Active</label>
+      </div>
+      <div class="row mt-5">
+        <hr>
+      </div>
+      <div class="row">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5 me-9">
+          <button type="button" @click="handleCancel"
+                  class="text-[#82868B] bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">CANCEL</button>
+          <button type="submit"
+                  class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">UPDATE</button>
         </div>
-    </div>
+      </div>
+    </form>
+  </div>
 </template>
+
+
+<style scoped>
+@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+
+label,
+button {
+    font-family: "Rubik", sans-serif;
+}
+.container {
+  margin: 0 auto;
+}
+
+.form {
+  margin-top: 20px;
+}
+
+.form-group { 
+  margin-bottom: 15px;
+}
+
+.form-label {
+  font-weight: bold;
+}
+
+.form-control {
+  width: 100%;
+  padding: 10px;
+  font-size: 16px;
+  border: 1px solid #ccc;
+  border-radius: 4px;
+}
+
+.btn {
+  padding: 10px 20px;
+  font-size: 16px;
+  border: none;
+  border-radius: 4px;
+  background-color: #007bff;
+  color: #fff;
+  cursor: pointer;
+}
+
+.btn:hover {
+  background-color: #0056b3;
+}
+
+.alert {
+  margin-top: 20px;
+  padding: 15px;
+  border-radius: 4px;
+}
+
+.alert-success {
+  background-color: #d4edda;
+  border-color: #c3e6cb;
+  color: #155724;
+}
+
+.alert-danger {
+  background-color: #f8d7da;
+  border-color: #f5c6cb;
+  color: #721c24;
+}
+</style>

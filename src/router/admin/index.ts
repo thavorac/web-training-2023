@@ -77,11 +77,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
         name: 'Banner',
         component: () => import('../../components/Banner/BannerItem.vue')
       },
-      {
-        path: 'promotion',
-        name: 'promotion',
-        component: () => import('../../components/Promotion/PromotionItem.vue')
-      },
+
       {
         path: 'promotion',
         name: 'promotion',
@@ -93,7 +89,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             component: () => import('../../components/Promotion/ListPromotion.vue')
           },
           {
-            path: 'create',
+            path: 'create-promotion',
             name: 'CreatePromotion',
             component: () => import('../../components/Promotion/CreatePromotion.vue')
           },
