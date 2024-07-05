@@ -78,9 +78,10 @@ Route::get('/categories/{categoryId}/products', [CategoryController::class,'getP
 Route::get('/products', [ProductController::class,'getProducts']);
 Route::get('/products/{productId}/getFirstImage',[ProductController::class,'getFirstImage']);
 
-Route::middleware(['cors'])->group(function(){
-    Route::post('/products', [ProductController::class,'createProduct']);
-});
+// Route::middleware(['cors'])->group(function(){
+//     Route::post('/products', [ProductController::class,'createProduct']);
+// });
+Route::post('/products', [ProductController::class,'createProduct']);
 Route::get('/products/{productId}', [ProductController::class,'getProduct']);
 Route::patch('/products/{productId}', [ProductController::class,'updateProduct']);
 Route::delete('/products/{productId}', [ProductController::class,'deleteProduct']);
