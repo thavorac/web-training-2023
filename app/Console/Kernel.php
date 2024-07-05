@@ -15,8 +15,8 @@ class Kernel extends ConsoleKernel
     protected function schedule(Schedule $schedule)
     {
         $schedule->command('promotions:check')->daily();
+        $schedule->command('promotions:update-discounts')->dialy();
     }
-
     protected function commands()
     {
         $this->load(__DIR__.'/Commands');

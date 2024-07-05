@@ -35,6 +35,10 @@ class Product extends Model
     {
         return $date->format('Y-m-d');
     }
+    public function promotions()
+    {
+        return $this->belongsToMany(Promotion::class)->withPivot('discount_price');
+    }
 
  
 }

@@ -80,6 +80,7 @@ Route::middleware(['cors'])->group(function(){
     Route::post('/products', [ProductController::class,'createProduct']);
 });
 Route::get('/products/{productId}', [ProductController::class,'getProduct']);
+Route::get('/products', [ProductController::class,'index']);
 Route::patch('/products/{productId}', [ProductController::class,'updateProduct']);
 Route::delete('/products/{productId}', [ProductController::class,'deleteProduct']);
 Route::get('/products/{productId}/images', [ProductController::class,'getImagesOfProduct']);
@@ -149,6 +150,7 @@ Route::post('/logout', [AuthenticationController::class, 'logout']);
 //promotion
 Route::post('/promotions', [PromotionController::class, 'createPromotion']);
 Route::get('/promotions', [PromotionController::class, 'getAllPromotions']);
+Route::get('/promotions/{id}', [PromotionController::class, 'getPromotionById']);
 Route::put('/promotions/{id}', [PromotionController::class, 'updatePromotion']);
 Route::delete('/promotions/{id}', [PromotionController::class, 'deletePromotion']);
 Route::get('/discount-history', [PromotionController::class, 'discountHistory']);
