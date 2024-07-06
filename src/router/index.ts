@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import RoutingView from '@/views/RoutingView.vue'
 import MainPageView from '@/views/MainPageView.vue'
 import { adminRouter } from './admin'
+import { cosmeticsRouter } from './cosmetics'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -11,11 +12,22 @@ const router = createRouter({
       name: 'Image',
       component: () => import('../API/GetImages.vue')
     },
+
     {
       path: '/',
       name: 'home',
       component: MainPageView //RoutingView
     },
+    {
+      path: '/showProducts',
+      name: 'show-product',
+      component: () => import('../views/Home/ListProductView.vue')
+    },
+    // {
+    //   path: '/home',
+    //   name: 'all-product',
+    //   component: () => import('../views/Home/AllProduct.vue')
+    // },
     {
       path: '/about',
       name: 'about',
@@ -187,6 +199,7 @@ const router = createRouter({
       component: () => import('../components/Category/ListCategory.vue')
     },
     ...adminRouter,
+    ...cosmeticsRouter,
 
     // {
     //   path: '/getCategories',
