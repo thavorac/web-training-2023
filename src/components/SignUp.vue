@@ -46,22 +46,25 @@
 
 <script>
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
-export default {
-  data() {
-    return {
-      username: '',
-      email: '',
-      // phoneNumber: '',
-      password: '',
-      confirmPassword: '',
-      // gender: ''
-    };
-  },
-  methods: {
-    register() {
-      if (this.password !== this.confirmPassword) {
-        alert("Password and Confirm Password do not match");
+const username = ref('');
+const email = ref('');
+const phoneNumber = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const gender = ref('');
+
+const router = useRouter();
+
+const register = () => {
+  if (password.value !== confirmPassword.value) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Password and Confirm Password do not match',
+    });
         return;
       }
 
