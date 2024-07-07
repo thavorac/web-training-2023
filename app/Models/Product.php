@@ -11,7 +11,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'pricing', 'discount','color','size','brand','category_id',
+        'name', 'pricing', 'discount','color','size','brand','category_id','image'
     ];
 
     public function category(): BelongsTo
@@ -26,5 +26,12 @@ class Product extends Model
     public function firstImage()
     {
         return $this->hasOne(Image::class)->oldestOfMany();
+    }
+
+
+    // Add this method to format dates
+    protected function serializeDate(\DateTimeInterface $date)
+    {
+        return $date->format('Y-m-d');
     }
 }

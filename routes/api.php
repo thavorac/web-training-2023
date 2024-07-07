@@ -66,8 +66,11 @@ Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
 // categories api urls
 Route::get('/categories', [CategoryController::class,'getCategories']);
 Route::post('/categories', [CategoryController::class,'createCategory']);
-Route::get('/categories/{categoryId}', [CategoryController::class,'getCategory']);
-Route::patch('/categories/{categoryId}', [CategoryController::class,'updateCategory']);
+// Route::get('/categories/{categoryId}', [CategoryController::class,'getCategory']);
+// Route::patch('/categories/{categoryId}', [CategoryController::class,'updateCategory']);
+Route::get('/categories/{categoryId}', [CategoryController::class, 'getCategory']);
+Route::patch('/categories/{categoryId}', [CategoryController::class, 'updateCategory']);
+
 Route::delete('/categories/{categoryId}', [CategoryController::class,'deleteCategory']);
 Route::get('/categories/{categoryId}/products', [CategoryController::class,'getProductsOfCategory']);
 
@@ -75,12 +78,10 @@ Route::get('/categories/{categoryId}/products', [CategoryController::class,'getP
 Route::get('/products', [ProductController::class,'getProducts']);
 Route::get('/products/{productId}/getFirstImage',[ProductController::class,'getFirstImage']);
 
-// create form 
-Route::get('/products/create', [ProductController::class, 'showCreateForm']);
-
-Route::middleware(['cors'])->group(function(){
-    Route::post('/products', [ProductController::class,'createProduct']);
-});
+// Route::middleware(['cors'])->group(function(){
+//     Route::post('/products', [ProductController::class,'createProduct']);
+// });
+Route::post('/products', [ProductController::class,'createProduct']);
 Route::get('/products/{productId}', [ProductController::class,'getProduct']);
 Route::patch('/products/{productId}', [ProductController::class,'updateProduct']);
 Route::delete('/products/{productId}', [ProductController::class,'deleteProduct']);
@@ -122,23 +123,23 @@ Route::post('/register',[AuthenticationController::class,'register']);
 
 // add product form 
 
-// need to create customer 
-// -- Category api url
-Route::get('/categories',[CategoryController::class, 'getCategories']);
-Route::post('/categories',[CategoryController::class, 'createCategory']);
-Route::get('/categories/{categoryId}',[CategoryController::class, 'getCategory']);
-Route::patch('/categories/{categoryId}',[CategoryController::class, 'updateCategory']);
-Route::delete('/categories/{categoryId}',[CategoryController::class, 'deleteCategory']);
-Route::get('/categories/{categoryId}/products/productId',[CategoryController::class, 'getProductsOfCategory']);
+// // need to create customer 
+// // -- Category api url
+// Route::get('/categories',[CategoryController::class, 'getCategories']);
+// Route::post('/categories',[CategoryController::class, 'createCategory']);
+// Route::get('/categories/{categoryId}',[CategoryController::class, 'getCategory']);
+// Route::patch('/categories/{categoryId}',[CategoryController::class, 'updateCategory']);
+// Route::delete('/categories/{categoryId}',[CategoryController::class, 'deleteCategory']);
+// Route::get('/categories/{categoryId}/products/productId',[CategoryController::class, 'getProductsOfCategory']);
 
 
 
-// -- Prodcut api url
-Route::get('/products',[CategoryController::class, 'getProducts']);
-Route::post('/products',[CategoryController::class, 'createProduct']);
-Route::get('/products/{productId}',[CategoryController::class, 'getProduct']);
-Route::patch('/products/{productId}',[CategoryController::class, 'updateProduct']);
-Route::delete('/products/{categoryId}',[CategoryController::class, 'deteProduct']);
+// // -- Prodcut api url
+// Route::get('/products',[CategoryController::class, 'getProducts']);
+// Route::post('/products',[CategoryController::class, 'createProduct']);
+// Route::get('/products/{productId}',[CategoryController::class, 'getProduct']);
+// Route::patch('/products/{productId}',[CategoryController::class, 'updateProduct']);
+// Route::delete('/products/{categoryId}',[CategoryController::class, 'deteProduct']);
 
 
 Route::post('/register',[AuthenticationController::class,'register']);

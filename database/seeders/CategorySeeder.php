@@ -17,6 +17,7 @@ class CategorySeeder extends Seeder
         DB::table('categories')->insert([
             //'name' => Str::random(10)
             'name'=>'ABC',
+            'description'=>'for man',
             'created_at' =>now(),
             'updated_at' =>now(),
         ]);

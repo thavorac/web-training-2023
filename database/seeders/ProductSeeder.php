@@ -5,6 +5,7 @@ namespace Database\Seeders;
 use Illuminate\Database\Seeder;
 use Illuminate\Support\Facades\DB; // Add this import statement
 use Illuminate\Support\Str;
+use Carbon\Carbon; // Add this import statement
 
 class ProductSeeder extends Seeder
 {
@@ -30,8 +31,8 @@ class ProductSeeder extends Seeder
             'shipping' => 'Free',
             'category_id' => 1, // Replace with the actual category ID
             'supplier_id' => 1, // Replace with the actual supplier ID
-            'created_at' => now(),
-            'updated_at' => now(),
+            'created_at' => Carbon::now()->format('Y-m-d'),
+            'updated_at' => Carbon::now()->format('Y-m-d'),
         ]);
 
 
