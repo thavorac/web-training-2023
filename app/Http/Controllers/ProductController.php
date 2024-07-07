@@ -189,6 +189,11 @@ class ProductController extends Controller
     //         return response()->json(['message' => 'Error fetching product', 'error' => $e->getMessage()], 500);
     //     }
     // }
+    public function index(){
+        return Product::with(relation:'categories:id,name')
+        ->get();
+
+    }
 
 
 }

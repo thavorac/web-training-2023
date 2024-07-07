@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Models;
-
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
@@ -22,9 +20,13 @@ class Product extends Model
         return $this->hasMany(Image::class,'product_id','id');
     }
 
-    // add new code 
     public function firstImage()
     {
         return $this->hasOne(Image::class)->oldestOfMany();
+    }
+
+    public function orders()
+    {
+        return $this->belongsToMany(Order::class);
     }
 }

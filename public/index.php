@@ -53,3 +53,6 @@ $response = $kernel->handle(
 )->send();
 
 $kernel->terminate($request, $response);
+
+// <script src="https://js.stripe.com/v3/"></script>
+

@@ -7,55 +7,27 @@ use App\Models\Order;
 
 class OrderController extends Controller
 {
-    public function getOrders(){
-        $orders = Order::all();
-
-        return $orders;
-    }
-
-    public function createOrder(Request $request){
+    public function checkout(Request $request)
+    {
+        $cartItems = $request->get('cartItems');
+        $total = $request->get('total');
+        
+        // Create a new order
         $order = new Order();
-
-        $order->order_number = $request->get('order_number');
-        $order->status = $request->get('status');
-
+        $order->order_number = uniqid(); // Generate a unique order number
+        $order->status = 'Pending';
+        $order->total = $total; // Assuming you have a total column in your orders table
         $order->save();
 
-        return ["message"=>"create success","data"=>$order];
-    }
-
-    public function getOrder($orderId){
-        $order = Order::find($orderId);
-
-        if($order){
-            return $order;
-        }else{
-            return response(["message"=>"Order not Found"],400);
-        }
-    }
-
-    public function deleteOrder($orderId){
-        $orderFound = Order::find($orderId);
-
-        if($orderFound){
-            $orderFound->delete();
-
-            return ["message"=> "delete order success", "data"=>$orderFound];
-        }else{
-            return response(["message"=>"Order not Found"],400);
-        }
-    }
-
-    public function updateOrder($orderId , Request $request){
-        $order = Order::find($orderId);
-
-        if($order){
-            $order->order_number = $request->get('order_number');
-            $order->status = $request->get('status');
-
-            $order->save();
-
-            return $order;
-        }
+        // Optionally, save the order items in another table (not shown here)
+        // foreach ($cartItems as $item) {
+        //     // Save each item to an order_items table
+        // }
+        return response()->json([
+            'message' => 'Checkout successful',
+            'order' => $order,
+            'cartItems' => $cartItems,
+            'total' => $total,
+        ]);
     }
 }

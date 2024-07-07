@@ -14,7 +14,7 @@ class OrderSeeder extends Seeder
     public function run(): void
     {
         DB::table('orders')->insert([
-            'order_number' => '123456',
+            'order_number' => '5',
             'status' => 'pending',
             'created_at' => now(),
             'updated_at' => now(),
