@@ -1,137 +1,3 @@
-<script setup>
-import { defineEmits, defineProps } from 'vue';
-import { ref, onMounted, computed } from 'vue';
-import axios from 'axios';
-
-const emit = defineEmits(['cancel']);
-const props = defineProps({
-  promotionId: {
-    type: Number,
-    required: true
-  }
-});
-
-const handleCancel = () => {
-    emit('cancel');
-};
-
-const selectedCategory = ref('');
-const selectedProducts = ref([]);
-const categories = ref([]);
-const products = ref([]);
-const discountPercentage = ref(0);
-const startDate = ref('');
-const endDate = ref('');
-const alertMessage = ref('');
-const alertClass = ref('');
-const isActive = ref(true);
-
-const promotionName = ref('');
-const promotionDescription = ref('');
-
-const API_URL = 'http://localhost:80/api';
-
-const endpoints = {
-    promotion: (id) => `${API_URL}/promotions/${id}`,
-    categories: `${API_URL}/categories`,
-    productsByCategory: (categoryId) => `${API_URL}/categories/${categoryId}/products`
-};
-
-const fetchCategories = async () => {
-    try {
-        const response = await axios.get(endpoints.categories);
-        categories.value = response.data.data;
-    } catch (error) {
-        console.error('Error fetching categories:', error);
-    }
-};
-
-const fetchProducts = async () => {
-    if (!selectedCategory.value) {
-        products.value = [];
-        return;
-    }
-
-    try {
-        const response = await axios.get(endpoints.productsByCategory(selectedCategory.value));
-        products.value = response.data;
-    } catch (error) {
-        console.error('Error fetching products:', error);
-    }
-};
-
-const fetchPromotion = async () => {
-    try {
-        const response = await axios.get(endpoints.promotion(props.promotionId));
-        const promotion = response.data.promotion;
-        
-        promotionName.value = promotion.name;
-        promotionDescription.value = promotion.description;
-        discountPercentage.value = promotion.discount_percentage;
-        startDate.value = promotion.start_date;
-        endDate.value = promotion.end_date;
-        isActive.value = promotion.status;
-
-        // Assuming promotion has a category_id field to preselect the category
-        selectedCategory.value = promotion.category_id;
-
-        // Fetch products after setting the category
-        await fetchProducts();
-        
-        // Preselect the products
-        selectedProducts.value = promotion.products.map(product => product.id);
-    } catch (error) {
-        console.error('Error fetching promotion:', error);
-    }
-};
-
-onMounted(() => {
-    fetchCategories();
-    fetchPromotion();
-});
-
-const productsByCategory = computed(() => {
-    if (!selectedCategory.value) {
-        return [];
-    }
-    return products.value.filter(product => product.category_id === selectedCategory.value);
-});
-
-const updatePromotion = async () => {
-    const currentDate = new Date();
-    const endDateValue = new Date(endDate.value);
-    const status = endDateValue >= currentDate && isActive.value;
-
-    try {
-        const response = await axios.put(endpoints.promotion(props.promotionId), {
-            name: promotionName.value,
-            description: promotionDescription.value,
-            discount_percentage: discountPercentage.value,
-            start_date: startDate.value,
-            end_date: endDate.value,
-            products: selectedProducts.value,
-            status: status
-        });
-        alertMessage.value = response.data.message;
-        alertClass.value = 'alert alert-success';
-    } catch (error) {
-        if (error.response && error.response.status === 422) {
-            alertMessage.value = error.response.data.error || 'Validation error';
-            alertClass.value = 'alert alert-danger';
-        } else {
-            alertMessage.value = error.response.data.message || 'Failed to update promotion';
-            alertClass.value = 'alert alert-danger';
-        }
-    } finally {
-        // Hide the alert message after 5 seconds
-        setTimeout(() => {
-            alertMessage.value = '';
-            alertClass.value = '';
-        }, 5000);
-    }
-};
-</script>
-
 <template>
   <div class="container">
     <div v-if="alertMessage" :class="alertClass">{{ alertMessage }}</div>
@@ -193,14 +59,148 @@ const updatePromotion = async () => {
   </div>
 </template>
 
+<script setup lang="ts">
+import { defineProps, defineEmits } from 'vue';
+import { ref, onMounted, computed } from 'vue';
+import axios from 'axios';
+
+const emit = defineEmits(['cancel']);
+const props = defineProps({
+  promotionId: {
+    type: Number,
+    required: true
+  }
+});
+
+const handleCancel = () => {
+  emit('cancel');
+};
+
+const selectedCategory = ref('');
+const selectedProducts = ref([]);
+const categories = ref([]);
+const products = ref([]);
+const discountPercentage = ref(0);
+const startDate = ref('');
+const endDate = ref('');
+const alertMessage = ref('');
+const alertClass = ref('');
+const isActive = ref(true);
+
+const promotionName = ref('');
+const promotionDescription = ref('');
+
+const API_URL = 'http://localhost:80/api';
+
+const endpoints = {
+  promotion: (id: number) => `${API_URL}/promotions/${id}`,
+  categories: `${API_URL}/categories`,
+  productsByCategory: (categoryId: number) => `${API_URL}/categories/${categoryId}/products`
+};
+
+const fetchCategories = async () => {
+  try {
+    const response = await axios.get(endpoints.categories);
+    categories.value = response.data.data;
+  } catch (error) {
+    console.error('Error fetching categories:', error);
+  }
+};
+
+const fetchProducts = async () => {
+  if (!selectedCategory.value) {
+    products.value = [];
+    return;
+  }
+
+  try {
+    const response = await axios.get(endpoints.productsByCategory(selectedCategory.value));
+    products.value = response.data.data;
+  } catch (error) {
+    console.error('Error fetching products:', error);
+  }
+};
+
+const fetchPromotion = async () => {
+  try {
+    const response = await axios.get(endpoints.promotion(props.promotionId));
+    const promotion = response.data.promotion;
+
+    promotionName.value = promotion.name;
+    promotionDescription.value = promotion.description;
+    discountPercentage.value = parseFloat(promotion.discount_percentage);
+    startDate.value = promotion.start_date.substring(0, 10);
+    endDate.value = promotion.end_date.substring(0, 10);
+    isActive.value = promotion.status === 1; // Assuming status 1 means active
+
+    // Fetch categories and preselect the category
+    await fetchCategories();
+    selectedCategory.value = promotion.products[0].category.id; // Assuming products are not empty
+
+    // Fetch products after setting the category
+    await fetchProducts();
+
+    // Preselect the products
+    selectedProducts.value = promotion.products.map(product => product.id);
+  } catch (error) {
+    console.error('Error fetching promotion:', error);
+  }
+};
+
+onMounted(async () => {
+  await fetchPromotion();
+});
+
+const productsByCategory = computed(() => {
+  if (!selectedCategory.value) {
+    return [];
+  }
+  return products.value.filter(product => product.category_id === selectedCategory.value);
+});
+
+const updatePromotion = async () => {
+  const currentDate = new Date();
+  const endDateValue = new Date(endDate.value);
+  const status = endDateValue >= currentDate && isActive.value;
+
+  try {
+    const response = await axios.put(endpoints.promotion(props.promotionId), {
+      name: promotionName.value,
+      description: promotionDescription.value,
+      discount_percentage: discountPercentage.value,
+      start_date: startDate.value,
+      end_date: endDate.value,
+      products: selectedProducts.value,
+      status: status ? 1 : 0 // Convert boolean to integer status
+    });
+    alertMessage.value = response.data.message;
+    alertClass.value = 'alert alert-success';
+  } catch (error) {
+    if (error.response && error.response.status === 422) {
+      alertMessage.value = error.response.data.error || 'Validation error';
+      alertClass.value = 'alert alert-danger';
+    } else {
+      alertMessage.value = error.response.data.message || 'Failed to update promotion';
+      alertClass.value = 'alert alert-danger';
+    }
+  } finally {
+    // Hide the alert message after 5 seconds
+    setTimeout(() => {
+      alertMessage.value = '';
+      alertClass.value = '';
+    }, 5000);
+  }
+};
+</script>
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
 label,
 button {
-    font-family: "Rubik", sans-serif;
+  font-family: "Rubik", sans-serif;
 }
+
 .container {
   margin: 0 auto;
 }
@@ -209,7 +209,7 @@ button {
   margin-top: 20px;
 }
 
-.form-group { 
+.form-group {
   margin-bottom: 15px;
 }
 

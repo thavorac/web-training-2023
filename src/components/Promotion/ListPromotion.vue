@@ -88,7 +88,7 @@
             <tr v-for="(promotion, index) in filteredData" :key="index"
               :class="`bg-white ${index === filteredData.length - 1 ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`">
               <td class="px-6 py-6">{{ promotion.id }}</td>
-              <td class="px-6 py-6">{{ promotion.name }}</td>
+              <!-- <td class="px-6 py-6">{{ promotion.name }}</td> -->
               <td class="px-6 py-6">{{ promotion.description }}</td>
               <td class="px-6 py-6">{{ promotion.discount_percentage }}</td>
               <td class="px-6 py-6">{{ formatDate(promotion.start_date) }}</td>

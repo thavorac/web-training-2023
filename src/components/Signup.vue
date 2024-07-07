@@ -15,8 +15,8 @@
                 <label for="uname">Username</label>
                 <input type="text" v-model="username" placeholder="Enter Username" required>
 
-                <!-- <label for="">Phone Number</label>
-                <input type="text" v-model="phoneNumber" required> -->
+                <label for="phoneNumber">Phone Number</label>
+                <input type="text" v-model="phoneNumber" placeholder="Enter Phone Number" required>
 
                 <label for="psw">Password</label>
                 <input type="password" v-model="password" placeholder="Enter Password" required>
@@ -24,11 +24,13 @@
                 <label for="psw">Confirm Password</label>
                 <input type="password" v-model="confirmPassword" placeholder="Enter Confirm Password" required>
 
-                <!-- <span class="gender">Gender: </span>
+                <span class="gender">Gender: </span>
                 <input type="radio" id="gender1" v-model="gender" value="male">
                 <label for="gender1">Male</label>
                 <input type="radio" id="gender2" v-model="gender" value="female">
-                <label for="gender2">Female</label><br> -->
+                <label for="gender2">Female</label>
+                <input type="radio" id="gender3" v-model="gender" value="other">
+                <label for="gender3">Other</label>
               </div>
               <div class="container d-flex justify-content-between align-items-center">
                 <router-link to="/sign-in">
@@ -44,48 +46,58 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import axios from 'axios';
+import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
-export default {
-  data() {
-    return {
-      username: '',
-      email: '',
-      // phoneNumber: '',
-      password: '',
-      confirmPassword: '',
-      // gender: ''
-    };
-  },
-  methods: {
-    register() {
-      if (this.password !== this.confirmPassword) {
-        alert("Password and Confirm Password do not match");
-        return;
-      }
+const username = ref('');
+const email = ref('');
+const phoneNumber = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const gender = ref('');
 
-      axios.post('http://localhost:80/api/register', {
-        username: this.username,
-        email: this.email,
-        // phone_number: this.phoneNumber,
-        password: this.password,
-        confirm_password: this.confirmPassword,
-        // gender: this.gender
-      })
-        .then(response => {
-          alert(response.data.message); // Assuming the server returns a message
-          // Redirect to login page or do other actions as needed
-        })
-        .catch(error => {
-          console.error('Error during registration:', error);
-          alert('Registration failed. Please try again.');
-        });
-    }
+const router = useRouter();
+
+const register = () => {
+  if (password.value !== confirmPassword.value) {
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Password and Confirm Password do not match',
+    });
+    return;
   }
-}
-</script>
 
+  axios.post('http://localhost:80/api/register', {
+    username: username.value,
+    email: email.value,
+    phone_number: phoneNumber.value,
+    password: password.value,
+    confirm_password: confirmPassword.value,
+    gender: gender.value,
+  })
+    .then(response => {
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: response.data.message,
+      }).then(() => {
+        router.push('/sign-in');
+      });
+    })
+    .catch(error => {
+      console.error('Error during registration:', error);
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response.data.message || 'Registration failed. Please try again.',
+      });
+    });
+};
+</script>
 
 <style scoped lang="scss">
 .container {
@@ -99,7 +111,7 @@ export default {
   min-height: 715px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   position: relative;
 }
 
@@ -133,7 +145,7 @@ input[type=email] {
   display: inline-block;
   box-sizing: border-box;
   border-radius: 7px;
-  border: 1px solid #c53636;
+  border: 1px solid #4aafa3;
 }
 
 .gender {
@@ -152,6 +164,10 @@ button {
   cursor: pointer;
   width: 25%;
   margin-bottom: 20px;
+}
+
+input {
+  padding-top: 10px;
 }
 
 button:hover {
