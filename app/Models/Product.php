@@ -9,7 +9,7 @@ class Product extends Model
     use HasFactory;
 
     protected $fillable = [
-        'name', 'pricing', 'discount','color','size','brand','category_id',
+        'name', 'pricing', 'discount','color','size','brand','category_id','image'
     ];
 
     public function category(): BelongsTo
@@ -25,8 +25,10 @@ class Product extends Model
         return $this->hasOne(Image::class)->oldestOfMany();
     }
 
-    public function orders()
+
+    // Add this method to format dates
+    protected function serializeDate(\DateTimeInterface $date)
     {
-        return $this->belongsToMany(Order::class);
+        return $date->format('Y-m-d');
     }
 }

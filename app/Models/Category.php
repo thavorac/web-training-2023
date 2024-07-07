@@ -10,10 +10,25 @@ class Category extends Model
 {
     use HasFactory;
 
-    protected $fillable = ['name', 'slug'];
+    protected $fillable = ['name', 'description']; 
 
     public function products(): BelongsToMany
     {
-        return $this->belongsToMany(Product::class);
+        return $this->hasMany(Product::class);
+    }
+
+    // Accessor for created_at timestamp
+    public function getCreatedAtAttribute($value)
+    {
+        // Format the timestamp to yy/mm/dd
+        return date('Y/m/d', strtotime($value));
+    }
+
+    // Accessor for updated_at timestamp
+    public function getUpdatedAtAttribute($value)
+    {
+        // Format the timestamp to yy/mm/dd
+        return date('Y/m/d', strtotime($value));
     }
 }
+
