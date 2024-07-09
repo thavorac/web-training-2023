@@ -3,7 +3,7 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const adminRouter: Readonly<RouteRecordRaw[]> = [
   {
-    path: '/admin',
+    path: '/admin/layout',
     name: 'AdminLayout',
     component: () => import('../../layout/AdminLayout.vue'),
     redirect: (to) => {
@@ -98,7 +98,14 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             name: 'promotionEdit',
             component: () => import('../../components/Promotion/EditPromotion.vue'),
             props: true
-          }
+          },
+          {
+            path: 'HistoryPromotion',
+            name: 'HistoryPromotion',
+            component: () => import('../../components/Promotion/HistoryPromotion.vue'),
+            props: true
+          },
+          
         ]
       },
     ]

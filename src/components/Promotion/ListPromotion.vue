@@ -16,7 +16,7 @@
         </div>
       </template>
       <!-- Router Link to Create Promotion Page -->
-      <RouterLink to="/admin/promotion/create-promotion"
+      <RouterLink to="/admin/layout/promotion/create-promotion"
         class="bg-[#7367F0] no-underline px-4 py-2 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
         <IconsCirclePlus class="w-10 h-10" stroke="2.0" />
         <span class="text-xl font-semibold"> Promotion</span>
@@ -97,13 +97,15 @@
               <!-- Action Icons -->
               <td class="px-6 py-6 flex space-x-2">
                 <!-- Router Link to Edit Promotion -->
-                <RouterLink :to="`/admin/promotion/${promotion.id}/edit`">
+                <RouterLink :to="`/admin/layout/promotion/${promotion.id}/edit`">
                   <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
                 </RouterLink>
                 <!-- Delete Icon with Confirmation Dialog -->
                 <IconDelete @click="() => confirmDelete(promotion.id)" class="w-6 h-6 text-red-500 cursor-pointer" />
                 <!-- Detail Icon -->
-                <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
+                <RouterLink :to="`/admin/layout/promotion/HistoryPromotion`">
+                  <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
+                </RouterLink>
               </td>
             </tr>
           </template>

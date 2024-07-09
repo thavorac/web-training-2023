@@ -56,11 +56,11 @@ const router = createRouter({
       name: 'buttonshop',
       component: () => import('../components/basic/ButtonShop.vue')
     },
-    // {
-    //   path: '/admin',
-    //   name: 'admin',
-    //   component: () => import('../components/AdminLogin.vue')
-    // },
+    {
+      path: '/admin',
+      name: 'admin',
+      component: () => import('../components/AdminLogin.vue')
+    },
     {
       path: '/forgot-password',
       name: 'forgot-password',
@@ -82,12 +82,17 @@ const router = createRouter({
       name: 'signup',
       component: () => import('../components/SignUp.vue')
     },
-
     {
-      path: '/signIn',
-      name: 'signIn',
-      component: () => import('../views/SignIn.vue')
+      path: '/verify_otp',
+      name: 'VerifyOtp',
+      component: () => import('../components/VerifyEmail.vue')
     },
+
+    // {
+    //   path: '/signIn',
+    //   name: 'signIn',
+    //   component: () => import('../views/SignIn.vue')
+    // },
     {
       path: '/test-card',
       name: 'testCard',

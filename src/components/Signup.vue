@@ -80,13 +80,23 @@ const register = () => {
     gender: gender.value,
   })
     .then(response => {
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: response.data.message,
-      }).then(() => {
-        router.push('/sign-in');
-      });
+      if (response.data.verification_required) {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: response.data.message,
+        }).then(() => {
+          router.push('/verify_otp');
+        });
+      } else {
+        Swal.fire({
+          icon: 'success',
+          title: 'Success',
+          text: response.data.message,
+        }).then(() => {
+          router.push('/sign-in');
+        });
+      }
     })
     .catch(error => {
       console.error('Error during registration:', error);

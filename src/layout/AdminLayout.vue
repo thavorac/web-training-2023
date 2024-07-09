@@ -15,23 +15,23 @@ const { route } = useSidebar();
 const showSide = ref(true);
 const sidebars = ref([
     {
-        path: "/admin/product",
+        path: "/layout/product",
         title: "Product",
     },
     {
-        path: "/admin/category",
+        path: "/layout/category",
         title: "Control",
         children: [
             {
-                path: "/admin/category",
+                path: "/layout/category",
                 title: "Category"
             },
             {
-                path: "/admin/sub-category",
+                path: "/layout/sub-category",
                 title: "Sub-Category"
             },
             {
-                path: "/admin/banner",
+                path: "/layout/banner",
                 title: "Banner"
             }
 
@@ -39,15 +39,15 @@ const sidebars = ref([
         ]
     },
     {
-        path: "/admin/order",
+        path: "/layout/order",
         title: "Order"
     },
     {
-        path: "/admin/promotion",
+        path: "/layout/promotion",
         title: "Promotion"
     },
     {
-        path: "/admin/setting",
+        path: "/layout/setting",
         title: "Setting"
     }
 
@@ -96,19 +96,19 @@ body {
                 <li class="flex mt-10 flex-col space-y-4 ">
                     <ul v-for="(side, index) in sidebars" :key="index">
                         <SidebarLink :route="route" :link="side.path" :title="side.title">
-                            <template v-if="side.path.match('/admin/category')">
+                            <template v-if="side.path.match('/layout/category')">
                                 <IconControl className="w-6 h-6 text-white items-center" />
                             </template>
-                            <template v-else-if="side.path.match('/admin/product')">
+                            <template v-else-if="side.path.match('/layout/product')">
                                 <IconBag className="w-6 h-6 text-white items-center" />
                             </template>
-                            <template v-else-if="side.path.match('/admin/order')">
+                            <template v-else-if="side.path.match('/layout/order')">
                                 <IconOrder className="w-6 h-6 text-white items-center" />
                             </template>
-                            <template v-else-if="side.path.match('/admin/setting')">
+                            <template v-else-if="side.path.match('/layout/setting')">
                                 <SettingIcon className="w-6 h-6 text-white items-center" />
                             </template>
-                            <template v-else-if="side.path.match('/admin/promotion')">
+                            <template v-else-if="side.path.match('/layout/promotion')">
                                 <IconPromotion className="w-6 h-6 text-white items-center" />
                             </template>
 
