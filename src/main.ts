@@ -8,6 +8,7 @@ import App from './App.vue'
 import router from './router'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/src/sweetalert2.scss'
+import store from './stores/wishlist' // Import the store
 
 // using antd to create an adminSideBar
 
@@ -39,5 +40,6 @@ app.use(createPinia())
 app.use(router)
 app.use(Toast)
 app.use(Antd)
+app.use(store) // Use the store
 
 app.mount('#app')

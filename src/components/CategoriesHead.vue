@@ -136,9 +136,11 @@ const toggleDropdown1 = () => {
                         <IconPerson />
                     </SignIn>
                 </RouterLink>
-                <SignIn text="Favorites">
-                    <IconHeart />
-                </SignIn>
+                <router-link class="no-underline" to="/wishlist-page1">
+                    <SignIn text="Favorites">
+                        <IconHeart />
+                    </SignIn>
+                </router-link>
                 <RouterLink class="no-underline" to="/cart">
                     <SignIn text="Card">
                         <IconCard />

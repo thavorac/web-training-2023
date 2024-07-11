@@ -14,23 +14,30 @@ const model = ref({
     }
 });
 
-// Reactive variable to control alert visibility
-let showAlert = ref(false);
+// Reactive variables to control alert visibility
+let showSuccessAlert = ref(false);
+let showErrorAlert = ref(false);
 
 const handleCancel = () => {
     router.push('/admin/category');
 };
 
 const createCategory = () => {
+    if (!model.value.category.name || !model.value.category.description) {
+        showErrorAlert.value = true;
+        return;
+    }
+
     axios.post('http://localhost/api/categories', model.value.category)
         .then(res => {
             console.log(res.data);
-            showAlert.value = true; // Show the alert
+            showSuccessAlert.value = true; // Show the success alert
+            showErrorAlert.value = false; // Hide the error alert
             // Clear the form inputs
             model.value.category.name = '';
             model.value.category.description = '';
             setTimeout(() => {
-                showAlert.value = false; // Hide the alert after 3 seconds
+                showSuccessAlert.value = false; // Hide the alert after 3 seconds
             }, 3000);
         })
         .catch(error => {
@@ -41,23 +48,28 @@ const createCategory = () => {
 
 <template>
     <div class="container mx-auto p-4">
-        <!-- Alert -->
-        <div v-if="showAlert" class="alert alert-success alert-dismissible fade show" role="alert">
+        <!-- Success Alert -->
+        <div v-if="showSuccessAlert" class="alert alert-success alert-dismissible fade show" role="alert">
             Category created successfully!
-            <button type="button" class="btn-close" @click="showAlert = false" aria-label="Close"></button>
+            <button type="button" class="btn-close" @click="showSuccessAlert = false" aria-label="Close"></button>
+        </div>
+        <!-- Error Alert -->
+        <div v-if="showErrorAlert" class="alert alert-danger alert-dismissible fade show" role="alert">
+            Please fill in all required fields.
+            <button type="button" class="btn-close" @click="showErrorAlert = false" aria-label="Close"></button>
         </div>
 
         <form>
             <div class="mb-4">
                 <label for="category-name" class="block mb-2 font-semibold text-xl">Category's Name</label>
                 <input id="category-name" v-model="model.category.name" type="text"
-                    class="form-control border-black shadow-sm w-full max-w-md" placeholder="men">
+                    class="form-control border-black shadow-sm w-full max-w-md" placeholder="men" required>
             </div>
             <div class="mt-4">
                 <label for="description" class="block mb-2 font-semibold text-xl">Description</label>
                 <textarea id="description" v-model="model.category.description"
                     class="form-control border-black shadow-sm w-full max-w-md h-40"
-                    placeholder="Lorem Ipsum Is A Dummy Text"></textarea>
+                    placeholder="Lorem Ipsum Is A Dummy Text" required></textarea>
             </div>
             <div class="flex flex-col md:flex-row justify-end mt-5 space-y-2 md:space-y-0 md:space-x-2">
                 <button type="button" @click="handleCancel"

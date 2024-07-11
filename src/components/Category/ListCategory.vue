@@ -172,8 +172,20 @@ const loading = ref(false);
 const filteredData = computed(() => {
     let filtered = categories.value;
 
+    // Filter by search term
     if (search.value) {
         filtered = filtered.filter(cat => cat.name.toLowerCase().includes(search.value.toLowerCase()));
+    }
+
+    // Filter by date range
+    if (startDate.value && endDate.value) {
+        const start = new Date(startDate.value).getTime();
+        const end = new Date(endDate.value).getTime();
+
+        filtered = filtered.filter(cat => {
+            const createdAt = new Date(cat.created_at).getTime();
+            return createdAt >= start && createdAt <= end;
+        });
     }
 
     return filtered;
@@ -229,6 +241,8 @@ const confirmDelete = (categoryId: number) => {
 
 const resetFilters = () => {
     search.value = "";
+    startDate.value = null;
+    endDate.value = null;
     getCategories(); // Refetch data after resetting filters
 };
 
