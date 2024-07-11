@@ -103,7 +103,7 @@
                 <!-- Delete Icon with Confirmation Dialog -->
                 <IconDelete @click="() => confirmDelete(promotion.id)" class="w-6 h-6 text-red-500 cursor-pointer" />
                 <!-- Detail Icon -->
-                <RouterLink :to="`/admin/layout/promotion/HistoryPromotion`">
+                <RouterLink :to="`/admin/layout/promotion/detail`">
                   <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
                 </RouterLink>
               </td>

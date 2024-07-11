@@ -3,7 +3,12 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const adminRouter: Readonly<RouteRecordRaw[]> = [
   {
-    path: '/admin/layout',
+    path: '/login',
+    name: 'login',
+    component: () => import('../../components/AdminLogin.vue')
+    },
+  {
+    path: '/admin',
     name: 'AdminLayout',
     component: () => import('../../layout/AdminLayout.vue'),
     redirect: (to) => {
@@ -105,9 +110,9 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             component: () => import('../../components/Promotion/HistoryPromotion.vue'),
             props: true
           },
-          
         ]
       },
+
     ]
   }
 ]

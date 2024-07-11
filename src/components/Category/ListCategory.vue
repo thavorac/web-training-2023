@@ -166,7 +166,7 @@ getCategories();
                     <span class=" font-sans font-semibold text-2xl">{{ filteredData.length }}</span>
                 </div>
             </template>
-            <RouterLink to="/admin/category/create"
+            <RouterLink to="/admin/layout/category/create"
                 class="bg-[#7367F0] no-underline px-4 py-2 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
                 <IconsCirclePlus className="w-10 h-10" stroke="2.0" />
                 <span class="text-xl font-semibold "> Category</span>

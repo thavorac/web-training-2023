@@ -56,11 +56,7 @@ const router = createRouter({
       name: 'buttonshop',
       component: () => import('../components/basic/ButtonShop.vue')
     },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: () => import('../components/AdminLogin.vue')
-    },
+
     {
       path: '/forgot-password',
       name: 'forgot-password',

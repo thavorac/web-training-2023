@@ -1,8 +1,6 @@
 <template>
     <div class="container mx-auto">
       <!-- Alert Message -->
-      <div v-if="alertMessage" :class="alertClass">{{ alertMessage }}</div>
-  
       <h2>Discount History</h2>
       <!-- Header Section for Promotions -->
       <div class="bg-gray-100 flex items-center py-3 px-3 space-x-4 rounded-md mt-8">
@@ -10,10 +8,8 @@
         <template v-if="loading">
           <IconSkLoading class="w-6 h-6" />
         </template>
-  
-  
         <!-- Router Link to Create Promotion Page -->
-        <RouterLink to="/admin/layout/promotion"
+        <RouterLink to="/admin/promotion"
           class="bg-[#7367F0] no-underline px-4 py-2 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
           <BackIcon class="w-10 h-10" stroke="2.0" />
           <span class="text-xl font-semibold">Back</span>
