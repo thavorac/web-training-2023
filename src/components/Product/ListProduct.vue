@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, onMounted } from 'vue';
 import { useFetch } from '@/composable/useFetch';
 import IconCategories from '../icons/IconCategories.vue';
 import IconsCirclePlus from '../icons/IconCirclePlus.vue';
@@ -12,20 +12,55 @@ import IconDetail from '../icons/IconDetail.vue';
 import axios from 'axios';
 import Swal from 'sweetalert2'
 import Datepicker from 'vue3-datepicker'; // Import the datepicker component
+import PaginationView from '../../views/PaginationView.vue';
 
 // Define reactive variables
 const page = ref(1);
 const search = ref('');
+const currentPage = ref(1);
+const totalPages = ref(0);
+// const loading = ref(false);
 
-const getProdcuts = () => {
-    axios.get("http://localhost/api/products").then(res => {
+
+const images = ref([]);
+const loading = ref(true);
+
+const fetchImages = async () => {
+    try {
+        const response = await fetch('http://localhost:80/api/images');
+        const data = await response.json();
+        images.value = data;
+    } catch (error) {
+        console.error('Error fetching images:', error);
+    } finally {
+        loading.value = false;
+    }
+};
+
+onMounted(fetchImages);
+
+const getProducts = () => {
+    axios.get(`http://localhost/api/products?page=${currentPage.value}`).then(res => {
         product.value = res.data.data;
+        totalPages.value = res.data.last_page;
     });
 };
 
-// Function to delete a category
-const deleteProduct = (productId) => {
-    return axios.delete(`http://localhost/api/products/${productId}`);
+const goToPage = (page: number) => {
+    currentPage.value = page;
+    getProducts();
+};
+
+const deleteProduct = (productId: number) => {
+    axios.delete(`http://localhost/api/products/${productId}`)
+        .then(() => {
+            currentPage.value = 1; // Reset page to 1
+            getProducts(); // Fetch data again after deletion
+            Swal.fire("Deleted!", "Your product has been deleted.", "success");
+        })
+        .catch((error) => {
+            Swal.fire("Error!", "An error occurred while deleting the product.", "error");
+        });
 };
 
 // Function to confirm deletion using SweetAlert
@@ -106,54 +141,7 @@ const resetFilters = () => {
 };
 
 // Initial data fetching
-getProdcuts();
-
-// const deleteCategory = (categoryId) => {
-
-//     if (confirm('confirmDelete()')) {
-//         console.log(categoryId);
-
-//         axios.delete(`http://localhost/api/categories/${categoryId}`).
-//             then(res => {
-
-//                 // alert(res.data.message)
-
-//             })
-//             .catch(function (error) {
-//                 if (error.response) {
-//                     if (error.response.status == 404) {
-//                         alert(error.response.data.message);
-//                     }
-//                 }
-//             })
-//     }
-// }
-
-// const confirmDelete = (categoryId: number) => {
-//     Swal.fire({
-//         title: "Are you sure?",
-//         text: "You won't be able to revert this!",
-//         icon: "warning",
-//         showCancelButton: true,
-//         confirmButtonColor: "#3085d6",
-//         cancelButtonColor: "#d33",
-//         confirmButtonText: "Yes, delete it!"
-//     }).then((result) => {
-//         if (result.isConfirmed) {
-//             deleteCategory(categoryId).then(() => {
-//                 Swal.fire(
-//                     "Deleted!",
-//                     "Your category has been deleted.",
-//                     "success"
-//                 );
-//             });
-//         }
-//     });
-// };
-
-// Fetch data using the useFetch composable
-// const { loading, data } = useFetch<any>(`${import.meta.env.VITE_BACKEND}/api/categories?page=${page.value}&search=${search.value}`);
-
+getProducts();
 
 </script>
 
@@ -256,6 +244,9 @@ getProdcuts();
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Image
                     </th>
+                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Description
+                    </th>
                     <!-- <th scope="col" class="px-6 py-3 text-lg">
                         Description
                     </th> -->
@@ -295,16 +286,20 @@ getProdcuts();
                         </td>
                         <td class="px-6 py-6">{{ product?.size }}
                         </td>
-                        <td class="px-6 py-6">{{ product?.image }}
+                        <td class="px-6 py-4 whitespace-nowrap">
+                            <!-- <img :src="image.replace('storage', 'app')" alt="Photo" width="50px" /> -->
+
+                            <!-- <img :src="`http://localhost/storage/${image.images}.jpg`" alt="image"> -->
+                            <img :src="`http://localhost/storage/${product.image}`" alt="image" width="50px" />
                         </td>
-                        <!-- <td class="px-6 py-6">
+                        <td class="px-6 py-6">
                             {{ product?.description }}
-                        </td> -->
+                        </td>
                         <td class="px-6 py-6">
                             {{ product?.created_at }}
                         </td>
                         <td class="px-6 py-6 flex space-x-2">
-                            <RouterLink :to="`/admin/${product.id}/edit`">
+                            <RouterLink :to="`/admin/product/${product.id}/edit`">
                                 <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
                             </RouterLink>
                             <IconDelete @click="confirmDelete(product.id)"
@@ -316,5 +311,6 @@ getProdcuts();
             </tbody>
         </table>
         <!-- paginate -->
+        <PaginationView :totalPages="totalPages" :currentPage="currentPage" @goToPage="goToPage" />
     </div>
 </template>
