@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, computed, onMounted, watch } from 'vue';
 import { useFetch } from '@/composable/useFetch';
 import IconCategories from '../icons/IconCategories.vue';
 import IconsCirclePlus from '../icons/IconCirclePlus.vue';
@@ -10,7 +10,7 @@ import IconEdit from '../icons/IconEdit.vue';
 import IconDelete from '../icons/IconDelete.vue';
 import IconDetail from '../icons/IconDetail.vue';
 import axios from 'axios';
-import Swal from 'sweetalert2'
+import Swal from 'sweetalert2';
 import Datepicker from 'vue3-datepicker'; // Import the datepicker component
 import PaginationView from '../../views/PaginationView.vue';
 
@@ -19,9 +19,6 @@ const page = ref(1);
 const search = ref('');
 const currentPage = ref(1);
 const totalPages = ref(0);
-// const loading = ref(false);
-
-
 const images = ref([]);
 const loading = ref(true);
 
@@ -39,11 +36,14 @@ const fetchImages = async () => {
 
 onMounted(fetchImages);
 
-const getProducts = () => {
-    axios.get(`http://localhost/api/products?page=${currentPage.value}`).then(res => {
-        product.value = res.data.data;
-        totalPages.value = res.data.last_page;
-    });
+const getProducts = async () => {
+    try {
+        const response = await axios.get(`http://localhost/api/products?page=${currentPage.value}`);
+        product.value = response.data.data;
+        totalPages.value = response.data.last_page;
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
 };
 
 const goToPage = (page: number) => {
@@ -119,30 +119,36 @@ const filteredData = computed(() => {
     let filtered = product.value;
 
     if (search.value) {
-        filtered = filtered.filter(product => product.name.toLowerCase().includes(search.value.toLowerCase()));
+        filtered = filtered.filter(pro => pro.name.toLowerCase().includes(search.value.toLowerCase()));
     }
 
+    // Filter by date range
     if (startDate.value && endDate.value) {
-        filtered = filtered.filter(product => {
-            const createdAt = new Date(product.created_at);
-            return createdAt >= startDate.value && createdAt <= endDate.value;
+        const start = new Date(startDate.value).setHours(0, 0, 0, 0);
+        const end = new Date(endDate.value).setHours(23, 59, 59, 999);
+
+        filtered = filtered.filter(pro => {
+            const createdAt = new Date(pro.created_at).getTime();
+            return createdAt >= start && createdAt <= end;
         });
     }
 
     return filtered;
 });
 
+// Watchers to refetch data on filter change
+watch([startDate, endDate, search], getProducts);
+
 // Method to reset all filters
 const resetFilters = () => {
-    search.value = "";
+    search.value = '';
     startDate.value = null;
     endDate.value = null;
-    getProducts(); // Refetch data after resetting filters
+    getProducts();
 };
 
 // Initial data fetching
 getProducts();
-
 </script>
 
 <template>

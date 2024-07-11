@@ -16,13 +16,39 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: MainPageView //RoutingView
+      component: MainPageView, //RoutingView,
+      redirect: (to) => {
+        return { name: 'Homepage' }
+      },
+      children: [
+        {
+          path: 'showProducts',
+          name: 'show-product',
+          component: () => import('../views/Home/ListProductView.vue')
+        },
+        {
+          path: 'categories/:categoryId/products',
+          name: 'CategoryProducts',
+          component: () => import('../components/Category/CategoryProducts.vue')
+        }
+        // {
+        //   path: 'showProducts',
+        //   name: 'show-product',
+        //   component: () => import('../views/Home/ListProductView.vue')
+        // }
+      ]
     },
     {
-      path: '/showProducts',
-      name: 'show-product',
-      component: () => import('../views/Home/ListProductView.vue')
+      path: '/Homepage',
+      name: 'Homepage',
+      component: () => import('../views/Wishlist/ListMainPageView.vue')
     },
+    // {
+    //   path: '/categories/:categoryId/products',
+    //   name: 'CategoryProducts',
+    //   component: () => import('../components/Category/CategoryProducts.vue')
+    // },
+
     // {
     //   path: '/home',
     //   name: 'all-product',
@@ -41,11 +67,11 @@ const router = createRouter({
       name: 'electronic',
       component: () => import('../views/ElectronicView.vue')
     },
-    {
-      path: '/product-detail',
-      name: 'product-detail',
-      component: () => import('../views/DetailView.vue')
-    },
+    // {
+    //   path: '/product-detail',
+    //   name: 'product-detail',
+    //   component: () => import('../views/DetailView.vue')
+    // },
     // {
     //   path: '/main-page',
     //   name: 'main-page',
@@ -59,7 +85,7 @@ const router = createRouter({
 
     // ========================== Product Detail call from component DetailView.vue in folder views =====================================
     {
-      path: '/product-detail1',
+      path: '/product-detail1/:productId',
       name: 'product-detail1',
       component: () => import('../components/ProductDetail1.vue')
     },
@@ -241,6 +267,12 @@ const router = createRouter({
       path: '/wishlist-page',
       name: 'wishlistPage',
       component: () => import('../views/Wishlist/WishListPage.vue')
+    },
+
+    {
+      path: '/wishlist-page1',
+      name: 'wishlistPage1',
+      component: () => import('../components/WishList1.vue')
     }
 
     // ==================================================== // Edit Form Category ==============================================
