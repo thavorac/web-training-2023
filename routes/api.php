@@ -113,13 +113,17 @@ Route::patch('/categories/{categoryId}', [CategoryController::class, 'updateCate
 Route::delete('/categories/{categoryId}', [CategoryController::class,'deleteCategory']);
 Route::get('/categories/{categoryId}/products', [CategoryController::class,'getProductsOfCategory']);
 
-// products api urls
-Route::get('/products', [ProductController::class,'getProducts']);
-Route::get('/products/{productId}/getFirstImage',[ProductController::class,'getFirstImage']);
+
+
+// Route::get('/products/{productId}/getFirstImage',[ProductController::class,'getFirstImage']);
 
 // Route::middleware(['cors'])->group(function(){
 //     Route::post('/products', [ProductController::class,'createProduct']);
 // });
+
+// products api urls
+
+Route::get('/products', [ProductController::class,'getProducts']);
 Route::post('/products', [ProductController::class,'createProduct']);
 Route::get('/products/{productId}', [ProductController::class,'getProduct']);
 Route::patch('/products/{productId}', [ProductController::class,'updateProduct']);

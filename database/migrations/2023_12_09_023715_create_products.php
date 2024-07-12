@@ -21,8 +21,8 @@ return new class extends Migration
             $table->string('color')->nullable();
             $table->integer('rating')->default(0);
             $table->integer('purchased_num')->default(0);
-            $table->string('size');
-            $table->string('brand');
+            $table->string('size')->nullable();
+            $table->string('brand')->nullable();
             $table->string('style')->nullable();
             $table->string('model')->nullable();
             $table->string('shipping')->nullable();
