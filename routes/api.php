@@ -159,6 +159,13 @@ Route::post('/forgot-password', [AuthenticationController::class, 'forgotPasswor
 Route::get('reset-password/{token}', [AuthenticationController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [AuthenticationController::class, 'resetPassword']);
 
+use App\Http\Controllers\StripeController;
+
+Route::get('/checkout', [StripeController::class, 'checkout'])->name('checkout');
+Route::post('/session', [StripeController::class, 'session'])->name('session');
+Route::get('/success', [StripeController::class, 'success'])->name('success');
+
+
 
 
 
