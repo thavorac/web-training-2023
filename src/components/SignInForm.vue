@@ -63,7 +63,7 @@ const loginData = () => {
           title: 'Login Successful',
           text: data.message
         }).then(() => {
-          router.push({ name: 'Home' });
+          router.push('/Homepage');
         });
       } else {
         Swal.fire({
