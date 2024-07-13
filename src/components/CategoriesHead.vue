@@ -1,4 +1,5 @@
 <script setup lang="ts">
+import SignIn from '../components/basic/SignIn.vue';
 import IconPerson from '../components/icons/IconPerson.vue';
 import IconHeart from '../components/icons/IconHeart.vue';
 import IconCard from '../components/icons/IconCard.vue';
@@ -10,15 +11,7 @@ import { useCartStore } from '@/stores/useCartStore';
 
 const data = useCartStore();
 
-const isDropdownVisible = ref(false);
-const isDropdownVisible1 = ref(false);
 
-const toggleDropdown = () => {
-    isDropdownVisible.value = !isDropdownVisible.value;
-};
-const toggleDropdown1 = () => {
-    isDropdownVisible1.value = !isDropdownVisible1.value;
-};
 </script>
 
 <template>
@@ -46,30 +39,7 @@ const toggleDropdown1 = () => {
                             </svg>
                         </button>
 
-                        <!-- Dropdown menu -->
-                        <div v-if="isDropdownVisible" id="dropdownHover"
-                            class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute">
-                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownHoverButton">
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
-                                        out</a>
-                                </li>
-                            </ul>
-                        </div>
+                       
                     </div>
                 </div>
                 <div class="row d-flex align-items-center">
@@ -85,30 +55,6 @@ const toggleDropdown1 = () => {
                             </svg>
                         </button>
 
-                        <!-- dropdown item -->
-                        <div v-if="isDropdownVisible1" id="dropdownHover1"
-                            class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute">
-                            <ul class="py-2 text-sm text-gray-700 dark:text-gray-200"
-                                aria-labelledby="dropdownHoverButton1">
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Dashboard</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Settings</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Earnings</a>
-                                </li>
-                                <li>
-                                    <a href="#"
-                                        class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Sign
-                                        out</a>
-                                </li>
-                            </ul>
-                        </div>
                     </div>
                 </div>
             </div>

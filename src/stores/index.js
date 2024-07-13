@@ -36,3 +36,4 @@ export default createStore({
     getUser: state => state.user,
   },
 });
+
