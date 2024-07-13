@@ -1,5 +1,4 @@
 <script setup lang="ts">
-import SignIn from '../components/basic/SignIn.vue';
 import IconPerson from '../components/icons/IconPerson.vue';
 import IconHeart from '../components/icons/IconHeart.vue';
 import IconCard from '../components/icons/IconCard.vue';

@@ -48,7 +48,7 @@
 
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import axios from '../services/axios';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 
@@ -80,26 +80,19 @@ const register = () => {
     gender: gender.value,
   })
     .then(response => {
-      if (response.data.verification_required) {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: response.data.message,
-        }).then(() => {
-          router.push('/verify_otp');
-        });
-      } else {
-        Swal.fire({
-          icon: 'success',
-          title: 'Success',
-          text: response.data.message,
-        }).then(() => {
-          router.push('/sign-in');
-        });
-      }
+      const { access_token, message } = response.data;
+      localStorage.setItem('auth_token', access_token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: message,
+      }).then(() => {
+        router.push('/verify_otp');
+      });
     })
     .catch(error => {
-      console.error('Error during registration:', error);
       Swal.fire({
         icon: 'error',
         title: 'Error',
@@ -108,6 +101,7 @@ const register = () => {
     });
 };
 </script>
+
 
 <style scoped lang="scss">
 .container {

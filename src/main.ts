@@ -8,7 +8,9 @@ import App from './App.vue'
 import router from './router'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/src/sweetalert2.scss'
-import store from './stores/wishlist' // Import the store
+// import store from './stores/wishlist' // Import the store
+
+import store from './stores';
 
 // using antd to create an adminSideBar
 

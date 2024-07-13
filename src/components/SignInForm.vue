@@ -42,9 +42,10 @@
 
 <script setup>
 import { ref } from 'vue';
-import axios from 'axios';
+import axios from '../services/axios';
 import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router';
+import { useStore } from 'vuex';
 
 const user = ref({
   email: '',
@@ -52,12 +53,16 @@ const user = ref({
 });
 
 const router = useRouter();
+const store = useStore();
 
 const loginData = () => {
   axios.post("http://localhost:80/api/login", user.value)
     .then(({ data }) => {
       console.log(data);
       if (data.message === "Login successful") {
+        // Dispatch the login action to the Vuex store
+        store.dispatch('login', { user: data.user, token: data.access_token });
+
         Swal.fire({
           icon: 'success',
           title: 'Login Successful',
@@ -83,7 +88,6 @@ const loginData = () => {
     });
 }
 </script>
-
 <style scoped lang="scss">
 .container {
   width: 100%;
