@@ -7,6 +7,12 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
     name: 'login',
     component: () => import('../../components/AdminLogin.vue')
     },
+    {
+      path: '/logout',
+      name: 'logout',
+      component: () => import('../../components/AdminLogout.vue')
+      },
+
   {
     path: '/admin',
     name: 'AdminLayout',
