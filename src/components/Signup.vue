@@ -15,20 +15,11 @@
                 <label for="uname">Username</label>
                 <input type="text" v-model="username" placeholder="Enter Username" required>
 
-                <!-- <label for="">Phone Number</label>
-                <input type="text" v-model="phoneNumber" required> -->
-
                 <label for="psw">Password</label>
                 <input type="password" v-model="password" placeholder="Enter Password" required>
 
                 <label for="psw">Confirm Password</label>
                 <input type="password" v-model="confirmPassword" placeholder="Enter Confirm Password" required>
-
-                <!-- <span class="gender">Gender: </span>
-                <input type="radio" id="gender1" v-model="gender" value="male">
-                <label for="gender1">Male</label>
-                <input type="radio" id="gender2" v-model="gender" value="female">
-                <label for="gender2">Female</label><br> -->
               </div>
               <div class="container d-flex justify-content-between align-items-center">
                 <router-link to="/sign-in">
@@ -44,48 +35,37 @@
   </div>
 </template>
 
-<script>
+<script setup>
+import { ref } from 'vue';
 import axios from 'axios';
 
-export default {
-  data() {
-    return {
-      username: '',
-      email: '',
-      // phoneNumber: '',
-      password: '',
-      confirmPassword: '',
-      // gender: ''
-    };
-  },
-  methods: {
-    register() {
-      if (this.password !== this.confirmPassword) {
-        alert("Password and Confirm Password do not match");
-        return;
-      }
+const username = ref('');
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
 
-      axios.post('http://localhost:80/api/register', {
-        username: this.username,
-        email: this.email,
-        // phone_number: this.phoneNumber,
-        password: this.password,
-        confirm_password: this.confirmPassword,
-        // gender: this.gender
-      })
-        .then(response => {
-          alert(response.data.message); // Assuming the server returns a message
-          // Redirect to login page or do other actions as needed
-        })
-        .catch(error => {
-          console.error('Error during registration:', error);
-          alert('Registration failed. Please try again.');
-        });
-    }
+const register = () => {
+  if (password.value !== confirmPassword.value) {
+    alert("Password and Confirm Password do not match");
+    return;
   }
-}
-</script>
 
+  axios.post('http://localhost:80/api/register', {
+    username: username.value,
+    email: email.value,
+    password: password.value,
+    confirm_password: confirmPassword.value,
+  })
+  .then(response => {
+    alert(response.data.message); // Assuming the server returns a message
+    // Redirect to login page or do other actions as needed
+  })
+  .catch(error => {
+    console.error('Error during registration:', error);
+    alert('Registration failed. Please try again.');
+  });
+};
+</script>
 
 <style scoped lang="scss">
 .container {

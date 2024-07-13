@@ -1,8 +1,4 @@
-<<<<<<< HEAD
-<script setup>
-=======
 <script setup lang="ts">
->>>>>>> 8d5d60d2fb4e10a5d0c962743a3fe7d33ee2aef1
 const props = defineProps({
     width: {
         type: Number,

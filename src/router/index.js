@@ -2,6 +2,7 @@ import { createRouter, createWebHistory } from 'vue-router'
 import RoutingView from '@/views/RoutingView.vue'
 import MainPageView from '@/views/MainPageView.vue'
 import ProductsCart from "../views/cart/index.vue"
+import {adminRouter} from './admin'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -18,6 +19,7 @@ const router = createRouter({
       //   }
       // ]
     },
+    
     {
       path: '/about',
       name: 'about',
@@ -26,6 +28,7 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/HomeView.vue')
     },
+    ...adminRouter,
     {
       path: '/electronic',
       name: 'electronic',
@@ -56,11 +59,11 @@ const router = createRouter({
       name: 'buttonshop',
       component: () => import('../components/basic/ButtonShop.vue')
     },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: () => import('../components/AdminLogin.vue')
-    },
+    // {
+    //   path: '/admin',
+    //   name: 'admin',
+    //   component: () => import('../components/AdminLogin.vue')
+    // },
     {
       path: '/forgot-password',
       name: 'forgot-password',
@@ -74,7 +77,7 @@ const router = createRouter({
     {
       path: '/sign-up',
       name: 'signup',
-      component: () => import('../components/Signup.vue')
+      component: () => import('../components/SignUp.vue')
     },
     {
       path: '/signIn',
