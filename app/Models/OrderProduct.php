@@ -11,9 +11,10 @@ class OrderProduct extends Model
 
     protected $table = 'orders_product';
     protected $fillable = [
-        'style',
-        'product_id',
         'order_id',
+        'product_id',
+        'quantity',
+        'price'
         // Add other attributes here as needed
     ];
 }

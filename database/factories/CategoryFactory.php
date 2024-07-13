@@ -21,6 +21,8 @@ class CategoryFactory extends Factory
     public function definition(): array
     {
         $name = $this->faker->jobTitle;
+        $nameArr = expode('',$name);
+        $name = trim($nameArr[0]);
         return [
             'name' => $name,
             'slug' => Str::slug($name),

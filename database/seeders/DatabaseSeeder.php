@@ -13,15 +13,10 @@ class DatabaseSeeder extends Seeder
      */
     public function run(): void
     {
-        // \App\Models\User::factory(10)->create();
-
-        // \App\Models\User::factory()->create([
-        //     'name' => 'Test User',
-        //     'email' => 'test@example.com',
-        // ]);
-
-        Product::factory()->count(20)->create(); // Correct the count syntax
-        Category::factory()->count(5)->create(); // Correct the count syntax
+        \App\Models\User::factory(10)->create();
+        \App\Models\product::factory(20)->create();
+        \App\Models\Category::factory(5)->create();
+       
 
         $categories = Category::all();
 

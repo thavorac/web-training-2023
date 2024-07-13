@@ -3,46 +3,46 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Stripe\Stripe;
-use Stripe\Checkout\Session;
+use Stripe\PaymentIntent;
+use App\Models\Order;
+use App\Models\OrderItem;
+use App\Models\Product;
 
 class StripeController extends Controller
 {
-    public function session(Request $request)
+    public function createPaymentIntent(Request $request)
     {
-        Stripe::setApiKey(config('services.stripe.sk'));
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        $totalAmountCents = (int) round($request->get('total') * 100);
-
-        $session = Session::create([
-            'payment_method_types' => ['card'],
-            'line_items' => [
-                [
-                    'price_data' => [
-                        'currency' => 'usd',
-                        'product_data' => [
-                            'name' => 'Cart Total',
-                        ],
-                        'unit_amount' => $totalAmountCents,
-                    ],
-                    'quantity' => 1,
-                ],
-            ],
-            'mode' => 'payment',
-            'success_url' => route('success'),
-            'cancel_url' => route('cancel'),
+        $order = Order::create([
+            'user_id' => auth()->id(),
+            'total' => $request->total,
+            'status' => 'pending',
         ]);
 
-        return response()->json(['id' => $session->id]);
- 
+        foreach ($request->items as $item) {
+            $product = Product::find($item['product_id']);
+            OrderItem::create([
+                'order_id' => $order->id,
+                'product_id' => $item['product_id'],
+                'quantity' => $item['quantity'],
+                'price' => $product->price,
+            ]);
+        }
+
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $order->total * 100, // Amount in cents
+            'currency' => 'usd',
+        ]);
+
+        return response()->json([
+            'clientSecret' => $paymentIntent->client_secret,
+            'order_id' => $order->id,
+        ]);
     }
 
-    public function success()
+    public function handlePaymentWebhook(Request $request)
     {
-        return "Thanks for your order! You have just completed your payment. The seller will reach out to you as soon as possible.";
-    }
-
-    public function cancel()
-    {
-        return "Payment was canceled!";
+        // Handle Stripe webhook to update order status
     }
 }

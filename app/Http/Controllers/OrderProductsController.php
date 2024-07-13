@@ -15,11 +15,6 @@ class OrderProductsController extends Controller
 
     public function store(Request $request)
     {
-        $request->validate([
-            'style' => 'required',
-            'product_id' => 'required',
-            'order_id' => 'required',
-        ]);
 
         // Create a new OrderProduct instance with timestamps managed by Eloquent
         $orderProduct = new OrderProduct([

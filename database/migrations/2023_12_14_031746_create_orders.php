@@ -10,7 +10,10 @@ return new class extends Migration
     {
         Schema::create('orders', function (Blueprint $table) {
             $table->id();
-            $table->string('order_number');
+
+            $table->bigInteger('user_id')->unsigned();
+            $table->foreign('user_id')->references('id')->on('users');
+
             $table->string('status')->default('pending');
             $table->decimal('total', 8, 2); // Add this line to store the total amount
             $table->timestamps();

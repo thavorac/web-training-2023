@@ -1,33 +1,36 @@
+/ app/Http/Controllers/OrderController.php
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
 
 class OrderController extends Controller
 {
-    public function checkout(Request $request)
+    public function createPaymentIntent(Request $request)
     {
-        $cartItems = $request->get('cartItems');
-        $total = $request->get('total');
-        
-        // Create a new order
-        $order = new Order();
-        $order->order_number = uniqid(); // Generate a unique order number
-        $order->status = 'Pending';
-        $order->total = $total; // Assuming you have a total column in your orders table
-        $order->save();
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        // Optionally, save the order items in another table (not shown here)
-        // foreach ($cartItems as $item) {
-        //     // Save each item to an order_items table
-        // }
-        return response()->json([
-            'message' => 'Checkout successful',
-            'order' => $order,
-            'cartItems' => $cartItems,
-            'total' => $total,
+        $amount = $request->amount * 100; // Convert to cents
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $amount,
+            'currency' => 'usd',
         ]);
+
+        return response()->json(['client_secret' => $paymentIntent->client_secret]);
+    }
+
+    public function store(Request $request)
+    {
+        $order = Order::create([
+            'user_id' => auth()->id(),
+            'total' => $request->total,
+        ]);
+
+        // Add products to the order...
+
+        return response()->json($order, 201);
     }
 }

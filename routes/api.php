@@ -15,6 +15,15 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderProductsController;
 
 
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::get('cart', [CartController::class, 'index']);
+//     Route::post('cart/add', [CartController::class, 'add']);
+//     Route::post('cart/remove', [CartController::class, 'remove']
+// );
+// Route::post('create-payment-intent', [OrderController::class, 'createPaymentIntent']);
+//     Route::post('orders', [OrderController::class, 'store']
+// );
+
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -154,12 +163,15 @@ Route::patch('/orders/{orderId}',[OrderController::class,'updateOrder']);
 Route::delete('/orders/{orderId}',[OrderController::class,'deleteOrder']);
 
 //Order_products api urls
-Route::get('/order_products',[Order_productsController::class,'getOrderProducts']);
-Route::post('/order_products',[Order_productsController::class,'createOrderProduct']);
-Route::get('/order_products/{order_productsId}',[Order_productsController::class , 'getOrderProduct']);
-Route::patch('/order_products/{order_productsId}',[Order_productsController::class , 'updateOrderProduct']);
-Route::delete('/order_products/{order_productsId}',[Order_productsController::class,'deleteOrderProduct']);
+// Route::get('/order_products',[Order_productsController::class,'getOrderProducts']);
+// Route::post('/order_products',[Order_productsController::class,'createOrderProduct']);
+// Route::get('/order_products/{order_productsId}',[Order_productsController::class , 'getOrderProduct']);
+// Route::patch('/order_products/{order_productsId}',[Order_productsController::class , 'updateOrderProduct']);
+// Route::delete('/order_products/{order_productsId}',[Order_productsController::class,'deleteOrderProduct']);
 
+
+Route::post('/create-payment-intent', [StripeController::class, 'createPaymentIntent']);
+Route::post('/webhook', [StripeController::class, 'handlePaymentWebhook']);
 // api for Authentication
 // Route::post('/register',[AuthenticationController::class,'register']);
 
@@ -205,7 +217,7 @@ Route::put('orderdetails/{orderDetail}', [OrderDetailController::class, 'update'
 Route::delete('orderdetails/{orderDetail}', [OrderDetailController::class, 'destroy']);
 
 // Corrected route definition for products
-Route::get('products', [ProductController::class, 'index']);
+// Route::get('products', [ProductController::class, 'index']);
 
 // User purchase route
 Route::post('purchase', [UserController::class, 'purchase']);
