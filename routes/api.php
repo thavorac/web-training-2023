@@ -10,6 +10,7 @@ use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Order_productsController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\AdminAuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -24,6 +25,7 @@ use App\Http\Controllers\PromotionController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 
 
 // Route::post('/categories', function (Request $request){
@@ -139,13 +141,22 @@ Route::delete('/order_products/{order_productsId}',[Order_productsController::cl
 // Route::delete('/products/{categoryId}',[CategoryController::class, 'deteProduct']);
 
 
-// api for Authentication
+// api for user Authentication
 Route::post('/register',[AuthenticationController::class,'register']);
 Route::post('/login', [AuthenticationController::class, 'login']);
 Route::post('/forgot-password', [AuthenticationController::class, 'forgotPassword']);
 Route::get('reset-password/{token}', [AuthenticationController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [AuthenticationController::class, 'resetPassword']);
 Route::post('/logout', [AuthenticationController::class, 'logout']);
+
+// api for admin Authentication
+
+Route::middleware('auth:admin')->group(function () {
+    Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('logout');
+    // Other protected routes
+});
+Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login');
+Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 //promotion
 Route::post('/promotions', [PromotionController::class, 'createPromotion']);
