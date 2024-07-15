@@ -121,6 +121,12 @@ const router = createRouter({
       name: 'VerifyOtp',
       component: () => import('../components/VerifyEmail.vue')
     },
+    {
+      path: '/user-profile',
+      name: 'UserProfile',
+      component: () => import('../components/Authentication/UserProfile.vue')
+    },
+
 
     // {
     //   path: '/signIn',

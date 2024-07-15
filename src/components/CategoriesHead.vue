@@ -114,7 +114,7 @@ const logoutHandler = () => {
                   class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute">
                   <ul class="py-2 text-sm text-gray-700 dark:text-gray-200" aria-labelledby="profileButton">
                     <li>
-                      <router-link to="/profile"
+                      <router-link to="/user-profile"
                         class="block px-4 py-2 hover:bg-gray-100 dark:hover:bg-gray-600 dark:hover:text-white">Profile</router-link>
                     </li>
                     <li>

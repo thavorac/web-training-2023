@@ -20,7 +20,7 @@ if (!store.getters.isAuthenticated) {
       <div v-if="user" class="card shadow-lg p-3 mb-5 bg-white rounded-4">
         <div class="card-body">
           <h1 class="card-title text-center mb-4">User Profile</h1>
-          <p class="card-text"><strong>Name:</strong>{{ user.last_name }} {{ user.first_name }} </p>
+          <p class="card-text"><strong>Name:</strong>{{ user.username }} </p>
           <p class="card-text"><strong>Email:</strong> {{ user.email }}</p>
           <p class="card-text"><strong>Date of Birth:</strong> {{ user.date_of_birth }}</p>
           <p class="card-text"><strong>Address:</strong> {{ user.address }}</p>

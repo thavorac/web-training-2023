@@ -60,10 +60,7 @@ const sidebars = ref([
     path: "/admin/setting",
     title: "Setting"
   },
-  {
-    path: "/admin/logout",
-    title: "Logout"
-  }
+
 
 
 ]);
@@ -124,9 +121,6 @@ body {
               </template>
               <template v-else-if="side.path.match('/admin/promotion')">
                 <IconPromotion className="w-6 h-6 text-white items-center" />
-              </template>
-              <template v-else-if="side.path.match('/admin/logout')">
-                <IconPerson class=" h-6 text-white items-cente" />
               </template>
             </SidebarLink>
             <div
