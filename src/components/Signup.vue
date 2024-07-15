@@ -120,7 +120,7 @@ const register = () => {
         title: 'Success',
         text: message,
       }).then(() => {
-        router.push('/verify_otp');
+        router.push('/sign-in');
       });
     })
     .catch(error => {

@@ -90,8 +90,7 @@ if (!store.getters.isAuthenticated || !admin.value) {
                           </div>
                         </div>
                       </div>
-                    </div>
-                    <div class="row pl-5 pb-3">
+                      <div class="row pl-5 pb-3">
                       <div class="col-sm-2">
                         <router-link to="/Homepage" class="mr-2">
                           <button type="button" class="btn btn-primary">Back</button>
@@ -102,6 +101,7 @@ if (!store.getters.isAuthenticated || !admin.value) {
                           <button type="button" class="btn btn-danger">Logout</button>
                         </router-link>
                       </div>
+                    </div>
                     </div>
                   </div>
                 </div>

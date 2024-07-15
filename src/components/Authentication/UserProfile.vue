@@ -23,7 +23,7 @@ if (!store.getters.isAuthenticated) {
                                     <img src="../../assets/image/profile.avif" alt="Admin"
                                         class="rounded-circle p-1 bg-primary" width="170">
                                     <div v-if="user"  class="mt-3 pl-5">
-                                        <h4>{{ user.last_name }} {{ user.first_name }}</h4>
+                                        <h4>{{ user.first_name }} {{ user.last_name }}</h4>
                                         <ul class="list-unstyled mb-4 pl-5">
                                             <li class="mb-3 text-start"><a href="#!"><i class="far fa-envelope display-25 me-3 text-secondary"></i>{{ user.email }}</a></li>
                                             <li class="mb-3 text-start"><a href="#!"><i class="fas fa-mobile-alt display-25 me-3 text-secondary"></i>{{ user.phone_number }}</a></li>
@@ -45,7 +45,7 @@ if (!store.getters.isAuthenticated) {
                                         <h6 class="mb-0">Full Name</h6>
                                     </div>
                                     <div class="col-sm-9 text-secondary">
-                                        {{ user.last_name }} {{ user.first_name }}
+                                        {{ user.first_name }} {{ user.last_name }}
                                     </div>
                                 </div>
                                 <div class="row mb-3">
@@ -97,7 +97,7 @@ if (!store.getters.isAuthenticated) {
                             <div class="row px-3 pb-3">
                                 <div class="col-sm-3">
                                     <router-link to="/Homepage" class="mr-2">
-                                        <button type="button" class="btn btn-primary">Cancel</button>
+                                        <button type="button" class="btn btn-primary">Back</button>
                                     </router-link>
                                 </div> 
                             </div>

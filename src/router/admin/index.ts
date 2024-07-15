@@ -82,7 +82,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
       {
         path: 'setting',
         name: 'AdminProfile',
-        component: () => import('../../components/SettingPage/SettingItem.vue')
+        component: () => import('../../components/AdminProfile/Profile.vue')
       },
       {
         path: 'sub-category',

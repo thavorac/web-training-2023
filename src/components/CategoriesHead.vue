@@ -106,7 +106,7 @@ const logoutHandler = () => {
                   class="text-white focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm ps-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   type="button">
                   <IconPerson class="mt-1" />
-                  {{ user.last_name }} {{ user.first_name }} <!-- Assuming user has a 'name' property -->   
+                  {{ user.first_name }} {{ user.last_name }} <!-- Assuming user has a 'name' property -->   
                 </button>
 
                 <!-- Profile dropdown menu -->
