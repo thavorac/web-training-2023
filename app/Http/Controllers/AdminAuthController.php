@@ -1,9 +1,9 @@
 <?php
-
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\Admin;
 
 class AdminAuthController extends Controller
@@ -13,8 +13,8 @@ class AdminAuthController extends Controller
         $credentials = $request->only('email', 'password');
         $admin = Admin::where('email', $credentials['email'])->first();
 
-        if ($admin && $admin->password === $credentials['password']) {
-            // Passwords match (plain text comparison, not recommended in production)
+        if ($admin && Hash::check($credentials['password'], $admin->password)) {
+            // Passwords match
             Auth::guard('admin')->login($admin);
 
             // Generate token (if using Sanctum or other token-based authentication)
@@ -23,7 +23,7 @@ class AdminAuthController extends Controller
             return response()->json([
                 'message' => 'Login successful',
                 'admin' => $admin,
-                'token' => $token, // Include the token in the response
+                'token' => $token,
             ], 200);
         }
 
@@ -32,7 +32,7 @@ class AdminAuthController extends Controller
 
     public function logout(Request $request)
     {
-        Auth::guard('admin')->logout();
+        $request->user()->currentAccessToken()->delete();
 
         return response()->json(['message' => 'Logged out'], 200);
     }

@@ -26,7 +26,10 @@ class AuthenticationController extends Controller
             if ($request->get("password") == $request->get("confirm_password")) {
                 // 3. Encrypt password before save to database
                 $user = new User();
-                $user->name = $request->get("username");
+                $user->first_name = $request->get("first_name");
+                $user->last_name = $request->get("last_name");
+                $user->date_of_birth = $request->get("date_of_birth");
+                $user->address = $request->get("address");
                 $user->email = $request->get("email");
                 $user->phone_number = $request->get("phone_number");
                 $user->password = Hash::make($request->get("password"));

@@ -151,12 +151,10 @@ Route::post('/logout', [AuthenticationController::class, 'logout']);
 
 // api for admin Authentication
 
-Route::middleware('auth:admin')->group(function () {
-    Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('logout');
-    // Other protected routes
+Route::prefix('admin')->group(function () {
+    Route::post('/login', [AdminAuthController::class, 'login']);
+    Route::middleware('auth:admin')->post('/logout', [AdminAuthController::class, 'logout']);
 });
-Route::post('/admin/login', [AdminAuthController::class, 'login'])->name('admin.login');
-Route::post('/admin/logout', [AdminAuthController::class, 'logout'])->name('admin.logout');
 
 //promotion
 Route::post('/promotions', [PromotionController::class, 'createPromotion']);
