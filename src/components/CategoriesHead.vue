@@ -1,3 +1,44 @@
+<script setup lang="ts">
+import { ref } from 'vue';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
+
+import SignIn from '../components/basic/SignIn.vue';
+import IconPerson from '../components/icons/IconPerson.vue';
+import IconHeart from '../components/icons/IconHeart.vue';
+import IconCard from '../components/icons/IconCard.vue';
+import IconCategories from '../components/icons/IconCategories.vue';
+
+const store = useStore();
+const router = useRouter();
+import { useCartStore } from '@/stores/useCartStore';
+
+const data = useCartStore();
+
+// Reactive variables
+const isProfileDropdownVisible = ref(false);
+
+// Toggle profile dropdown visibility
+const toggleProfileDropdown = () => {
+  isProfileDropdownVisible.value = !isProfileDropdownVisible.value;
+};
+
+// Getters and state from Vuex
+const isAuthenticated = store.getters.isAuthenticated;
+const user = store.getters.getUser;
+
+// Logout function
+const logoutHandler = () => {
+  store.dispatch('logout');
+  router.push('/sign-in'); // Redirect to sign-in page after logout
+};
+</script>
+
+  <style scoped>
+    /* Add your component-specific styles here */
+  </style>
+
+
 <template>
   <div class="container-fluid bg-gray-900 box-border">
       <div class="row">
@@ -21,9 +62,7 @@
                               <path stroke="currentColor" stroke-linecap="round" stroke-linejoin="round"
                                   stroke-width="2" d="m1 1 4 4 4-4" />
                           </svg>
-                      </button>
-
-                     
+                      </button>                  
                   </div>
               </div>
               <div class="row d-flex align-items-center">
@@ -67,7 +106,7 @@
                   class="text-white focus:outline-none focus:ring-blue-300 font-medium rounded-lg text-sm ps-5 py-2.5 text-center inline-flex items-center dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800"
                   type="button">
                   <IconPerson class="mt-1" />
-                  {{ user.name }} <!-- Assuming user has a 'name' property -->   
+                  {{ user.last_name }} {{ user.first_name }} <!-- Assuming user has a 'name' property -->   
                 </button>
 
                 <!-- Profile dropdown menu -->
@@ -111,44 +150,4 @@
       </div>
   </div>
 </template>
-
-<script setup lang="ts">
-import { ref } from 'vue';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
-
-import SignIn from '../components/basic/SignIn.vue';
-import IconPerson from '../components/icons/IconPerson.vue';
-import IconHeart from '../components/icons/IconHeart.vue';
-import IconCard from '../components/icons/IconCard.vue';
-import IconCategories from '../components/icons/IconCategories.vue';
-
-const store = useStore();
-const router = useRouter();
-import { useCartStore } from '@/stores/useCartStore';
-
-const data = useCartStore();
-
-// Reactive variables
-const isProfileDropdownVisible = ref(false);
-
-// Toggle profile dropdown visibility
-const toggleProfileDropdown = () => {
-  isProfileDropdownVisible.value = !isProfileDropdownVisible.value;
-};
-
-// Getters and state from Vuex
-const isAuthenticated = store.getters.isAuthenticated;
-const user = store.getters.getUser;
-
-// Logout function
-const logoutHandler = () => {
-  store.dispatch('logout');
-  router.push('/sign-in'); // Redirect to sign-in page after logout
-};
-</script>
-
-  <style scoped>
-    /* Add your component-specific styles here */
-  </style>
 

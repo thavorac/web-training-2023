@@ -6,12 +6,18 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
     path: '/login',
     name: 'login',
     component: () => import('../../components/AdminLogin.vue')
-    },
-    {
-      path: '/logout',
-      name: 'logout',
-      component: () => import('../../components/AdminLogout.vue')
-      },
+} ,
+  {
+    path: '/logout',
+    name: 'logout',
+    component: () => import('../../components/AdminLogout.vue')
+  },
+  {
+      path: '/admin-profile',
+      name: 'profile',
+      component: () => import('../../components/AdminProfile/Profile.vue')
+   },
+
 
   {
     path: '/admin',
