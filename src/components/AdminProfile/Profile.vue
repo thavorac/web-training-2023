@@ -2,13 +2,13 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-
+import ProductView from '../../views/CategoryView.vue';
 const store = useStore();
 const admin = computed(() => store.getters.getAdmin);
 const router = useRouter();
 const logoutHandler = () => {
   store.dispatch('logout');
-  router.push('/sign-in'); // Redirect to sign-in page after logout
+  router.push('/login'); // Redirect to sign-in page after logout
 };
 
 if (!store.getters.isAuthenticated || !admin.value) {
