@@ -10,16 +10,21 @@
               </div>
               <div class="container">
                 <label>Email</label>
-                <input type="email" v-model="email" placeholder="Enter Email" required>
+                <input type="email" v-model="email" placeholder="Enter Email" required />
 
                 <label for="uname">Username</label>
-                <input type="text" v-model="username" placeholder="Enter Username" required>
+                <input type="text" v-model="username" placeholder="Enter Username" required />
 
                 <label for="psw">Password</label>
-                <input type="password" v-model="password" placeholder="Enter Password" required>
+                <input type="password" v-model="password" placeholder="Enter Password" required />
 
                 <label for="psw">Confirm Password</label>
-                <input type="password" v-model="confirmPassword" placeholder="Enter Confirm Password" required>
+                <input
+                  type="password"
+                  v-model="confirmPassword"
+                  placeholder="Enter Confirm Password"
+                  required
+                />
               </div>
               <div class="container d-flex justify-content-between align-items-center">
                 <router-link to="/sign-in">
@@ -36,35 +41,36 @@
 </template>
 
 <script setup>
-import { ref } from 'vue';
-import axios from 'axios';
+import { ref } from 'vue'
+import axios from 'axios'
 
-const username = ref('');
-const email = ref('');
-const password = ref('');
-const confirmPassword = ref('');
+const username = ref('')
+const email = ref('')
+const password = ref('')
+const confirmPassword = ref('')
 
 const register = () => {
   if (password.value !== confirmPassword.value) {
-    alert("Password and Confirm Password do not match");
-    return;
+    alert('Password and Confirm Password do not match')
+    return
   }
 
-  axios.post('http://localhost:80/api/register', {
-    username: username.value,
-    email: email.value,
-    password: password.value,
-    confirm_password: confirmPassword.value,
-  })
-  .then(response => {
-    alert(response.data.message); // Assuming the server returns a message
-    // Redirect to login page or do other actions as needed
-  })
-  .catch(error => {
-    console.error('Error during registration:', error);
-    alert('Registration failed. Please try again.');
-  });
-};
+  axios
+    .post('http://localhost:80/api/register', {
+      username: username.value,
+      email: email.value,
+      password: password.value,
+      confirm_password: confirmPassword.value
+    })
+    .then((response) => {
+      alert(response.data.message) // Assuming the server returns a message
+      // Redirect to login page or do other actions as needed
+    })
+    .catch((error) => {
+      console.error('Error during registration:', error)
+      alert('Registration failed. Please try again.')
+    })
+}
 </script>
 
 <style scoped lang="scss">
@@ -75,7 +81,7 @@ const register = () => {
 }
 
 .container-fluid {
-  background-image: url("/src/assets/image/abstract-1264071_1920.png");
+  background-image: url('/src/assets/image/abstract-1264071_1920.png');
   min-height: 715px;
   background-position: center;
   background-repeat: no-repeat;
@@ -104,9 +110,9 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-input[type=text],
-input[type=password],
-input[type=email] {
+input[type='text'],
+input[type='password'],
+input[type='email'] {
   width: 100%;
   padding: 7px 20px;
   margin: 10px 0;
