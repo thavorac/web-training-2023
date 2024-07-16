@@ -40,5 +40,6 @@ class Product extends Model
         return $this->belongsToMany(Promotion::class)->withPivot('discount_price');
     }
 
+
  
 }

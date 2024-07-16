@@ -18,15 +18,6 @@ class Promotion extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class, 'product_promotion')
-                    ->withPivot('discount_price')
-                    ->withTimestamps();
-    }
-
-    public function scopeActive($query)
-    {
-        return $query->where('status', true)
-                     ->where('start_date', '<=', Carbon::now())
-                     ->where('end_date', '>=', Carbon::now());
+        return $this->belongsToMany(Product::class)->withPivot('discount_price');
     }
 }
