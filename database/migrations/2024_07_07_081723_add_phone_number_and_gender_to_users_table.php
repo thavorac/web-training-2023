@@ -9,24 +9,22 @@ return new class extends Migration
     /**
      * Run the migrations.
      */
-    public function up()
+    public function up(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('reset_password_token')->nullable();
-            $table->timestamp('reset_password_created_at')->nullable();
+            $table->string('phone_number')->nullable();
+            $table->enum('gender', ['male', 'female', 'other'])->nullable();
         });
     }
-    
 
     /**
      * Reverse the migrations.
      */
-    public function down()
+    public function down(): void
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('reset_password_token');
-            $table->dropColumn('reset_password_created_at');
+            $table->dropColumn('phone_number');
+            $table->dropColumn('gender');
         });
     }
-    
 };

@@ -11,13 +11,9 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_suppliers', function (Blueprint $table) {
-            $table->id();
-            $table->string('name')->nullable;
-            $table->string('address')->nullable;
-            $table->string('phone')->nullable;
-            $table->string('email');
-            $table->timestamps();
+        Schema::table('products', function (Blueprint $table) {
+            $table->dropColumn('discount');
+            $table->dropColumn('promotion_date');
 
         });
     }
@@ -27,6 +23,9 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_suppliers');
+        Schema::table('products', function (Blueprint $table) {
+            $table->double('discount')->nullable();
+            $table->timestamp('promotion_date')->nullable();
+        });
     }
 };

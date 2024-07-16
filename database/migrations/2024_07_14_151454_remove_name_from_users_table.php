@@ -12,20 +12,14 @@ return new class extends Migration
     public function up()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->string('reset_password_token')->nullable();
-            $table->timestamp('reset_password_created_at')->nullable();
+            $table->dropColumn('name');
         });
     }
     
-
-    /**
-     * Reverse the migrations.
-     */
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn('reset_password_token');
-            $table->dropColumn('reset_password_created_at');
+            $table->string('name')->nullable();
         });
     }
     

@@ -143,6 +143,7 @@ Route::get('/categories/{categoryId}/products', [CategoryController::class,'getP
 Route::get('/products', [ProductController::class,'getProducts']);
 Route::post('/products', [ProductController::class,'createProduct']);
 Route::get('/products/{productId}', [ProductController::class,'getProduct']);
+Route::get('/products', [ProductController::class,'index']);
 Route::patch('/products/{productId}', [ProductController::class,'updateProduct']);
 Route::delete('/products/{productId}', [ProductController::class,'deleteProduct']);
 Route::get('/products/{productId}/images', [ProductController::class,'getImagesOfProduct']);
@@ -205,8 +206,8 @@ Route::post('/webhook', [StripeController::class, 'handlePaymentWebhook']);
 // Route::delete('/products/{categoryId}',[CategoryController::class, 'deteProduct']);
 
 
+// api for user Authentication
 Route::post('/register',[AuthenticationController::class,'register']);
-
 Route::post('/login', [AuthenticationController::class, 'login']);
 Route::post('/forgot-password', [AuthenticationController::class, 'forgotPassword']);
 Route::get('reset-password/{token}', [AuthenticationController::class, 'showResetForm'])->name('password.reset');
@@ -230,3 +231,22 @@ Route::delete('orderdetails/{orderDetail}', [OrderDetailController::class, 'dest
 // User purchase route
 Route::post('purchase', [UserController::class, 'purchase']);
 ?>
+
+Route::post('/logout', [AuthenticationController::class, 'logout']);
+
+// api for admin Authentication
+
+Route::prefix('admin')->group(function () {
+    Route::post('/login', [AdminAuthController::class, 'login']);
+    Route::middleware('auth:admin')->post('/logout', [AdminAuthController::class, 'logout']);
+});
+
+//promotion
+Route::get('/promotions', [PromotionController::class, 'index']);
+Route::get('/promotions/create', [PromotionController::class, 'create']);
+Route::post('/promotions', [PromotionController::class, 'store']);
+Route::get('/promotions/{id}', [PromotionController::class, 'show']);
+Route::get('/promotions/{id}/edit', [PromotionController::class, 'edit']);
+Route::put('/promotions/{id}', [PromotionController::class, 'update']);
+Route::delete('/promotions/{id}', [PromotionController::class, 'destroy']);
+Route::get('/promotions/history', [PromotionController::class, 'history']);
