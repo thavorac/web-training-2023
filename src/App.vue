@@ -1,15 +1,3 @@
-<script setup lang="ts">
-import { RouterView } from 'vue-router'
-// import ProductCard from '@/components/ProductCard.vue';
-// import ButtonShop from './components/basic/ButtonShop.vue'
-// import AddToCardButton from './components/basic/AddToCardButton.vue';
-// import PricingBtn from './components/basic/PricingBtn.vue';
-
-// import HelloWorld from './components/HelloWorld.vue'
-
-
-</script>
-
 <template>
   <!-- <div>
     <div class="product_card">
@@ -22,7 +10,6 @@ import { RouterView } from 'vue-router'
       <ProductCard new_price="$141" full_price="$114" discount_price="25%" rating="(29)" brandName="Sketchers"
         detail="Sport-shoe 2102" :productCardimage="shoesMid3" />
     </div>
-
   </div> -->
   <div>
     <RouterView />
@@ -32,8 +19,22 @@ import { RouterView } from 'vue-router'
   <!-- <WishListView />
   <DetailView class="" /> -->
   <!-- <ElectronicView /> -->
-
+  <recipe />
 </template>
+
+<script>
+import { mapState } from 'pinia';
+import { useGeneralStore } from '@/stores/general';
+
+export default {
+  name: 'App',
+  computed: {
+    ...mapState(useGeneralStore, ["categories"]),
+    ...mapState(useGeneralStore, ["advertisement"]),
+  },
+  methods: {},
+};
+</script>
 
 <style scoped>
 header {
@@ -92,9 +93,10 @@ nav a:first-of-type {
     text-align: left;
     margin-left: -1rem;
     font-size: 1rem;
-
     padding: 1rem 0;
     margin-top: 1rem;
   }
 }
 </style>
+
+

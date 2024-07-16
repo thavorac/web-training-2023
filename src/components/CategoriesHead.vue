@@ -1,4 +1,4 @@
-<script setup lang="ts">
+<script setup>
 import SignIn from '../components/basic/SignIn.vue';
 import IconPerson from '../components/icons/IconPerson.vue';
 import IconHeart from '../components/icons/IconHeart.vue';
@@ -136,11 +136,9 @@ const toggleDropdown1 = () => {
                         <IconPerson />
                     </SignIn>
                 </RouterLink>
-                <router-link class="no-underline" to="/wishlist-page1">
-                    <SignIn text="Favorites">
-                        <IconHeart />
-                    </SignIn>
-                </router-link>
+                <SignIn text="Favorites">
+                    <IconHeart />
+                </SignIn>
                 <RouterLink class="no-underline" to="/cart">
                     <SignIn text="Card">
                         <IconCard />
@@ -152,3 +150,4 @@ const toggleDropdown1 = () => {
         </div>
     </div>
 </template>
+

@@ -1,6 +1,7 @@
 <template>
     <div class="container-fluid ">
         <div class="bg-img">
+            <!-- <AddToCardButton color="#0000FF" colorText="#FFFFFF" width="300px" height="100px" text="Shop Now"></AddToCardButton> -->
             <div class="container position-absolute">
                 <div class="row justify-content-end">
                     <div class="col-6 ">
@@ -19,6 +20,10 @@
                                 <label>
                                     <input type="checkbox" checked="checked" name="remember"> Remember me
                                 </label>
+                            </div>
+
+                            <div class="container">
+                                <span class="psw"><a href="#">Forgot password?</a></span>
                             </div>
                             <div class="container">
                                 <button type="submit">Login</button>
@@ -65,12 +70,15 @@ export default {
 //     background-size: cover; /* Resize the background image to cover the entire container */
 // }
 .container-fluid {
-    background-image: url("/src/assets/image/abstract-1264071_1920.png");
+    /* The image used */
+    background-image: url("/src/assets/image/admin.jpg");
+
     min-height: 715px;
+
+    /* Center and scale the image nicely */
     background-position: center;
     background-repeat: no-repeat;
-    background-size: 100% 100%;
-
+    background-size: cover;
     position: relative;
 }
 
@@ -98,7 +106,7 @@ input[type=password] {
     padding: 10px 20px;
     margin: 10px 0;
     display: inline-block;
-    border: 1px solid #4aafa3;
+    border: 1px solid #41393f;
     box-sizing: border-box;
     //   border: none;
 }
