@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RoutingView from '@/views/RoutingView.vue'
 import MainPageView from '@/views/MainPageView.vue'
-import Adress from '@/views/Adress.vue'
-import ProductsCart from "../views/cart/index.vue"
+import Address from '@/views/Address.vue'
+import ProductsCart from '../views/cart/index.vue'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -88,12 +88,12 @@ const router = createRouter({
       component: () => import('../views/TestCard.vue')
     },
     {
-      path: '/cart',
-      name: 'cart',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/CartPage.vue')
+      // path: '/cart',
+      // name: 'cart',
+      // // route level code-splitting
+      // // this generates a separate chunk (About.[hash].js) for this route
+      // // which is lazy-loaded when the route is visited.
+      // component: () => import('../views/CartPage.vue')
     },
     {
       path: '/products',
@@ -146,11 +146,10 @@ const router = createRouter({
       component: () => import('../views/Address.vue')
     },
     {
-      path: "/products-cart",
-      name: "products-cart",
-      component: ProductsCart,
-    },
-
+      path: '/products-cart',
+      name: 'products-cart',
+      component: ProductsCart
+    }
   ]
 })
 
