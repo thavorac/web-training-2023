@@ -7,9 +7,12 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 
 
+
 class ProductController extends Controller
 {
-
+    
+    // -- Add product to cart
+   
         public function getProducts(){
             // $products = Product::with('images')->get();
             // // ->orderBy('id','desc')->get();// ->paginate()

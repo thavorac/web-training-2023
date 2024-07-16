@@ -11,7 +11,7 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('carts', function (Blueprint $table) {
+        Schema::create('cart_items', function (Blueprint $table) {
             $table->id();
             $table->timestamps();
 
@@ -22,13 +22,6 @@ return new class extends Migration
             $table->foreign('product_id')->references('id')->on('products');
         });
     }
-        // DB::table('carts')->insert([
-        //     'product_id' => 2,
-        //     'user_id' => $userId,
-        //     'updated_at' => now(),
-        //     'created_at' => now(),
-        // ]);
-    
 
     /**
      * Reverse the migrations.

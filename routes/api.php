@@ -13,6 +13,10 @@ use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderProductsController;
+use App\Http\Controllers\CartController;
+
+Route::post('/cart', [CartController::class, 'store']);
+
 
 
 // Route::middleware('auth:sanctum')->group(function () {
@@ -35,9 +39,13 @@ use App\Http\Controllers\OrderProductsController;
 |
 */
 
-Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-    return $request->user();
-});
+// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
+//     return $request->user();
+// });
+Route::post('/carts', [CartController::class, 'addProductToCart']);
+Route::delete('/carts', [CartController::class, 'removeProductFromCart']);
+Route::get('/carts', [CartController::class, 'getProductsFromCart']);
+Route::post('/user', [UserController::class, 'createUser']);
 
 // // Example category routes
 // Route::post('/categories', function (Request $request){
