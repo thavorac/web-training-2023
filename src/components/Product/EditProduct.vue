@@ -76,13 +76,15 @@ const updateProduct = async () => {
 
     if (image.value) {
         formData.append('image', image.value);
+        handleCancel(); // Redirect after successful creation
     }
 
     try {
-        const response = await axios.patch(`http://localhost:80/api/products/${productId}`, formData, {
+        const response = await axios.post(`http://localhost:80/api/products/${productId}`, formData, {
             headers: {
                 'Content-Type': 'multipart/form-data',
-            },
+                'X-HTTP-Method-Override': 'PATCH'
+            }
         });
 
         // Update reactive variables with updated product data
@@ -122,25 +124,25 @@ const handleCancel = () => {
                             Name</label>
                         <input v-model="productName" type="text" name="name" id="name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Type product name" required>
+                            placeholder="Type product name">
                     </div>
                     <div class="sm:col-span-2">
                         <label for="brand" class="block mb-2 font-semibold text-gray-900 dark:text-white">Brand</label>
                         <input v-model="brand" type="text" name="brand" id="brand"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Type brand" required>
+                            placeholder="Type brand">
                     </div>
                     <div class="sm:col-span-2">
                         <label for="size" class="block mb-2 font-semibold text-gray-900 dark:text-white">Size</label>
                         <input v-model="size" type="text" name="size" id="size"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Type size" required>
+                            placeholder="Type size">
                     </div>
                     <div class="sm:col-span-2">
                         <label for="price" class="block mb-2 font-semibold text-gray-900 dark:text-white">Price</label>
                         <input v-model.number="price" type="number" name="price" id="price"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="$2999" required>
+                            placeholder="$2999">
                     </div>
                     <div class="sm:col-span-2">
                         <label for="category"

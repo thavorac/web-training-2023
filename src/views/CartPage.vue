@@ -54,11 +54,15 @@
                     </div>
                 </div>
             </div>
+
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
+
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import MenuHeader from '@/components/MenuHeader.vue';
@@ -97,7 +101,8 @@ const total = computed(() =>
 </script>
 
 <style scoped>
+
 i {
-    cursor: pointer;
+  cursor: pointer;
 }
 </style>

@@ -8,12 +8,6 @@ const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [
     {
-      path: '/getImage',
-      name: 'Image',
-      component: () => import('../API/GetImages.vue')
-    },
-
-    {
       path: '/',
       name: 'home',
       component: MainPageView, //RoutingView,
@@ -25,6 +19,11 @@ const router = createRouter({
           path: 'showProducts',
           name: 'show-product',
           component: () => import('../views/Home/ListProductView.vue')
+        },
+        {
+          path: 'cart',
+          name: 'cart',
+          component: () => import('../views/Home/Cart.vue')
         },
         {
           path: 'categories/:categoryId/products',
@@ -131,14 +130,14 @@ const router = createRouter({
       name: 'testCard',
       component: () => import('../views/TestCard.vue')
     },
-    {
-      path: '/cart',
-      name: 'cart',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/CartPage.vue')
-    },
+    // {
+    //   path: '/cart',
+    //   name: 'cart',
+    //   // route level code-splitting
+    //   // this generates a separate chunk (About.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import('../views/CartPage.vue')
+    // },
     // {
     //   path : '/report',
     //   name : 'report',
@@ -160,57 +159,8 @@ const router = createRouter({
     // ++++++++++++++++++++++++++++++++++++++++++ END GET PRODUCT ++++++++++++++++++++++++++++++++++++++
 
     // ++++++++++++++++++++++++++++++++++++++++++ GET CATEGORY ++++++++++++++++++++++++++++++++++++++
-    {
-      path: '/form-category',
-      name: 'createFormCategory',
-      component: () => import('../API/Categories/CreateFormCategory.vue')
-    },
-    {
-      path: '/getCategory',
-      name: 'Category',
-      component: () => import('../API/Categories/GetCategory.vue')
-    },
 
     // =========================================== MainLayout for admin dashboard ============================================================
-    {
-      path: '/main-layout',
-      name: 'MainLayout',
-      component: () => import('../layout/MainLayout.vue'),
-      children: [
-        // {
-        //   path: '/edit-category/:id',
-        //   name: 'Edit-category',
-        //   component: () => import('../API/Categories/EditCategory.vue'),
-        //   props: true
-        // },
-        {
-          path: '/product-form',
-          name: 'product-form',
-          component: () => import('../API/Products/ProductForm.vue')
-        },
-        {
-          path: '/getCategory',
-          name: 'Category',
-          component: () => import('../API/Categories/GetCategory.vue')
-        },
-        {
-          path: '/getProducts',
-          name: 'get-product',
-          component: () => import('../API/Products/GetProduct.vue')
-        },
-        {
-          path: '/edit-product/:id',
-          name: 'Edit-product',
-          component: () => import('../API/Products/EditProduct.vue'),
-          props: true
-        },
-        {
-          path: '/form-category',
-          name: 'createFormCategory',
-          component: () => import('../API/Categories/CreateFormCategory.vue')
-        }
-      ]
-    },
 
     // ++++++++++++++++++++++++++++++++++++++++++END GET CATEGORY ++++++++++++++++++++++++++++++++++++++
 
