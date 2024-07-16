@@ -1,156 +1,180 @@
 <template>
-  <div class="container-fluid ">
-    <!-- <AddToCardButton color="#0000FF" colorText="#FFFFFF" width="300px" height="100px" text="Shop Now"></AddToCardButton> -->
-    <div class="container">
-      <div class="row">
-        <div class="col-6">
-          <div class="img_bg"></div>
-        </div>
-        <div class="col-6">
-          <form class="shadow-lg p-3 bg-white rounded" action="" method="post">
-            <div class="container">
-              <h1>Sign Up</h1>
-              <p>Please fill in this form to create an account.</p>
-              <hr>
-
-              <label for="email"><b>Email</b></label>
-              <input type="text" placeholder="Enter Email" name="email" required>
-
-              <label for="number"><b>Phone Number</b></label>
-              <input type="tel" placeholder="+855 324 XXX XXX " name="number" id="">
-
-              <label for="psw"><b>Password</b></label>
-              <input type="password" placeholder="Enter Password" name="psw" required>
-
-              <label for="psw-repeat"><b>Confirm Password</b></label>
-              <input type="password" placeholder="confirm Password" name="psw-repeat" required>
-
-              <label>
-                <input type="checkbox" checked="checked" name="remember" style="margin-bottom:15px"> Remember me
-              </label>
-
-              <p>By creating an account you agree to our <a href="#" style="color:dodgerblue">Terms & Privacy</a>.</p>
-
-              <div class="clearfix">
-                <RouterLink to="/">
-                  <button type="button" class="cancelbtn">Cancel</button>
-                </RouterLink>
-                <button type="submit" class="signupbtn">Sign Up</button>
+  <div class="container-fluid">
+    <div class="bg-img">
+      <div class="container position-absolute">
+        <div class="row justify-content-end">
+          <div class="col-6">
+            <form class="shadow-lg px-3 bg-white rounded-4 float-end" @submit.prevent="register">
+              <div class="imgcontainer">
+                <h1>Register</h1>
               </div>
-            </div>
-          </form>
+              <div class="container">
+                <label>Email</label>
+                <input type="email" v-model="email" placeholder="Enter Email" required>
+
+                <label for="uname">Username</label>
+                <input type="text" v-model="username" placeholder="Enter Username" required>
+
+                <label for="psw">Password</label>
+                <input type="password" v-model="password" placeholder="Enter Password" required>
+
+                <label for="psw">Confirm Password</label>
+                <input type="password" v-model="confirmPassword" placeholder="Enter Confirm Password" required>
+              </div>
+              <div class="container d-flex justify-content-between align-items-center">
+                <router-link to="/sign-in">
+                  <button type="button" class="cancelbtn">Cancel</button>
+                </router-link>
+                <button class="btn btn-primary" type="submit">SignUp</button>
+              </div>
+            </form>
+          </div>
         </div>
       </div>
     </div>
   </div>
-
 </template>
 
-
 <script setup>
+import { ref } from 'vue';
+import axios from 'axios';
 
+const username = ref('');
+const email = ref('');
+const password = ref('');
+const confirmPassword = ref('');
 
+const register = () => {
+  if (password.value !== confirmPassword.value) {
+    alert("Password and Confirm Password do not match");
+    return;
+  }
+
+  axios.post('http://localhost:80/api/register', {
+    username: username.value,
+    email: email.value,
+    password: password.value,
+    confirm_password: confirmPassword.value,
+  })
+  .then(response => {
+    alert(response.data.message); // Assuming the server returns a message
+    // Redirect to login page or do other actions as needed
+  })
+  .catch(error => {
+    console.error('Error during registration:', error);
+    alert('Registration failed. Please try again.');
+  });
+};
 </script>
 
 <style scoped lang="scss">
 .container {
   width: 100%;
   height: 100%;
-  margin-top: 20px;
+  margin-top: 10px;
 }
 
-.img_bg {
-  background-image: url("/src/assets/image/signin.jpg");
-  /* The image used */
+.container-fluid {
+  background-image: url("/src/assets/image/abstract-1264071_1920.png");
+  min-height: 715px;
   background-position: center;
-  /* Center the image */
-  height: 500px;
-  width: 500px;
-  margin-top: 100px;
   background-repeat: no-repeat;
-  /* Do not repeat the image */
   background-size: cover;
-  /* Resize the background image to cover the entire container */
+  position: relative;
+}
+
+h1 {
+  text-align: center;
 }
 
 form {
-  width: 85%;
+  width: 75%;
+}
+
+.form-group .btn {
+  width: 100%;
+  margin-bottom: 10px;
+}
+
+.form-group {
+  margin-top: 10px;
 }
 
 body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-* {
-  box-sizing: border-box
-}
-
-/* Full-width input fields */
 input[type=text],
 input[type=password],
-input[type=tel] {
+input[type=email] {
   width: 100%;
-  padding: 5px;
-  margin: 2px 0 22px 0;
+  padding: 7px 20px;
+  margin: 10px 0;
   display: inline-block;
-  border: 1px solid #ccc;
+  box-sizing: border-box;
+  border-radius: 7px;
+  border: 1px solid #c53636;
 }
 
-hr {
-  border: 1px solid #f1f1f1;
-  margin-bottom: 25px;
+.gender {
+  padding-right: 10px;
 }
 
-/* Set a style for all buttons */
 button {
-  background-color: #04AA6D;
+  background-color: #779341;
   color: white;
-  padding: 14px 20px;
-  margin: 8px 0;
+  padding: 10px 20px;
+  margin: 10px 0;
+  margin-bottom: 10px;
   border: none;
+  border-radius: 7px;
+  float: right;
   cursor: pointer;
-  width: 100%;
-  opacity: 0.9;
+  width: 25%;
+  margin-bottom: 20px;
 }
 
 button:hover {
-  opacity: 1;
+  opacity: 0.8;
 }
 
-/* Extra styles for the cancel button */
 .cancelbtn {
-  padding: 10px 10px;
-  border-radius: 7px;
+  width: auto;
+  padding: 10px 18px;
   background-color: #f44336;
-  float: left;
-  width: 40%;
 }
 
-/* Float cancel and signup buttons and add an equal width */
-.signupbtn {
-  padding: 10px 10px;
-  border-radius: 7px;
-  float: right;
-  width: 40%;
+.imgcontainer {
+  padding-left: 10px;
+  margin: 24px 0 12px 0;
 }
 
-/* Add padding to container elements */
+.imgcontainer h1 {
+  padding-top: 20px;
+  padding-bottom: 10px;
+}
+
+img.avatar {
+  width: 40%;
+  border-radius: 50%;
+}
+
 .container {
-  padding: 16px;
+  padding: 10px;
 }
 
-/* Clear floats */
-.clearfix::after {
-  content: "";
-  clear: both;
-  display: table;
+span.psw {
+  float: right;
+  padding-top: 10px;
 }
 
-/* Change styles for cancel button and signup button on extra small screens */
 @media screen and (max-width: 300px) {
+  span.psw {
+    display: block;
+    float: none;
+  }
 
-  .cancelbtn,
-  .signupbtn {
+  .cancelbtn {
     width: 100%;
   }
 }

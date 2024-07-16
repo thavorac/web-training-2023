@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RoutingView from '@/views/RoutingView.vue'
 import MainPageView from '@/views/MainPageView.vue'
-import Address from '@/views/Address.vue'
 import ProductsCart from '../views/cart/index.vue'
+import { adminRouter } from './admin'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -19,6 +19,7 @@ const router = createRouter({
       //   }
       // ]
     },
+
     {
       path: '/about',
       name: 'about',
@@ -27,6 +28,7 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/HomeView.vue')
     },
+    ...adminRouter,
     {
       path: '/electronic',
       name: 'electronic',
@@ -57,11 +59,11 @@ const router = createRouter({
       name: 'buttonshop',
       component: () => import('../components/basic/ButtonShop.vue')
     },
-    {
-      path: '/admin',
-      name: 'admin',
-      component: () => import('../components/AdminLogin.vue')
-    },
+    // {
+    //   path: '/admin',
+    //   name: 'admin',
+    //   component: () => import('../components/AdminLogin.vue')
+    // },
     {
       path: '/forgot-password',
       name: 'forgot-password',
@@ -75,7 +77,7 @@ const router = createRouter({
     {
       path: '/sign-up',
       name: 'signup',
-      component: () => import('../components/Signup.vue')
+      component: () => import('../components/SignUp.vue')
     },
     {
       path: '/signIn',
@@ -141,7 +143,8 @@ const router = createRouter({
       component: () => import('../views/RecipeView.vue')
     },
     {
-      path: '/adress',
+      path: '/address',
+      path: '/address',
       name: 'adress',
       component: () => import('../views/Address.vue')
     },
@@ -149,6 +152,21 @@ const router = createRouter({
       path: '/products-cart',
       name: 'products-cart',
       component: ProductsCart
+    },
+    {
+      path: '/customerList',
+      name: 'CustomerList',
+      component: () => import('../views/CustomerList.vue')
+    },
+    {
+      path: '/customer-detail',
+      name: 'CustomerDitai',
+      component: () => import('../views/CustomerDetail.vue')
+    },
+    {
+      path: '/order-list',
+      name: 'OrderList',
+      component: () => import('../views/OrderList.vue')
     }
   ]
 })

@@ -29,20 +29,14 @@
                                     <td>
                                         <img :src="item.image" width="60" height="60" class="img-fluid rounded" alt="">
                                     </td>
-                                    <td>
-                                        {{ item.name }}
-                                    </td>
+                                    <td>{{ item.name }}</td>
                                     <td>
                                         <i class="bi bi-plus-circle-fill" @click="incrementQ(item)"></i>
                                         {{ item.quantity }}
                                         <i class="bi bi-dash-circle-fill" @click="decrementQ(item)"></i>
                                     </td>
-                                    <td>
-                                        {{ item.price }}
-                                    </td>
-                                    <td>
-                                        {{ item.price * item.quantity }}
-                                    </td>
+                                    <td>{{ item.price }}</td>
+                                    <td>{{ item.price * item.quantity }}</td>
                                     <td>
                                         <i @click="removeFromCart(item)" class="bi bi-cart-x text-danger fx-bo"></i>
                                     </td>
@@ -60,12 +54,16 @@
                     </div>
                 </div>
             </div>
+
         </div>
+      </div>
     </div>
+  </div>
 </template>
 
 <script setup>
-import { ref, computed } from 'vue';
+
+import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import MenuHeader from '@/components/MenuHeader.vue';
 import CategoriesHead from '@/components/CategoriesHead.vue';
@@ -83,7 +81,7 @@ const fetchProducts = async () => {
     }
 };
 
-fetchProducts();
+onMounted(fetchProducts);
 
 const incrementQ = (item) => {
     data.incrementQ(item);
@@ -103,7 +101,8 @@ const total = computed(() =>
 </script>
 
 <style scoped>
+
 i {
-    cursor: pointer;
+  cursor: pointer;
 }
 </style>

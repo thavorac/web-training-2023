@@ -61,7 +61,7 @@ const imageTop5 = new URL("../assets/image/top5.png", import.meta.url);
     </div>
 
     <!-- Top100 -->
-    <FlashSale text="Top100"></FlashSale>
+    <FlashSale class="pt-10" text="Top100"></FlashSale>
     <div class="top100Card1">
         <Top100Card1 disPrice="120$" newPrice="$123" fullPrice="200$" productName="Mango"
             productTitle="Komono & Caftan-Black-Regular fit" rate="(289)" :top100Img1="top100Card1"></Top100Card1>
@@ -105,22 +105,23 @@ const imageTop5 = new URL("../assets/image/top5.png", import.meta.url);
 <style scopted>
 .product_card {
     /* width: 1260px; */
-    width: 1518px;
+    /* width: 1518px; */
     height: 380px;
     display: flex;
     /* gap: 20px; */
-    gap: 45px;
-    padding-left: 88px;
+    gap: 10px;
+    padding-left: 16px;
     margin-top: 37px;
 }
 
 .trending_collection {
-    width: 1260px;
-    height: 437px;
+    /* width: 1260px; */
+    height: 410px;
     display: flex;
+    padding-right: 20px;
     /* gap: 20px; */
-    gap: 60px;
-    padding-left: 88px;
+    /* gap: 60px; */
+    /* padding-left: 88px; */
     margin-top: 37px;
     /* margin-top: 200px; */
 }
@@ -129,20 +130,22 @@ const imageTop5 = new URL("../assets/image/top5.png", import.meta.url);
     width: 1260px;
     height: 480px;
     display: flex;
-    gap: 47px;
+    gap: 10px;
     /* gap: 20px; */
-    padding-left: 88px;
+    padding-left: 1px;
     margin-top: 37px;
+  
 }
 
 .top100Card4 {
-    width: 1440px;
+    /* width: 1440px; */
     height: 384px;
-    padding: 0px 90px;
+    /* padding: 0px 90px; */
     display: flex;
-    gap: 101px;
-    /* gap: 20px; */
-    padding-left: 88px;
+    gap: 1px;
+    gap: 10px;
+    padding-left: 5px;
+    padding-right: 20px;
     margin-top: 47px;
 }
 
@@ -151,13 +154,15 @@ const imageTop5 = new URL("../assets/image/top5.png", import.meta.url);
 }
 
 .top100Card41 {
-    width: 1440px;
+    /* width: 1440px; */
     height: 347px;
-    padding: 0px 90px;
+    /* padding: 0px 90px; */
     display: flex;
-    gap: 99px;
+    gap: 3px;
     /* ? gap: 20px; */
-    padding-left: 88px;
+    padding-left: 16px;
+    padding-right: 10px;
     margin-top: 47px;
 }
 </style>
+

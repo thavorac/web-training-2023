@@ -71,10 +71,10 @@ option {
 }
 
 .container {
-    width: 1440px;
+    /* width: 1440px; */
     height: 96px;
     padding: 28px 90px;
-    gap: 147px;
+    gap: 65px; 
     background-color: #FFFFFF;
     display: flex;
     flex-direction: row;
