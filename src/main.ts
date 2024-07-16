@@ -6,6 +6,16 @@ import { createApp } from 'vue'
 import { createPinia } from 'pinia'
 import App from './App.vue'
 import router from './router'
+import Swal from 'sweetalert2/dist/sweetalert2.js'
+import 'sweetalert2/src/sweetalert2.scss'
+// import store from './stores/wishlist' // Import the store
+
+import store from './stores'
+
+// using antd to create an adminSideBar
+
+import Antd from 'ant-design-vue'
+import 'ant-design-vue/dist/reset.css'
 
 import 'vue-toastification/dist/index.css'
 import 'bootstrap/dist/css/bootstrap.min.css'
@@ -30,5 +40,3 @@ app.use(router)
 app.use(Toast)
 
 app.mount('#app')
-
-

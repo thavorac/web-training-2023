@@ -3,7 +3,7 @@
     <div class="bg-img">
       <div class="container position-absolute">
         <div class="row justify-content-end">
-          <div class="col-6">
+          <div class="col-9">
             <form class="shadow-lg px-3 bg-white rounded-4 float-end" @submit.prevent="register">
               <div class="imgcontainer">
                 <h1>Register</h1>
@@ -15,6 +15,9 @@
                 <label for="uname">Username</label>
                 <input type="text" v-model="username" placeholder="Enter Username" required />
 
+                <!-- <label for="">Phone Number</label>
+                <input type="text" v-model="phoneNumber" required> -->
+
                 <label for="psw">Password</label>
                 <input type="password" v-model="password" placeholder="Enter Password" required />
 
@@ -25,10 +28,16 @@
                   placeholder="Enter Confirm Password"
                   required
                 />
+
+                <!-- <span class="gender">Gender: </span>
+                <input type="radio" id="gender1" v-model="gender" value="male">
+                <label for="gender1">Male</label>
+                <input type="radio" id="gender2" v-model="gender" value="female">
+                <label for="gender2">Female</label><br> -->
               </div>
-              <div class="container d-flex justify-content-between align-items-center">
-                <router-link to="/sign-in">
-                  <button type="button" class="cancelbtn">Cancel</button>
+              <div class="container d-flex justify-content-end align-items-center">
+                <router-link to="/sign-in" class="mr-2">
+                  <button type="button" class="cancelbtn btn btn-secondary">Cancel</button>
                 </router-link>
                 <button class="btn btn-primary" type="submit">SignUp</button>
               </div>
@@ -40,36 +49,48 @@
   </div>
 </template>
 
-<script setup>
-import { ref } from 'vue'
-import axios from 'axios'
+<script>
+import axios from 'axios';
+import { useRouter } from 'vue-router';
+import Swal from 'sweetalert2';
 
-const username = ref('')
-const email = ref('')
-const password = ref('')
-const confirmPassword = ref('')
+const username = ref('');
+const email = ref('');
+const phoneNumber = ref('');
+const password = ref('');
+const confirmPassword = ref('');
+const gender = ref('');
+
+const router = useRouter();
 
 const register = () => {
   if (password.value !== confirmPassword.value) {
-    alert('Password and Confirm Password do not match')
-    return
-  }
+    Swal.fire({
+      icon: 'error',
+      title: 'Error',
+      text: 'Password and Confirm Password do not match',
+    });
+        return;
+      }
 
-  axios
-    .post('http://localhost:80/api/register', {
-      username: username.value,
-      email: email.value,
-      password: password.value,
-      confirm_password: confirmPassword.value
-    })
-    .then((response) => {
-      alert(response.data.message) // Assuming the server returns a message
-      // Redirect to login page or do other actions as needed
-    })
-    .catch((error) => {
-      console.error('Error during registration:', error)
-      alert('Registration failed. Please try again.')
-    })
+      axios.post('http://localhost:80/api/register', {
+        username: this.username,
+        email: this.email,
+        // phone_number: this.phoneNumber,
+        password: this.password,
+        confirm_password: this.confirmPassword,
+        // gender: this.gender
+      })
+        .then(response => {
+          alert(response.data.message); // Assuming the server returns a message
+          // Redirect to login page or do other actions as needed
+        })
+        .catch(error => {
+          console.error('Error during registration:', error);
+          alert('Registration failed. Please try again.');
+        });
+    }
+  }
 }
 </script>
 
@@ -85,7 +106,7 @@ const register = () => {
   min-height: 715px;
   background-position: center;
   background-repeat: no-repeat;
-  background-size: cover;
+  background-size: 100% 100%;
   position: relative;
 }
 
@@ -94,7 +115,7 @@ h1 {
 }
 
 form {
-  width: 75%;
+  width: 60%;
 }
 
 .form-group .btn {
@@ -119,7 +140,7 @@ input[type='email'] {
   display: inline-block;
   box-sizing: border-box;
   border-radius: 7px;
-  border: 1px solid #c53636;
+  border: 1px solid #4aafa3;
 }
 
 .gender {
@@ -129,15 +150,18 @@ input[type='email'] {
 button {
   background-color: #779341;
   color: white;
-  padding: 10px 20px;
+  padding: 10px 10px;
   margin: 10px 0;
   margin-bottom: 10px;
   border: none;
   border-radius: 7px;
-  float: right;
   cursor: pointer;
-  width: 25%;
+  width: 20%;
   margin-bottom: 20px;
+}
+
+input {
+  padding-top: 10px;
 }
 
 button:hover {
@@ -148,6 +172,7 @@ button:hover {
   width: auto;
   padding: 10px 18px;
   background-color: #f44336;
+  margin-right: 20px;
 }
 
 .imgcontainer {

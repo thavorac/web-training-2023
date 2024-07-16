@@ -2,10 +2,14 @@
 import { computed } from 'vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
-
+import ProductView from '../../views/CategoryView.vue';
 const store = useStore();
 const admin = computed(() => store.getters.getAdmin);
 const router = useRouter();
+const logoutHandler = () => {
+  store.dispatch('logout');
+  router.push('/login'); // Redirect to sign-in page after logout
+};
 
 if (!store.getters.isAuthenticated || !admin.value) {
   router.push('/login'); // Redirect to login if not authenticated or admin not found
@@ -97,9 +101,9 @@ if (!store.getters.isAuthenticated || !admin.value) {
                         </router-link>
                       </div>
                       <div class="col-sm-2">
-                        <router-link to="/" class="mr-1">
+                        <a href="#" @click="logoutHandler">
                           <button type="button" class="btn btn-danger">Logout</button>
-                        </router-link>
+                      </a>
                       </div>
                     </div>
                     </div>
