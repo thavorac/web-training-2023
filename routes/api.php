@@ -212,6 +212,9 @@ Route::post('/login', [AuthenticationController::class, 'login']);
 Route::post('/forgot-password', [AuthenticationController::class, 'forgotPassword']);
 Route::get('reset-password/{token}', [AuthenticationController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [AuthenticationController::class, 'resetPassword']);
+Route::post('/logout', [AuthenticationController::class, 'logout']);
+
+use App\Http\Controllers\StripeController;
 
 // Stripe payment session routes
 Route::post('/create-checkout-session', [StripeController::class, 'session']);
