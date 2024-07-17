@@ -1,5 +1,7 @@
 <?php
 
+// app/Http/Controllers/ProductController.php
+
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
@@ -9,6 +11,11 @@ use Illuminate\Support\Facades\Storage;
 
 class ProductController extends Controller
 {
+    // Get all products
+    public function index()
+    {
+        return Product::with('category')->get();
+    }
 
         public function getProducts(){
             // $products = Product::with('images')->get();
@@ -522,33 +529,15 @@ public function getProduct($productId)
     }
     public function findProductsOfCategory($productId)
     {
-        $product = Product::find($productId);
+        $product = Product::find($id);
 
-        if ($product) {
-            return $product->category;
-        } else {
-            return response(["message" => "Can't found that product"], 400);
+        if (!$product) {
+            return response()->json(['message' => 'Product not found'], 404);
         }
+
+        $product->delete();
+
+        return response()->json(['message' => 'Product deleted successfully']);
     }
-
-    //     public function updateProduct($productId)
-    // {
-    //     try {
-    //         // Find the product by its ID
-    //         $product = Product::find($productId);
-
-    //         if ($product) {
-    //             // Return the product data
-    //             return response()->json(['message' => 'success', 'data' => $product]);
-    //         } else {
-    //             // Return a 404 response if the product is not found
-    //             return response()->json(['message' => 'Product not found'], 404);
-    //         }
-    //     } catch (\Exception $e) {
-    //         // Handle any exceptions that occur during the database operation
-    //         return response()->json(['message' => 'Error fetching product', 'error' => $e->getMessage()], 500);
-    //     }
-    // }
-
-
 }
+

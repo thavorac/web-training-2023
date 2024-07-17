@@ -9,6 +9,8 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\Order_productsController;
 use App\Http\Controllers\AuthenticationController;
+use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\AdminAuthController;
 /*
 |--------------------------------------------------------------------------
 | API Routes
@@ -23,6 +25,7 @@ use App\Http\Controllers\AuthenticationController;
 Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
     return $request->user();
 });
+
 
 
 // Route::post('/categories', function (Request $request){
@@ -87,6 +90,7 @@ Route::get('/categories/{categoryId}/products', [CategoryController::class,'getP
 Route::get('/products', [ProductController::class,'getProducts']);
 Route::post('/products', [ProductController::class,'createProduct']);
 Route::get('/products/{productId}', [ProductController::class,'getProduct']);
+Route::get('/products', [ProductController::class,'index']);
 Route::patch('/products/{productId}', [ProductController::class,'updateProduct']);
 Route::delete('/products/{productId}', [ProductController::class,'deleteProduct']);
 Route::get('/products/{productId}/images', [ProductController::class,'getImagesOfProduct']);
@@ -121,8 +125,7 @@ Route::get('/order_products/{order_productsId}',[Order_productsController::class
 Route::patch('/order_products/{order_productsId}',[Order_productsController::class , 'updateOrderProduct']);
 Route::delete('/order_products/{order_productsId}',[Order_productsController::class,'deleteOrderProduct']);
 
-// api for Authentication
-Route::post('/register',[AuthenticationController::class,'register']);
+
 
 
 // add product form 
@@ -146,18 +149,13 @@ Route::post('/register',[AuthenticationController::class,'register']);
 // Route::delete('/products/{categoryId}',[CategoryController::class, 'deteProduct']);
 
 
+// api for user Authentication
 Route::post('/register',[AuthenticationController::class,'register']);
-
 Route::post('/login', [AuthenticationController::class, 'login']);
-
-
-
-// Route::post('/resetPassword', [AuthenticationController::class, 'resetPassword']);
-
 Route::post('/forgot-password', [AuthenticationController::class, 'forgotPassword']);
-
 Route::get('reset-password/{token}', [AuthenticationController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [AuthenticationController::class, 'resetPassword']);
+Route::post('/logout', [AuthenticationController::class, 'logout']);
 
 use App\Http\Controllers\StripeController;
 
@@ -167,8 +165,17 @@ Route::get('/success', [StripeController::class, 'success'])->name('success');
 
 
 
+Route::prefix('admin')->group(function () {
+    Route::post('/login', [AdminAuthController::class, 'login']);
+    Route::middleware('auth:admin')->post('/logout', [AdminAuthController::class, 'logout']);
+});
 
-
-
-
-
+//promotion
+Route::get('/promotions', [PromotionController::class, 'index']);
+Route::get('/promotions/create', [PromotionController::class, 'create']);
+Route::post('/promotions', [PromotionController::class, 'store']);
+Route::get('/promotions/{id}', [PromotionController::class, 'show']);
+Route::get('/promotions/{id}/edit', [PromotionController::class, 'edit']);
+Route::put('/promotions/{id}', [PromotionController::class, 'update']);
+Route::delete('/promotions/{id}', [PromotionController::class, 'destroy']);
+Route::get('/promotions/history', [PromotionController::class, 'history']);

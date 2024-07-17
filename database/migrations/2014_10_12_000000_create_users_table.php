@@ -18,7 +18,11 @@ return new class extends Migration
             $table->string('last_name')->nullable();
             $table->date('date_of_birth')->nullable();
             $table->string('address')->nullable();
+<<<<<<< HEAD
             $table->enum('gender', ['male', 'female',])->nullable();
+=======
+            $table->enum('gender', ['male', 'female'])->nullable();
+>>>>>>> 15da5c16a21062cb8f7353d52d3c45291afcdc7f
             $table->string('phone_number')->nullable();
             $table->string('email')->unique();
             $table->timestamp('email_verified_at')->nullable();

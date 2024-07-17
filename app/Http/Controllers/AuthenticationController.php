@@ -10,30 +10,30 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Auth;
 use App\Mail\ResetPasswordMail;
-
-
 use Illuminate\Support\Str;
-
+use Laravel\Sanctum\HasApiTokens;
 
 
 class AuthenticationController extends Controller
 {
     public function register(Request $request) {
         // 1. Make sure that email is not used yet
-        // $user = User::where("email", $request->get("email"))->get(); // return as []
-        $userFound = User::where("email", $request->get("email"))->first(); // return as {}
+        $userFound = User::where("email", $request->get("email"))->first();
         if ($userFound) {
-            return response(["message" => "This email already exist"], 400);
+            return response(["message" => "This email already exists"], 400);
         } else {
             // 2. Compare password with confirm password
             if ($request->get("password") == $request->get("confirm_password")) {
                 // 3. Encrypt password before save to database
                 $user = new User();
-                $user->name = $request->get("username");
+                $user->first_name = $request->get("first_name");
+                $user->last_name = $request->get("last_name");
+                $user->date_of_birth = $request->get("date_of_birth");
+                $user->address = $request->get("address");
                 $user->email = $request->get("email");
+                $user->phone_number = $request->get("phone_number");
                 $user->password = Hash::make($request->get("password"));
-                // $user->phone_number = $request->get("phone_number");
-                // $user->gender
+                $user->gender = $request->get("gender");
                 $user->otp = mt_rand(100000, 999999);
 
                 $user->save();
@@ -41,40 +41,67 @@ class AuthenticationController extends Controller
                 $linkOTP = "http://localhost:80/verify_otp?user_id=".$user->id."&otp=".$user->otp;
                 Mail::to($user->email)->send(new OtpMail($linkOTP));
 
-                return response(["message" => "good"]);
+                 // Create token
+                $token = $user->createToken('auth_token')->plainTextToken;
+
+                return response()->json([
+                    'message' => 'Registration successful',
+                    'access_token' => $token,
+                    'token_type' => 'Bearer',
+                ]);
+                return response(["message" => "Registration successful"]);
             } else {
-                return response(["message" => "Password and Confirm Password are not match"], 400);
+                return response(["message" => "Password and Confirm Password do not match"], 400);
             }
+            
         }
     }
 
-    public function verifyOTP(Request $request) {
+    public function verifyOTP(Request $request)
+    {
         $user = User::find($request->query('user_id'));
-
-        if ($user) {
-           if ($user->otp == $request->query('otp')) {
-               $user->email_verified_at = Carbon::now();
-               $user->save();
-
-               return response(["message" => "Email is verified. You can start login"]);
-           } else {
-               return response(["message" => "OTP is invalid"], 400);
-           }
+    
+        if (!$user) {
+            return response()->json(['message' => 'User not found'], 404);
+        }
+    
+        if ($user->otp == $request->query('otp')) {
+            $user->email_verified_at = Carbon::now();
+            $user->save();
+    
+            // Create token
+            $token = $user->createToken('auth_token')->plainTextToken;
+    
+            return response()->json([
+                'message' => 'Account activated successfully.',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+            ]);
         } else {
-            return response(["message" => "User not found"], 400);
+            return response()->json(['message' => 'Invalid OTP'], 400);
         }
     }
-    public function login(Request $request) {
+
+    public function login(Request $request)
+    {
         $credentials = $request->only('email', 'password');
     
         if (Auth::attempt($credentials)) {
-            // Authentication passed...
+            // Authentication passed
             $user = Auth::user();
-            return response(["message" => "Login successful", "user" => $user]);
+            $token = $user->createToken('auth_token')->plainTextToken;
+    
+            return response()->json([
+                'message' => 'Login successful',
+                'access_token' => $token,
+                'token_type' => 'Bearer',
+                'user' => $user,
+            ]);
         } else {
-            return response(["message" => "Invalid credentials"], 401);
+            return response()->json(['message' => 'Invalid credentials'], 401);
         }
     }
+    
     public function forgotPassword(Request $request)
     {
         $user = User::where('email', $request->input('email'))->first();
@@ -91,13 +118,11 @@ class AuthenticationController extends Controller
         $user->reset_password_created_at = now();
         $user->save();
 
-        // Send email with reset password link (you'll need to implement this)
         Mail::to($user->email)->send(new ResetPasswordMail($token));
 
         return response()->json(['message' => 'Reset password link sent to your email', 'token' => $token]);
     }
 
-    
     public function resetPassword(Request $request)
     {
         $user = User::where('reset_password_token', $request->input('token'))
@@ -121,7 +146,12 @@ class AuthenticationController extends Controller
     
         return response()->json(['message' => 'Password reset successfully']);
     }
-    
-    
 
+    public function logout(Request $request)
+    {
+        $request->user()->tokens()->delete();
+    
+        return response()->json(['message' => 'Logout successful']);
+    }
+    
 }
