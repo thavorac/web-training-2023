@@ -26,6 +26,8 @@ return new class extends Migration
             $table->string('style')->nullable();
             $table->string('model')->nullable();
             $table->string('shipping')->nullable();
+            $table->string('description');
+            $table->string('image');
             $table->timestamps();
 
             $table->bigInteger('category_id')->unsigned();
