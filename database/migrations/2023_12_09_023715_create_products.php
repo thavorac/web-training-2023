@@ -17,22 +17,20 @@ return new class extends Migration
             $table->double('pricing');
             $table->double('discount')->nullable();
             $table->string('tags')->nullable();
-            $table->timestamp('promotion_date')->nullable();
-            $table->string('color');
+            $table->string('color')->nullable();
             $table->integer('rating')->default(0);
             $table->integer('purchased_num')->default(0);
-            $table->string('size');
-            $table->string('brand');
+            $table->string('size')->nullable();
+            $table->string('brand')->nullable();
+            $table->string('image');
             $table->string('style')->nullable();
             $table->string('model')->nullable();
             $table->string('shipping')->nullable();
+            $table->string('description');
             $table->timestamps();
 
             $table->bigInteger('category_id')->unsigned();
             $table->foreign('category_id')->references('id')->on('categories');
-
-            $table->bigInteger('supplier_id')->unsigned();
-            $table->foreign('supplier_id')->references('id')->on('suppliers');
         });
     }
 
