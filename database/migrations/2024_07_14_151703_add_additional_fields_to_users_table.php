@@ -15,14 +15,14 @@ return new class extends Migration
             $table->string('first_name')->nullable();
             $table->string('last_name')->nullable();
             $table->date('date_of_birth')->nullable();
-            $table->string('address')->nullable();
+            //$table->string('address')->nullable();
         });
     }
 
     public function down()
     {
         Schema::table('users', function (Blueprint $table) {
-            $table->dropColumn(['first_name', 'last_name', 'date_of_birth', 'address']);
+            $table->dropColumn(['first_name', 'last_name', 'date_of_birth',]);
         });
     }
 };

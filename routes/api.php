@@ -230,7 +230,6 @@ Route::delete('orderdetails/{orderDetail}', [OrderDetailController::class, 'dest
 
 // User purchase route
 Route::post('purchase', [UserController::class, 'purchase']);
-?>
 
 Route::post('/logout', [AuthenticationController::class, 'logout']);
 
