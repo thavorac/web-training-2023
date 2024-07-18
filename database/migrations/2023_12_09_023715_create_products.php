@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->double('pricing');
-            $table->double('discount')->nullable();
+            $table->double('discounted_price')->nullable();
             $table->string('tags')->nullable();
             $table->timestamp('promotion_date')->nullable();
             $table->string('color')->nullable();
@@ -33,11 +33,6 @@ return new class extends Migration
             $table->bigInteger('category_id')->unsigned();
             $table->foreign('category_id')->references('id')->on('categories');
             
-            // $table->bigInteger('category_id')->unsigned()->nullable();
-            // $table->foreign('category_id')->references('id')->on('categories')->cascadeOnDelete();
-
-            // $table->bigInteger('supplier_id')->unsigned();
-            // $table->foreign('supplier_id')->references('id')->on('suppliers');
         });
     }
 
