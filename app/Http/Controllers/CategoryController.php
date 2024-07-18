@@ -17,7 +17,7 @@ class CategoryController extends Controller
     //     // return "get categories";
     // }
     public function getCategories(){
-        return   Category::orderBy('id','desc')->paginate(10);
+        return   Category::orderBy('id','asc')->paginate(10);
     }
 
     // -- POST / api / categories == create category

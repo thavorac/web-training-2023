@@ -37,6 +37,7 @@ public function createImage(Request $request){
                 $images[]=$image;
             }
         }
+
         return ["message"=>"image create success","data"=>$image];
     }
 
