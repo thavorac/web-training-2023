@@ -79,12 +79,14 @@ class ProductController extends Controller
         $product = new Product();
         $product->name = $request->get('name');
         $product->pricing = $request->get('pricing');
-        $product->discounted_price = $request->get('pricing');
-        $product->color = $request->get('color');
+        // $product->discounted_price = $request->get('discounted_price');
+        // $product->color = $request->get('color');
         $product->size = $request->get('size');
         $product->brand = $request->get('brand');
+        $product->description = $request->get('description');
+        $product->image = $fileNameToStore; // Assign the image file name to the 'image' field
         $product->category_id = $request->get('category_id');
-        $product->supplier_id = $request->get('supplier_id');
+        // $product->supplier_id = $request->get('supplier_id');
 
         $product->save();
     
