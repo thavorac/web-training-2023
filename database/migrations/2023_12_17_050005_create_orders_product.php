@@ -11,30 +11,27 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('carts', function (Blueprint $table) {
+        Schema::create('orders_product', function (Blueprint $table) {
             $table->id();
-            $table->timestamps();
-
-            $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-
+            
             $table->bigInteger('product_id')->unsigned();
             $table->foreign('product_id')->references('id')->on('products');
+
+            $table->bigInteger('order_id')->unsigned();
+            $table->foreign('order_id')->references('id')->on('orders');
+
+            $table->integer('quantity');
+            $table->decimal('price', 8, 2);
+
+            $table->timestamps();
         });
     }
-        // DB::table('carts')->insert([
-        //     'product_id' => 2,
-        //     'user_id' => $userId,
-        //     'updated_at' => now(),
-        //     'created_at' => now(),
-        // ]);
-    
 
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('carts');
+        Schema::dropIfExists('orders_product');
     }
 };
