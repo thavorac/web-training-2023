@@ -113,7 +113,7 @@ const router = createRouter({
     {
       path: '/sign-up',
       name: 'signup',
-      component: () => import('../components/SignUp.vue')
+      component: () => import('../components/Signup.vue')
     },
     {
       path: '/verify_otp',
