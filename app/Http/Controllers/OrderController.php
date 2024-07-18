@@ -1,61 +1,36 @@
+/ app/Http/Controllers/OrderController.php
 <?php
-
 namespace App\Http\Controllers;
 
-use Illuminate\Http\Request;
 use App\Models\Order;
+use Illuminate\Http\Request;
+use Stripe\Stripe;
+use Stripe\PaymentIntent;
 
 class OrderController extends Controller
 {
-    public function getOrders(){
-        $orders = Order::all();
+    public function createPaymentIntent(Request $request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET'));
 
-        return $orders;
+        $amount = $request->amount * 100; // Convert to cents
+        $paymentIntent = PaymentIntent::create([
+            'amount' => $amount,
+            'currency' => 'usd',
+        ]);
+
+        return response()->json(['client_secret' => $paymentIntent->client_secret]);
     }
 
-    public function createOrder(Request $request){
-        $order = new Order();
+    public function store(Request $request)
+    {
+        $order = Order::create([
+            'user_id' => auth()->id(),
+            'total' => $request->total,
+        ]);
 
-        $order->order_number = $request->get('order_number');
-        $order->status = $request->get('status');
+        // Add products to the order...
 
-        $order->save();
-
-        return ["message"=>"create success","data"=>$order];
-    }
-
-    public function getOrder($orderId){
-        $order = Order::find($orderId);
-
-        if($order){
-            return $order;
-        }else{
-            return response(["message"=>"Order not Found"],400);
-        }
-    }
-
-    public function deleteOrder($orderId){
-        $orderFound = Order::find($orderId);
-
-        if($orderFound){
-            $orderFound->delete();
-
-            return ["message"=> "delete order success", "data"=>$orderFound];
-        }else{
-            return response(["message"=>"Order not Found"],400);
-        }
-    }
-
-    public function updateOrder($orderId , Request $request){
-        $order = Order::find($orderId);
-
-        if($order){
-            $order->order_number = $request->get('order_number');
-            $order->status = $request->get('status');
-
-            $order->save();
-
-            return $order;
-        }
+        return response()->json($order, 201);
     }
 }

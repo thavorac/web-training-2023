@@ -9,6 +9,7 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Storage;
 
 
+
 class ProductController extends Controller
 {
     // Get all products
