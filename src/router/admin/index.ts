@@ -76,11 +76,6 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
         path: 'banner',
         name: 'Banner',
         component: () => import('../../components/Banner/BannerItem.vue')
-      },
-      {
-        path: 'promotion',
-        name: 'Promotion',
-        component: () => import('../../components/Promotion/PromotionItem.vue')
       }
     ]
   }

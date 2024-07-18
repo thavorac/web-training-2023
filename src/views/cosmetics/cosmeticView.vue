@@ -14,7 +14,7 @@ import ChevronRight from '@/components/icons/ChevronRight.vue';
 // import SubFooter from '../components/SubFooter.vue';
 import SubFooter from '@/components/SubFooter.vue';
 
-import { useCartStore } from '@/stores/useCartStore';
+import { useCartStore } from '@/stores/useCartStoreP';
 
 const data = useCartStore();
 
@@ -43,7 +43,7 @@ const data = useCartStore();
             <SaleComponent v-for="product in data.products" :key="product.id" :product="product" />
             <!-- create another component for cosmetics  -->
 
-            
+
         </div>
         <div>
             <SubFooter />

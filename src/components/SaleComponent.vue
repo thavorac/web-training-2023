@@ -35,7 +35,7 @@ import ShopIcon from './basic/ShopIcon.vue';
 import CartIcon from './basic/CartIcon.vue';
 import { defineProps } from 'vue';
 
-import { useCartStore } from '@/stores/useCartStore';
+import { useCartStore } from '@/stores/useCartStoreP';
 
 const data = useCartStore();
 

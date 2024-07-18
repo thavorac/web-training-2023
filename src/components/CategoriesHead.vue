@@ -7,7 +7,7 @@ import IconCategories from '../components/icons/IconCategories.vue';
 
 import { ref } from 'vue';
 
-import { useCartStore } from '@/stores/useCartStore';
+import { useCartStore } from '@/stores/useCartStoreP';
 
 const data = useCartStore();
 
