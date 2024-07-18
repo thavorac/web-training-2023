@@ -157,11 +157,7 @@ Route::prefix('admin')->group(function () {
 });
 
 //promotion
-Route::get('/promotions', [PromotionController::class, 'index']);
-Route::get('/promotions/create', [PromotionController::class, 'create']);
-Route::post('/promotions', [PromotionController::class, 'store']);
-Route::get('/promotions/{id}', [PromotionController::class, 'show']);
-Route::get('/promotions/{id}/edit', [PromotionController::class, 'edit']);
-Route::put('/promotions/{id}', [PromotionController::class, 'update']);
-Route::delete('/promotions/{id}', [PromotionController::class, 'destroy']);
-Route::get('/promotions/history', [PromotionController::class, 'history']);
+Route::post('promotions', [PromotionController::class, 'store']);
+Route::put('promotions/{promotion}', [PromotionController::class, 'update']);
+Route::delete('promotions/{promotion}', [PromotionController::class, 'destroy']);
+Route::get('admin/discount-history', [PromotionController::class, 'discountHistory']);

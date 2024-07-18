@@ -15,7 +15,7 @@ return new class extends Migration
             $table->id();
             $table->string('name');
             $table->double('pricing');
-            $table->double('discount')->nullable();
+            $table->double('discounted_price')->nullable();
             $table->string('tags')->nullable();
             $table->string('color')->nullable();
             $table->integer('rating')->default(0);
