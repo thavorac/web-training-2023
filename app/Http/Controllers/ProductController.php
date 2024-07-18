@@ -33,7 +33,7 @@ class ProductController extends Controller
         $product = new Product();
         $product->name = $request->get('name');
         $product->pricing = $request->get('pricing');
-        $product->discount = $request->get('pricing');
+        $product->discounted_price = $request->get('pricing');
         $product->color = $request->get('color');
         $product->size = $request->get('size');
         $product->brand = $request->get('brand');
