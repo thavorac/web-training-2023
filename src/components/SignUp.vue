@@ -9,38 +9,60 @@
                 <h1>Register</h1>
               </div>
               <div class="container">
-                <label>Email</label>
-                <input type="email" v-model="email" placeholder="Enter Email" required />
-
-                <label for="uname">Username</label>
-                <input type="text" v-model="username" placeholder="Enter Username" required />
-
-                <!-- <label for="">Phone Number</label>
-                <input type="text" v-model="phoneNumber" required> -->
-
-                <label for="psw">Password</label>
-                <input type="password" v-model="password" placeholder="Enter Password" required />
-
-                <label for="psw">Confirm Password</label>
-                <input
-                  type="password"
-                  v-model="confirmPassword"
-                  placeholder="Enter Confirm Password"
-                  required
-                />
-
-                <!-- <span class="gender">Gender: </span>
+                <div class="row">
+                  <div class="col-6">
+                    <label for="fname">First name</label>
+                    <input type="text" v-model="first_name" placeholder="Enter Frist name" required>
+                  </div>
+                  <div class="col-6">
+                    <label for="lname">Last name</label>
+                    <input type="text" v-model="last_name" placeholder="Enter Last name" required>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <label>Email</label>
+                    <input type="email" v-model="email" placeholder="Enter Email" required>
+                  </div>
+                  <div class="col-6">
+                    <label for="phoneNumber">Phone Number</label>
+                    <input type="text" v-model="phoneNumber" placeholder="Enter Phone Number" required>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <label for="dob">Date Of Birth</label>
+                    <input type="date" v-model="date_of_birth" name="" id="" required>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-12">
+                    <label for="address">Address: ( EX: #001, St192 , sangkat teuk la’ork 3 , khan Toul kork , Phnom Penh, Cambodia.)</label>
+                   <input type="text" v-model="address" name="" id="" required>
+                  </div>
+                </div>
+                <div class="row">
+                  <div class="col-6">
+                    <label for="psw">Password</label>
+                    <input type="password" v-model="password" placeholder="Enter Password" required>
+                  </div>
+                  <div class="col-6">
+                    <label for="psw">Confirm Password</label>
+                    <input type="password" v-model="confirmPassword" placeholder="Enter Confirm Password" required>
+                  </div>
+                </div>
+                <span class="gender">Gender: </span>
                 <input type="radio" id="gender1" v-model="gender" value="male">
-                <label for="gender1">Male</label>
+                <label for="gender1 mx-1">Male</label>
                 <input type="radio" id="gender2" v-model="gender" value="female">
-                <label for="gender2">Female</label><br> -->
+                <label for="gender2">Female</label>
               </div>
               <div class="container d-flex justify-content-end align-items-center">
-                <router-link to="/sign-in" class="mr-2">
-                  <button type="button" class="cancelbtn btn btn-secondary">Cancel</button>
-                </router-link>
-                <button class="btn btn-primary" type="submit">SignUp</button>
-              </div>
+              <router-link to="/sign-in" class="mr-2">
+                <button type="button" class="cancelbtn btn btn-secondary">Cancel</button>
+              </router-link>
+              <button class="btn btn-primary" type="submit">SignUp</button>
+            </div>
             </form>
           </div>
         </div>
@@ -49,12 +71,16 @@
   </div>
 </template>
 
-<script>
-import axios from 'axios';
+<script setup>
+import { ref } from 'vue';
+import axios from '../services/axios';
 import { useRouter } from 'vue-router';
 import Swal from 'sweetalert2';
 
-const username = ref('');
+const first_name = ref('');
+const last_name = ref('');
+const date_of_birth = ref('');
+const address = ref('');
 const email = ref('');
 const phoneNumber = ref('');
 const password = ref('');
@@ -70,28 +96,40 @@ const register = () => {
       title: 'Error',
       text: 'Password and Confirm Password do not match',
     });
-        return;
-      }
-
-      axios.post('http://localhost:80/api/register', {
-        username: this.username,
-        email: this.email,
-        // phone_number: this.phoneNumber,
-        password: this.password,
-        confirm_password: this.confirmPassword,
-        // gender: this.gender
-      })
-        .then(response => {
-          alert(response.data.message); // Assuming the server returns a message
-          // Redirect to login page or do other actions as needed
-        })
-        .catch(error => {
-          console.error('Error during registration:', error);
-          alert('Registration failed. Please try again.');
-        });
-    }
+    return;
   }
-}
+  axios.post('http://localhost:80/api/register', {
+    first_name: first_name.value,
+    last_name: last_name.value,
+    date_of_birth: date_of_birth.value,
+    address: address.value,
+    email: email.value,
+    phone_number: phoneNumber.value,
+    password: password.value,
+    confirm_password: confirmPassword.value,
+    gender: gender.value,
+  })
+    .then(response => {
+      const { access_token, message } = response.data;
+      localStorage.setItem('auth_token', access_token);
+      axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
+
+      Swal.fire({
+        icon: 'success',
+        title: 'Success',
+        text: message,
+      }).then(() => {
+        router.push('/sign-in');
+      });
+    })
+    .catch(error => {
+      Swal.fire({
+        icon: 'error',
+        title: 'Error',
+        text: error.response.data.message || 'Registration failed. Please try again.',
+      });
+    });
+};
 </script>
 
 <style scoped lang="scss">
@@ -102,7 +140,7 @@ const register = () => {
 }
 
 .container-fluid {
-  background-image: url('/src/assets/image/abstract-1264071_1920.png');
+  background-image: url("/src/assets/image/abstract-1264071_1920.png");
   min-height: 715px;
   background-position: center;
   background-repeat: no-repeat;
@@ -131,9 +169,11 @@ body {
   font-family: Arial, Helvetica, sans-serif;
 }
 
-input[type='text'],
-input[type='password'],
-input[type='email'] {
+input[type=text],
+input[type=password],
+input[type=email],
+input[type=date]
+{
   width: 100%;
   padding: 7px 20px;
   margin: 10px 0;

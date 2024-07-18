@@ -1,8 +1,8 @@
 import { createRouter, createWebHistory } from 'vue-router'
 import RoutingView from '@/views/RoutingView.vue'
 import MainPageView from '@/views/MainPageView.vue'
-import ProductsCart from '../views/cart/index.vue'
 import { adminRouter } from './admin'
+import { cosmeticsRouter } from './cosmetics'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
@@ -10,16 +10,44 @@ const router = createRouter({
     {
       path: '/',
       name: 'home',
-      component: MainPageView //RoutingView
-      // children: [
-      //   {
-      //     path: '/signIn',
-      //     name: 'signIn',
-      //     component: () => import('../views/SignIn.vue')
-      //   }
-      // ]
+      component: MainPageView, //RoutingView,
+      redirect: (to) => {
+        return { name: 'Homepage'}
+      },
+      children: [
+        {
+          path: 'showProducts',
+          name: 'show-product',
+          component: () => import('../views/Home/ListProductView.vue')
+        },
+        {
+          path: 'categories/:categoryId/products',
+          name: 'CategoryProducts',
+          component: () => import('../components/Category/CategoryProducts.vue')
+        }
+        // {
+        //   path: 'showProducts',
+        //   name: 'show-product',
+        //   component: () => import('../views/Home/ListProductView.vue')
+        // }
+      ]
     },
+    {
+      path: '/Homepage',
+      name: 'Homepage',
+      component: () => import('../views/Wishlist/ListMainPageView.vue')
+    },
+    // {
+    //   path: '/categories/:categoryId/products',
+    //   name: 'CategoryProducts',
+    //   component: () => import('../components/Category/CategoryProducts.vue')
+    // },
 
+    // {
+    //   path: '/home',
+    //   name: 'all-product',
+    //   component: () => import('../views/Home/AllProduct.vue')
+    // },
     {
       path: '/about',
       name: 'about',
@@ -28,17 +56,16 @@ const router = createRouter({
       // which is lazy-loaded when the route is visited.
       component: () => import('../views/HomeView.vue')
     },
-    ...adminRouter,
     {
       path: '/electronic',
       name: 'electronic',
       component: () => import('../views/ElectronicView.vue')
     },
-    {
-      path: '/product-detail',
-      name: 'product-detail',
-      component: () => import('../views/DetailView.vue')
-    },
+    // {
+    //   path: '/product-detail',
+    //   name: 'product-detail',
+    //   component: () => import('../views/DetailView.vue')
+    // },
     // {
     //   path: '/main-page',
     //   name: 'main-page',
@@ -49,8 +76,10 @@ const router = createRouter({
       name: 'advertising',
       component: () => import('../components/AdvertiseSlide.vue')
     },
+
+    // ========================== Product Detail call from component DetailView.vue in folder views =====================================
     {
-      path: '/product-detail1',
+      path: '/product-detail1/:productId',
       name: 'product-detail1',
       component: () => import('../components/ProductDetail1.vue')
     },
@@ -70,16 +99,21 @@ const router = createRouter({
       component: () => import('../components/Forgotpassword.vue')
     },
     {
+      path: '/reset-password/:token',
+      name: 'reset-password',
+      component: () => import('../components/ResetPassword.vue')
+    },
+
+    {
       path: '/sign-in',
       name: 'sigin',
-      component: () => import('../components/Signin.vue')
+      component: () => import('../components/SignInForm.vue')
     },
     {
       path: '/sign-up',
       name: 'signup',
       component: () => import('../components/SignUp.vue')
-    },
-    {
+    },{
       path: '/signIn',
       name: 'signIn',
       component: () => import('../views/SignIn.vue')
@@ -90,84 +124,100 @@ const router = createRouter({
       component: () => import('../views/TestCard.vue')
     },
     {
-      // path: '/cart',
-      // name: 'cart',
-      // // route level code-splitting
-      // // this generates a separate chunk (About.[hash].js) for this route
-      // // which is lazy-loaded when the route is visited.
-      // component: () => import('../views/CartPage.vue')
-    },
-    {
-      path: '/products',
-      name: 'fetch-data',
+      path: '/cart',
+      name: 'cart',
       // route level code-splitting
       // this generates a separate chunk (About.[hash].js) for this route
       // which is lazy-loaded when the route is visited.
-      component: () => import('../components/FetchApi.vue')
+      component: () => import('../views/CartPage.vue')
     },
-    /*  {
-      path: '/categories',
-      name: 'categories',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../API/GetCategories.vue')
-    }, 
+    // {
+    //   path : '/report',
+    //   name : 'report',
+    //   component : () => import('../API/Student/ReportView.vue')
+    // },
+    // {
+    //   path: '/reporte/create',
+    //   name: 'reporteCreate',
+    //   component: () => import('../API/Student/StudentCreate.vue')
+    // },
+    // ++++++++++++++++++++++++++++++++++++++++++ GET PRODUCT ++++++++++++++++++++++++++++++++++++++
+
+    // {
+    //   path:'/admin-layout',
+    //   name : 'Admin-Layout',
+    //   component: () => import('../views/LayoutSidebar.vue')
+    // },
+
+    // ++++++++++++++++++++++++++++++++++++++++++ END GET PRODUCT ++++++++++++++++++++++++++++++++++++++
+
+    // ++++++++++++++++++++++++++++++++++++++++++ GET CATEGORY ++++++++++++++++++++++++++++++++++++++
+
+    // =========================================== MainLayout for admin dashboard ============================================================
+
+    // ++++++++++++++++++++++++++++++++++++++++++END GET CATEGORY ++++++++++++++++++++++++++++++++++++++
+
     {
-      path: '/getProducts',
-      name: 'get-product',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../API/GetProduct.vue')
-    },
-    {
-      path: '/reporte',
-      name: 'reporte',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/ReportView.vue')
-    },
-    {
-      path: '/reporte/create',
-      name: 'reporteCreate',
-      // route level code-splitting
-      // this generates a separate chunk (About.[hash].js) for this route
-      // which is lazy-loaded when the route is visited.
-      component: () => import('../views/StudentCreate.vue')
-    },*/
-    {
-      path: '/recipe',
-      name: 'recipe',
-      component: () => import('../views/RecipeView.vue')
+      path: '/category-page',
+      name: 'CategoryPage',
+      component: () => import('../views/CategoryPage.vue')
     },
     {
-      path: '/address',
-      path: '/address',
-      name: 'adress',
-      component: () => import('../views/Address.vue')
+      path: '/list-categories',
+      name: 'listcategory',
+      component: () => import('../components/Category/ListCategory.vue')
+    },
+    ...adminRouter,
+    ...cosmeticsRouter,
+
+    // {
+    //   path: '/getCategories',
+    //   name : 'Categories',
+    //   component: () => import('../API/Categories/GetCategories.vue')
+    // }
+    // {
+    //   path : '/reporte',
+    //   name : 'report',
+    //   component : () => import('../API/Student/ReportView.vue')
+    // },
+    // {
+    //   path: '/edit-product/:id',
+    //   name: 'reporteEdit',
+    //   // route level code-splitting
+    //   // this generates a separate chunk (About.[hash].js) for this route
+    //   // which is lazy-loaded when the route is visited.
+    //   component: () => import('../API/Student/StudentEdit.vue'),
+    //   props:true,
+    // },
+    // {
+    //   path: '/reporte/create',
+    //   name: 'reporteCreate',
+    //   component: () => import('../API/Student/StudentCreate.vue')
+    // },
+    // {
+    //   path: '/getProducts',
+    //   name: 'Get-Product',
+    //   component: () => import('../API/Products/GetProduct.vue')
+    // },
+
+    {
+      path: '/testing',
+      name: 'testing',
+      component: () => import('../views/Testing/IndexView.vue')
     },
     {
-      path: '/products-cart',
-      name: 'products-cart',
-      component: ProductsCart
+      path: '/wishlist-page',
+      name: 'wishlistPage',
+      component: () => import('../views/Wishlist/WishListPage.vue')
     },
+
     {
-      path: '/customerList',
-      name: 'CustomerList',
-      component: () => import('../views/CustomerList.vue')
-    },
-    {
-      path: '/customer-detail',
-      name: 'CustomerDitai',
-      component: () => import('../views/CustomerDetail.vue')
-    },
-    {
-      path: '/order-list',
-      name: 'OrderList',
-      component: () => import('../views/OrderList.vue')
+      path: '/wishlist-page1',
+      name: 'wishlistPage1',
+      component: () => import('../components/WishList1.vue')
     }
+
+    // ==================================================== // Edit Form Category ==============================================
   ]
 })
 

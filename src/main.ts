@@ -38,5 +38,7 @@ const app = createApp(App)
 app.use(createPinia())
 app.use(router)
 app.use(Toast)
+app.use(Antd)
+app.use(store) // Use the store
 
 app.mount('#app')
