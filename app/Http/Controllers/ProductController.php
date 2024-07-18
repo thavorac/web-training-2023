@@ -16,20 +16,66 @@ class ProductController extends Controller
         return Product::with('category')->get();
     }
 
-    // Get a single product by ID
-    public function show($id)
-    {
-        $product = Product::find($id);
-
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+        public function getProducts(){
+            return   Product::orderBy('id','asc')->paginate(20);
         }
 
-        return response()->json($product);
-    }
-
-
-    public function createProduct(Request $request){
+   
+        public function getFirstImage($productId)
+        {
+            $product = Product::with('firstImage')->find($productId);
+        
+            if (!$product) {
+                return response()->json(['message' => 'Product not found'], 404);
+            }
+        
+            $firstImage = $product->firstImage;
+        
+            if (!$firstImage) {
+                return response()->json(['message' => 'No images found for this product'], 404);
+            }
+        
+            return response()->json(['message' => 'First image retrieved successfully', 'data' => $firstImage]);
+        }
+    public function createProduct(Request $request)
+    {
+        // Validate incoming request if needed
+        $request->validate([
+            'name' => 'required|string',
+            'pricing' => 'required|numeric',
+            'size' => 'required|string',
+            'brand' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Example validation rules for image upload
+            'description' => 'required|string',
+        ]);
+    
+        // Check if product name already exists
+        $existingProduct = Product::where('name', $request->input('name'))->first();
+        if ($existingProduct) {
+            return response()->json([
+                'error' => 'Product with this name already exists'
+            ], 409); // HTTP 409 Conflict status code
+        }
+    
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Get the file name with extension
+            $fileNameWithExt = $request->file('image')->getClientOriginalName();
+            // Get just the file name
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            // Get just the extension
+            $extension = $request->file('image')->getClientOriginalExtension();
+            // File name to store
+            $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+            // Upload Image to public storage
+            $path = $request->file('image')->storeAs('public', $fileNameToStore);
+        } else {
+            // Default image path if no image is uploaded
+            $fileNameToStore = 'noimage.jpg';
+        }
+    
+        // Create new product
         $product = new Product();
         $product->name = $request->get('name');
         $product->pricing = $request->get('pricing');
@@ -41,62 +87,126 @@ class ProductController extends Controller
         $product->supplier_id = $request->get('supplier_id');
 
         $product->save();
-
-        return ["message" => "success","data"=>$product];
+    
+        return response()->json([
+            'message' => 'Product created successfully',
+            'data' => $product
+        ], 201);
     }
-    // // Create a new product
-    // public function createProduct(Request $request)
-    // {
-    //     $request->validate([
-    //         'name' => 'required|string|max:255',
-    //         'image' => 'required',
-    //         'description' => 'nullable|string',
-    //         'price' => 'required|numeric',
-    //         'category_id' => 'required|exists:categories,id',
-    //     ]);
-
-    //     $product = Product::create([
-    //         'name' => $request->input('name'),
-    //         'image' => $request->input('image'),
-    //         'description' => $request->input('description'),
-    //         'price' => $request->input('price'),
-    //         'category_id' => $request->input('category_id'),
-
-    //     ]);
-
-    //     return response()->json($product, 201);
-    // }
-
-    // Update an existing product by ID
-    public function update(Request $request, $id)
+    
+    public function updateProduct(Request $request, $productId)
     {
-        $product = Product::find($id);
+        try {
+            // Validate the request data
+            $validatedData = $request->validate([
+                'name' => 'nullable|string|max:255',
+                'pricing' => 'nullable|numeric',
+                'size' => 'nullable|string|max:255',
+                'brand' => 'nullable|string|max:255',
+                'category_id' => 'nullable|integer|exists:categories,id',
+                'image' => 'nullable|image|max:2048',
+                'description' => 'nullable|string|max:255',
+            ]);
+    
+            $productFound = Product::find($productId);
+    
+            if ($productFound) {
+                // Update product fields if they exist in the request
+                if ($request->has('name')) {
+                    $productFound->name = $validatedData['name'];
+                }
+                if ($request->has('pricing')) {
+                    $productFound->pricing = $validatedData['pricing'];
+                }
+                if ($request->has('size')) {
+                    $productFound->size = $validatedData['size'];
+                }
+                if ($request->has('brand')) {
+                    $productFound->brand = $validatedData['brand'];
+                }
+                if ($request->has('description')) {
+                    $productFound->description = $validatedData['description'];
+                }
+                if ($request->has('category_id')) {
+                    $productFound->category_id = $validatedData['category_id'];
+                }
+    
+                // Handle image upload if new image is uploaded
+                if ($request->hasFile('image')) {
+                    // Get the file name with extension
+                    $fileNameWithExt = $request->file('image')->getClientOriginalName();
+                    // Get just the file name
+                    $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+                    // Get just the extension
+                    $extension = $request->file('image')->getClientOriginalExtension();
+                    // File name to store
+                    $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+                    // Upload Image to public storage
+                    $path = $request->file('image')->storeAs('public', $fileNameToStore);
+    
+                    // Delete old image if exists and it's not the default image
+                    if ($productFound->image != 'noimage.jpg' && Storage::disk('public')->exists($productFound->image)) {
+                        Storage::disk('public')->delete($productFound->image);
+                    }
+    
+                    // Assign the new image file name to the 'image' field
+                    $productFound->image = $fileNameToStore;
+                }
+    
+                $productFound->save();
+    
+                // Fetch the updated product data
+                $updatedProduct = Product::find($productId);
+    
+                return response()->json(["message" => "Product updated successfully", "data" => $updatedProduct], 200);
+            } else {
+                return response()->json(["message" => "Product not found"], 404);
+            }
+        } catch (\Illuminate\Validation\ValidationException $e) {
+            return response()->json(["message" => "Validation failed", "errors" => $e->errors()], 422);
+        } catch (\Exception $e) {
+            return response()->json(["message" => "An error occurred", "error" => $e->getMessage()], 500);
+        }
+    }
+    
+    // -- DELETE /api/products/{productId}
+    public function deleteProduct($productId)
+{
+    $productFound = Product::find($productId);
 
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+    if ($productFound) {
+        // Delete associated image file from storage
+        if ($productFound->image && Storage::disk('public')->exists($productFound->image)) {
+            Storage::disk('public')->delete($productFound->image);
         }
 
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'image' => 'required',
-            'description' => 'nullable|string',
-            'price' => 'required|numeric',
-            'category_id' => 'required|exists:categories,id',
-        ]);
+        // Delete the product record from the database
+        $productFound->delete();
 
-        $product->update([
-            'name' => $request->input('name'),
-            'image' => $request->input('image'),
-            'description' => $request->input('description'),
-            'price' => $request->input('price'),
-            'category_id' => $request->input('category_id'),
-        ]);
+        return ["message" => "Delete success"];
+    } else {
+        return response()->json(["message" => "Product not found"], 404);
+    }
+}
 
-        return response()->json($product);
+public function getProduct($productId)
+{
+    $product = Product::find($productId);
+
+    if (!$product) {
+        return response()->json(['error' => 'Product not found'], 404);
     }
 
-    // Delete a product by ID
-    public function destroy($id)
+    return response()->json([
+        'message' => 'Product retrieved successfully',
+        'data' => $product
+    ], 200);
+}
+
+    public function getImagesOfProduct()
+    {
+    }
+    public function findProductsOfCategory($productId)
     {
         $product = Product::find($id);
 
