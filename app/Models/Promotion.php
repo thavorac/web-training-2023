@@ -1,9 +1,7 @@
 <?php
-
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Carbon\Carbon;
 
 class Promotion extends Model
 {
@@ -18,6 +16,6 @@ class Promotion extends Model
 
     public function products()
     {
-        return $this->belongsToMany(Product::class)->withPivot('discount_price');
+        return $this->belongsToMany(Product::class, 'product_promotion')->withTimestamps();
     }
 }

@@ -83,8 +83,10 @@ class ProductController extends Controller
         $product->color = $request->get('color');
         $product->size = $request->get('size');
         $product->brand = $request->get('brand');
+        $product->description = $request->get('description');
         $product->category_id = $request->get('category_id');
-        $product->supplier_id = $request->get('supplier_id');
+        $product->image = $fileNameToStore; // Assign the image file name to the 'image' field
+        // $product->supplier_id = $request->get('supplier_id');
 
         $product->save();
     

@@ -14,6 +14,8 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderProductsController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\PromotionController;
+
 
 Route::post('/cart', [CartController::class, 'store']);
 
@@ -242,7 +244,9 @@ Route::prefix('admin')->group(function () {
 });
 
 //promotion
-Route::post('promotions', [PromotionController::class, 'store']);
-Route::put('promotions/{promotion}', [PromotionController::class, 'update']);
-Route::delete('promotions/{promotion}', [PromotionController::class, 'destroy']);
-Route::get('admin/discount-history', [PromotionController::class, 'discountHistory']);
+Route::prefix('promotions')->group(function () {
+    Route::post('/', [PromotionController::class, 'store']);
+    Route::put('/{promotion}', [PromotionController::class, 'update']);
+    Route::delete('/{promotion}', [PromotionController::class, 'destroy']);
+    Route::get('/history', [PromotionController::class, 'history']);
+});
