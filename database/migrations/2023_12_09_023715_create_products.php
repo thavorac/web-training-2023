@@ -17,6 +17,7 @@ return new class extends Migration
             $table->double('pricing');
             $table->double('discount')->nullable();
             $table->string('tags')->nullable();
+            $table->timestamp('promotion_date')->nullable();
             $table->string('color')->nullable();
             $table->integer('rating')->default(0);
             $table->integer('purchased_num')->default(0);
