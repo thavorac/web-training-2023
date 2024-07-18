@@ -5,14 +5,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
+use Carbon\Carbon;
 
 class Product extends Model
 {
     use HasFactory;
 
-    protected $fillable = [
-        'name', 'pricing', 'discount','color','category_id','image'
-    ];
+    protected $guarded = [];
 
     public function category(): BelongsTo
     {
@@ -29,15 +28,35 @@ class Product extends Model
         return $this->hasOne(Image::class)->oldestOfMany();
     }
 
+    public function promotions(): BelongsToMany
+    {
+        return $this->belongsToMany(Promotion::class, 'product_promotion')
+                    ->withPivot('discount_price')
+                    ->withTimestamps();
+    }
+
+    public function applyDiscount()
+    {
+        $activePromotion = $this->promotions()
+                                ->where('start_date', '<=', Carbon::now())
+                                ->where('end_date', '>=', Carbon::now())
+                                ->first();
+
+        if ($activePromotion) {
+            if ($activePromotion->discount_percentage) {
+                $discountedPrice = $this->price - ($this->price * ($activePromotion->discount_percentage / 100));
+            } else {
+                // Handle fixed discount if implemented
+                $discountedPrice = $this->price; 
+            }
+            $this->update(['discounted_price' => $discountedPrice]);
+        } else {
+            $this->update(['discounted_price' => null]);
+        }
+    }
+
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d');
     }
-    public function promotions()
-    {
-        return $this->belongsToMany(Promotion::class)->withPivot('discount_price');
-    }
-
-
- 
 }

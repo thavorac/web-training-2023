@@ -9,89 +9,86 @@ use Carbon\Carbon;
 
 class PromotionController extends Controller
 {
-    // Display a listing of the promotions
-    public function index()
-    {
-        $promotions = Promotion::all();
-        return response()->json($promotions);
-    }
-
-    // Show the form for creating a new promotion
-    public function create()
-    {
-        // return view('promotions.create'); // If using Blade templates
-    }
-
-    // Store a newly created promotion in storage
+    /**
+     * Store a newly created promotion in the database.
+     */
     public function store(Request $request)
     {
- 
-        $promotion = Promotion::create($request->only('name', 'description', 'discount_percentage', 'start_date', 'end_date', 'status'));
-    
-        if ($request->has('product_ids')) {
-            foreach ($request->product_ids as $productId) {
-                $product = Product::find($productId);
-                if ($product) {
-                    $discountPrice = $product->price * (1 - $request->discount_percentage / 100);
-                    $promotion->products()->attach($product->id, ['discount_price' => $discountPrice]);
-                }
-            }
-        }
-    
-        return response()->json(['message' => 'Promotion created successfully', 'promotion' => $promotion]);
-    }
-    
+        $promotion = Promotion::create($request->all());
 
-    // Display the specified promotion
-    public function show($id)
+        if ($request->has('product_ids')) {
+            $promotion->products()->attach($request->input('product_ids'));
+        }
+
+        $this->applyDiscounts($promotion);
+
+        return response()->json($promotion, 201);
+    }
+
+    /**
+     * Apply discounts to products based on active promotions.
+     */
+    public function applyDiscounts(Promotion $promotion)
     {
-        $promotion = Promotion::findOrFail($id);
+        $products = $promotion->products;
+
+        foreach ($products as $product) {
+            $product->applyDiscount();
+        }
+    }
+
+    /**
+     * Update the specified promotion in the database.
+     */
+    public function update(Request $request, Promotion $promotion)
+    {
+        $promotion->update($request->all());
+
+        if ($request->has('product_ids')) {
+            $promotion->products()->sync($request->input('product_ids'));
+        }
+
+        $this->applyDiscounts($promotion);
+
+        // Update prices for all products
+        $this->updateAllProductPrices();
+
         return response()->json($promotion);
     }
 
-    // Show the form for editing the specified promotion
-    public function edit($id)
+    /**
+     * Remove the specified promotion from the database.
+     */
+    public function destroy(Promotion $promotion)
     {
-        $promotion = Promotion::findOrFail($id);
-        // return view('promotions.edit', compact('promotion')); // If using Blade templates
-    }
-
-    // Update the specified promotion in storage
-    public function update(Request $request, $id)
-    {
-        $request->validate([
-            'name' => 'required|string|max:255',
-            'description' => 'nullable|string',
-            'discount_percentage' => 'required|numeric|min:0|max:100',
-            'start_date' => 'required|date',
-            'end_date' => 'required|date|after_or_equal:start_date',
-            'status' => 'required|boolean',
-            'product_ids' => 'required|array',
-            'product_ids.*' => 'exists:products,id',
-        ]);
-
-        $promotion = Promotion::findOrFail($id);
-        $promotion->update($request->only('name', 'description', 'discount_percentage', 'start_date', 'end_date', 'status'));
-
-        $promotion->products()->detach();
-
-        foreach ($request->product_ids as $productId) {
-            $product = Product::find($productId);
-            $discountPrice = $product->price * (1 - $request->discount_percentage / 100);
-            $promotion->products()->attach($product->id, ['discount_price' => $discountPrice]);
-        }
-
-        return response()->json(['message' => 'Promotion updated successfully', 'promotion' => $promotion]);
-    }
-
-    // Remove the specified promotion from storage
-    public function destroy($id)
-    {
-        $promotion = Promotion::findOrFail($id);
         $promotion->delete();
 
-        return response()->json(['message' => 'Promotion deleted successfully']);
+        // Update prices for all products
+        $this->updateAllProductPrices();
+
+        return response()->json(null, 204);
     }
+
+    /**
+     * Get the discount history for all promotions.
+     */
+    public function discountHistory()
+    {
+        $history = Promotion::with('products')->get();
+        return response()->json($history);
+    }
+
+    /**
+     * Update prices for all products based on active promotions.
+     */
+    private function updateAllProductPrices()
+    {
+        $products = Product::all();
+        foreach ($products as $product) {
+            $product->applyDiscount();
+        }
+    }
+
 
     // Display discount history
     public function history()
