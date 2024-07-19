@@ -255,7 +255,7 @@ onMounted(() => {
   getStudents();
   console.log('i am here');
 });
-</script> -->
+</script> 
 
 <input type="text" v-model="model.student.name">
 <button @click="saveStudent">Save</button>
@@ -307,3 +307,4 @@ export default {
     },
 }
 </script>
+-->
