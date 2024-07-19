@@ -111,17 +111,10 @@ const register = () => {
     gender: gender.value,
   })
     .then(response => {
-      const { access_token, message } = response.data;
+      const { access_token } = response.data;
       localStorage.setItem('auth_token', access_token);
       axios.defaults.headers.common['Authorization'] = `Bearer ${access_token}`;
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Success',
-        text: message,
-      }).then(() => {
         router.push('/sign-in');
-      });
     })
     .catch(error => {
       Swal.fire({
