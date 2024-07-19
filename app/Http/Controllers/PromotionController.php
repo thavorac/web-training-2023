@@ -84,35 +84,37 @@ class PromotionController extends Controller
 
     public function deletePromotion($id)
     {
+        // Find the promotion
         $promotion = Promotion::find($id);
 
         if (!$promotion) {
-            return response()->json(['message' => 'Promotion not found'], 404);
+            // Promotion not found
+            return response()->json(['error' => 'Promotion not found'], 404);
         }
 
-        $promotion->products()->each(function ($product) {
-            $activePromotion = $product->promotions()
-                ->where('status', true)
-                ->where('start_date', '<=', now())
-                ->where('end_date', '>=', now())
-                ->first();
+        // Handle related records
+        foreach ($promotion->products as $product) {
+            // Reset the discounted price for each product
+            $product->update(['discounted_price' => 0]);
+        }
 
-            if (!$activePromotion) {
-                $product->update(['discounted_price' => 0]);
-            }
-        });
+        // Detach related products
+        $promotion->products()->detach();
 
+        // Delete the promotion
         $promotion->delete();
 
-        return response()->json(['message' => 'Promotion deleted successfully']);
+        // Return a success response
+        return response()->json(['message' => 'Promotion deleted successfully'], 200);
     }
+
 
     private function isPromotionActive(Promotion $promotion)
     {
         $now = Carbon::now();
         return $promotion->status && $promotion->start_date <= $now && $promotion->end_date >= $now;
     }
-    public function discountHistory()
+  public function discountHistory()
     {
         $now = Carbon::now();
 
@@ -125,9 +127,11 @@ class PromotionController extends Controller
 
         foreach ($products as $product) {
             foreach ($product->promotions as $promotion) {
+                $discountPercentage = number_format($promotion->discount_percentage, 0); // Format percentage without decimals
                 $history[] = [
+                    'product_id' => $product->id,
                     'product_name' => $product->name,
-                    'discount' => $promotion->discount_percentage . '% discount',
+                    'discount' => $discountPercentage . '%', // Append % sign
                     'start_date' => Carbon::parse($promotion->start_date)->format('d M Y'),
                     'end_date' => Carbon::parse($promotion->end_date)->format('d M Y'),
                 ];
@@ -136,4 +140,5 @@ class PromotionController extends Controller
 
         return response()->json($history);
     }
+
 }
