@@ -7,7 +7,7 @@ import SubHeader from '../components/SubHeader.vue';
 import ChevronRight from '../components/icons/ChevronRight.vue';
 import SubFooter from '../components/SubFooter.vue';
 
-import { useCartStore } from '@/stores/useCartStore';
+import { useCartStore } from '@/stores/useCartStoreP';
 
 const data = useCartStore();
 

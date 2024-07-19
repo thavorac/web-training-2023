@@ -67,7 +67,7 @@ import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
 import MenuHeader from '@/components/MenuHeader.vue';
 import CategoriesHead from '@/components/CategoriesHead.vue';
-import { useCartStore } from '@/stores/useCartStore';
+import { useCartStore } from '@/stores/useCartStoreP';
 
 const data = useCartStore();
 const cartItems = ref([]);

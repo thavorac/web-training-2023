@@ -26,7 +26,7 @@
 
 <script>
 import { mapState } from "pinia";
-import { useGeneralStore } from "../stores/general";
+import { useGeneralStore } from "../stores/generalP";
 import TimeSet from './basic/TimeSet.vue';
 import Pricing from './basic/Pricing.vue';
 export default {
