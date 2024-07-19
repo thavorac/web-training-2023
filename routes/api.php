@@ -244,9 +244,10 @@ Route::prefix('admin')->group(function () {
 });
 
 //promotion
-Route::prefix('promotions')->group(function () {
-    Route::post('/', [PromotionController::class, 'store']);
-    Route::put('/{promotion}', [PromotionController::class, 'update']);
-    Route::delete('/{promotion}', [PromotionController::class, 'destroy']);
-    Route::get('/history', [PromotionController::class, 'history']);
-});
+
+
+Route::get('/promotions', [PromotionController::class, 'listAllPromotions']);
+Route::post('/promotions', [PromotionController::class, 'createPromotion']);
+Route::put('/promotions/{id}', [PromotionController::class, 'updatePromotion']);
+Route::delete('/promotions/{id}', [PromotionController::class, 'deletePromotion']);
+Route::get('/promotions/history', [PromotionController::class, 'discountHistory']);

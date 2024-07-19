@@ -6,6 +6,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Product;
+use Illuminate\Support\Facades\Storage;
 
 
 class ProductController extends Controller
@@ -23,6 +24,7 @@ class ProductController extends Controller
    
         public function getFirstImage($productId)
         {
+
             $product = Product::with('firstImage')->find($productId);
         
             if (!$product) {
@@ -208,17 +210,17 @@ public function getProduct($productId)
     public function getImagesOfProduct()
     {
     }
-    public function findProductsOfCategory($productId)
+
+
+      public function findProductsOfCategory($productId)
     {
-        $product = Product::find($id);
+        $product = Product::find($productId);
 
-        if (!$product) {
-            return response()->json(['message' => 'Product not found'], 404);
+        if ($product) {
+            return $product->category;
+        } else {
+            return response(["message" => "Can't found that product"], 400);
         }
-
-        $product->delete();
-
-        return response()->json(['message' => 'Product deleted successfully']);
     }
 }
 
