@@ -11,7 +11,7 @@ import IconCategories from '../components/icons/IconCategories.vue'
 
 const store = useStore()
 const router = useRouter()
-import { useCartStore } from '@/stores/useCartStore'
+// import { useCartStore } from '@/stores/useCartStore'
 
 const data = useCartStore()
 

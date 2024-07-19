@@ -9,19 +9,6 @@ import { RouterView } from 'vue-router'
   </div>
 </template>
 
-<script>
-import { mapState } from 'pinia';
-import { useGeneralStore } from '@/stores/general';
-
-export default {
-  name: 'App',
-  computed: {
-    ...mapState(useGeneralStore, ["categories"]),
-    ...mapState(useGeneralStore, ["advertisement"]),
-  },
-  methods: {},
-};
-</script>
 
 <style scoped>
 header {
