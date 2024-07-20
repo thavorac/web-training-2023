@@ -1,4 +1,4 @@
-<script setup lang="ts"></script>
+<script setup></script>
 <template>
     <div class="container-fluid d-flex justify-center align-items-center mb-4"
         style="height:250px; background-color: #D1E2EB;">

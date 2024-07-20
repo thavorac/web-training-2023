@@ -1,3 +1,4 @@
+
 import axios from 'axios'
 
 const baseUrl = 'http://localhost:80'
@@ -14,6 +15,7 @@ const fetchProducts = async () => {
 const addProductToCart = async (product_id, user_id = 17) => {
   const response = await axios.post(`${baseUrl}/api/carts`, {
     product_id,
+
     user_id
   })
 
@@ -25,6 +27,7 @@ const addProductToCart = async (product_id, user_id = 17) => {
 const removeProductFromCart = async (product_id, user_id = 17) => {
   const response = await axios.delete(
     `${baseUrl}/api/carts?product_id=${product_id}&user_id=${user_id}`
+
   )
 
   if (response && response.data.message === 'success') {

@@ -1,39 +1,14 @@
 <script setup lang="ts">
 import { RouterView } from 'vue-router'
-// import ProductCard from '@/components/ProductCard.vue';
-// import ButtonShop from './components/basic/ButtonShop.vue'
-// import AddToCardButton from './components/basic/AddToCardButton.vue';
-// import PricingBtn from './components/basic/PricingBtn.vue';
-
-// import HelloWorld from './components/HelloWorld.vue'
-
 
 </script>
 
 <template>
-  <!-- <div>
-    <div class="product_card">
-      <ProductCard new_price="$123" full_price="$131" discount_price="10%" rating="(54)" brandName="Tonny Black"
-        detail="Shoulder bag-White-Plain" :productCardimage="productCardimage" />
-      <ProductCard new_price="$113" full_price="$142" discount_price="13%" rating="(100)" brandName="Reebok"
-        detail="Women's Powder sneaker" :productCardimage="shoesMid1" />
-      <ProductCard new_price="$101" full_price="$321" discount_price="21%" rating="(83)" brandName="Patso"
-        detail="Shoulder bag-Pink-Plain" :productCardimage="shoesMid2" />
-      <ProductCard new_price="$141" full_price="$114" discount_price="25%" rating="(29)" brandName="Sketchers"
-        detail="Sport-shoe 2102" :productCardimage="shoesMid3" />
-    </div>
-
-  </div> -->
   <div>
     <RouterView />
   </div>
-  <!-- <PricingBtn newPriceBtn="231$" fullPriceBtn="500$" discountBtn="20%" /> -->
-  <!-- <AddToCardButton /> -->
-  <!-- <WishListView />
-  <DetailView class="" /> -->
-  <!-- <ElectronicView /> -->
-
 </template>
+
 
 <style scoped>
 header {
@@ -92,9 +67,10 @@ nav a:first-of-type {
     text-align: left;
     margin-left: -1rem;
     font-size: 1rem;
-
     padding: 1rem 0;
     margin-top: 1rem;
   }
 }
 </style>
+
+
