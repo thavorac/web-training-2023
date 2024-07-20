@@ -8,7 +8,9 @@ import App from './App.vue'
 import router from './router'
 import Swal from 'sweetalert2/dist/sweetalert2.js'
 import 'sweetalert2/src/sweetalert2.scss'
-import store from './stores/wishlist' // Import the store
+// import store from './stores/wishlist' // Import the store
+
+ import store from './stores';
 
 // using antd to create an adminSideBar
 
@@ -21,7 +23,20 @@ import 'bootstrap/dist/js/bootstrap.min.js'
 import 'bootstrap-icons/font/bootstrap-icons.css'
 import Toast from 'vue-toastification'
 
+// import ElectronicView from './views/ElectronicView.vue'
+// import DetailView from './views/DetailView.vue'
+// import WishListView from './views/WishListView.vue'
+// import MainPageView from './views/MainPageView.vue'
+
 const app = createApp(App)
+
+// pagination
+// vue.component('pagination',require('laravel.vue.pagination'));
+
+// app.component('ElectronicView', ElectronicView)
+// app.component('DetailView', DetailView)
+// app.component('WishListView', WishListView)
+// app.component('MainPageView', MainPageView)
 
 app.use(createPinia())
 app.use(router)

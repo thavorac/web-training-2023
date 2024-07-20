@@ -3,6 +3,23 @@ import type { RouteRecordRaw } from 'vue-router'
 
 const adminRouter: Readonly<RouteRecordRaw[]> = [
   {
+    path: '/login',
+    name: 'login',
+    component: () => import('../../components/AdminLogin.vue')
+} ,
+  {
+    path: '/logout',
+    name: 'logout',
+    component: () => import('../../components/AdminLogout.vue')
+  },
+  {
+      path: '/admin-profile',
+      name: 'profile',
+      component: () => import('../../components/AdminProfile/Profile.vue')
+   },
+
+
+  {
     path: '/admin',
     name: 'AdminLayout',
     component: () => import('../../layout/AdminLayout.vue'),
@@ -65,7 +82,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
       {
         path: 'setting',
         name: 'AdminProfile',
-        component: () => import('../../components/SettingPage/SettingItem.vue')
+        component: () => import('../../components/AdminProfile/Profile.vue')
       },
       {
         path: 'sub-category',
@@ -76,7 +93,37 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
         path: 'banner',
         name: 'Banner',
         component: () => import('../../components/Banner/BannerItem.vue')
-      }
+      },
+      {
+        path: 'promotion',
+        name: 'promotion',
+        component: () => import('../../components/Promotion/PromotionItem.vue'),
+        children: [
+          {
+            path: '',
+            name: 'ListPromotion',
+            component: () => import('../../components/Promotion/ListPromotion.vue')
+          },
+          {
+            path: 'create-promotion',
+            name: 'CreatePromotion',
+            component: () => import('../../components/Promotion/CreatePromotion.vue')
+          },
+          {
+            path: ':promotionId/edit',
+            name: 'promotionEdit',
+            component: () => import('../../components/Promotion/EditPromotion.vue'),
+            props: true
+          },
+          {
+            path: 'HistoryPromotion',
+            name: 'HistoryPromotion',
+            component: () => import('../../components/Promotion/HistoryPromotion.vue'),
+            props: true
+          },
+        ]
+      },
+
     ]
   }
 ]
