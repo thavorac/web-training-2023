@@ -30,7 +30,7 @@ const user = store.getters.getUser;
 // Logout function
 const logoutHandler = () => {
   store.dispatch('logout');
-  router.push('/sign-in'); // Redirect to sign-in page after logout
+  router.push('/signin'); // Redirect to sign-in page after logout
 };
 </script>
 
@@ -143,7 +143,6 @@ const logoutHandler = () => {
                   <SignIn text="Card">
                       <IconCard />
                       ({{ data.countCartItems }})
-
                   </SignIn>
               </RouterLink>
           </div>
