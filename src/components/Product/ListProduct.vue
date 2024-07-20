@@ -40,6 +40,7 @@ const getProducts = async () => {
     try {
         const response = await axios.get(`http://localhost/api/products?page=${currentPage.value}`);
         product.value = response.data;
+        // console.log(response.data);
         totalPages.value = response.data.last_page;
     } catch (error) {
         console.error('Error fetching products:', error);
