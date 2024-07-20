@@ -15,7 +15,7 @@ import { RouterLink } from 'vue-router';
         <RouterLink to="/admin">Link to admin</RouterLink>
         <RouterLink to="/forgot-password">Link to forgot-password</RouterLink>
         <RouterLink to="/sign-in">Link to Signin</RouterLink>
-
+        <RouterLink to="/sign-up">Link to Signup</RouterLink>
 
         <RouterView />
     </div>

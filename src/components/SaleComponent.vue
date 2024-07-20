@@ -29,13 +29,13 @@
     </div>
 </template>
 
-<script setup>
+<script setup lang="ts">
 import AddToCardButton from './basic/AddToCardButton.vue';
 import ShopIcon from './basic/ShopIcon.vue';
 import CartIcon from './basic/CartIcon.vue';
 import { defineProps } from 'vue';
 
-import { useCartStore } from '@/stores/useCartStoreP';
+import { useCartStore } from '@/stores/useCartStore';
 
 const data = useCartStore();
 

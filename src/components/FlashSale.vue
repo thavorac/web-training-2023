@@ -21,7 +21,7 @@ const props = defineProps({
             </div>
             <div class="col-sm-4"></div>
             <div class="col-sm-2">
-                <p class="absolute text-xs ms-11">View all
+                <p class="absolute text-xs ms-24">View all
                     <ChevronRight width="4" color="black" class="float-end" />
                 </p>
             </div>

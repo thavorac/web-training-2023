@@ -24,7 +24,7 @@
                 </tr>
               </thead>
               <tbody>
-                <tr v-for="item in cartItems" :key="item.id">
+                <tr v-for="item in data.cartItems" :key="item.id">
                   <td>{{ item.id }}</td>
                   <td>
                     <img
@@ -35,22 +35,34 @@
                       alt=""
                     />
                   </td>
-                  <td>{{ item.name }}</td>
                   <td>
-                    <i class="bi bi-plus-circle-fill" @click="incrementQ(item)"></i>
-                    {{ item.quantity }}
-                    <i class="bi bi-dash-circle-fill" @click="decrementQ(item)"></i>
+                    {{ item.name }}
                   </td>
-                  <td>{{ item.price }}</td>
-                  <td>{{ item.price * item.quantity }}</td>
                   <td>
-                    <i @click="removeFromCart(item)" class="bi bi-cart-x text-danger fx-bo"></i>
+                    <i class="bi bi-plus-circle-fill" @click="data.incrementQ(item)"></i>
+
+                    {{ item.quantity }}
+                    <i class="bi bi-dash-circle-fill" @click="data.decrementQ(item)"></i>
+                  </td>
+                  <td>
+                    {{ item.price }}
+                  </td>
+                  <td>
+                    {{ item.price * item.quantity }}
+                  </td>
+                  <td>
+                    <i @click="data.removeFromCart(item)" class="bi bi-cart-x text-danger fx-bo">
+                    </i>
                   </td>
                 </tr>
                 <tr>
                   <th class="text-center" colspan="3">Total</th>
                   <td>
-                    <span class="badge badge bg-danger rounded-pill"> ${{ total }} </span>
+                    <span class="badge badge bg-danger tounded-pill">
+                      ${{
+                        data.cartItems.reduce((acc, item) => (acc += item.price * item.quantity), 0)
+                      }}
+                    </span>
                   </td>
                 </tr>
               </tbody>
@@ -63,44 +75,20 @@
 </template>
 
 <script setup>
-import { ref, computed, onMounted } from 'vue'
-import axios from 'axios'
 import MenuHeader from '@/components/MenuHeader.vue'
 import CategoriesHead from '@/components/CategoriesHead.vue'
-import { useCartStore } from '@/stores/useCartStoreP'
+import { useCartStore } from '@/stores/useCartStore'
 
 const data = useCartStore()
-const cartItems = ref([])
-
-const fetchProducts = async () => {
-  try {
-    const response = await axios.get('/api/products')
-    cartItems.value = response.data
-  } catch (error) {
-    console.error('Error fetching products:', error)
-  }
-}
-
-onMounted(fetchProducts)
-
-const incrementQ = (item) => {
-  data.incrementQ(item)
-}
-
-const decrementQ = (item) => {
-  data.decrementQ(item)
-}
-
-const removeFromCart = (item) => {
-  data.removeFromCart(item)
-}
-
-const total = computed(() =>
-  cartItems.value.reduce((acc, item) => acc + item.price * item.quantity, 0)
-)
 </script>
 
 <style scoped>
+* {
+  /* padding: 0px;
+    margin: 0px; */
+  /* box-sizing: border-box; */
+}
+
 i {
   cursor: pointer;
 }

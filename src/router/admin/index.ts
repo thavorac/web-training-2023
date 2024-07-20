@@ -1,4 +1,4 @@
-
+import { Components } from 'ant-design-vue/es/date-picker/generatePicker'
 import type { RouteRecordRaw } from 'vue-router'
 
 const adminRouter: Readonly<RouteRecordRaw[]> = [

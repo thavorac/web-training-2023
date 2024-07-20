@@ -136,14 +136,14 @@ const currentPage = ref(1)
 const totalPages = ref(0)
 
 const getProducts = async (page = 1) => {
-    try {
-        const response = await axios.get(`http://localhost/api/products?page=${page}`);
-        products.value = response.data;
-        totalPages.value = response.data.last_page;
-    } catch (error) {
-        console.error('Error fetching products:', error);
-    }
-};
+  try {
+    const response = await axios.get(`http://localhost/api/products?page=${page}`)
+    products.value = response.data;
+    totalPages.value = response.data.last_page
+  } catch (error) {
+    console.error('Error fetching products:', error)
+  }
+}
 
 const goToPage = (page) => {
   currentPage.value = page

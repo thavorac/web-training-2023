@@ -35,8 +35,8 @@ export default {
     /* border-radius: 4px; */
     gap: 8px;
     font-size: 14px;
-    letter-spacing: 1.5px;
-    font-weight: 700;
+    letter-spacing: 1px;
+    /* font-weight: 700; */
     line-height: 20px;
     color: rgba(255, 255, 255, 1);
     display: flex;

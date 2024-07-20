@@ -1,16 +1,16 @@
 <template>
-   <div class="ButtonShipping">
-        <slot/>
-        {{text}}
-   </div>
+    <div class="ButtonShipping">
+        <slot></slot>
+        {{ text }}
+    </div>
 </template>
 
 <script>
-export default{
-    name : 'ButtonShipping',
+export default {
+    name: 'ButtonShipping',
     props: ["text"],
-    data(){
-        return{
+    data() {
+        return {
 
         }
     }
@@ -19,7 +19,7 @@ export default{
 
 </script>
 <style scoped>
-.ButtonShipping{
+.ButtonShipping {
     display: flex;
     /* justify-content: center;
     align-items: center; */
@@ -28,36 +28,3 @@ export default{
     color: #5E5873;
 }
 </style>
-
-
-<template>
-   <div class="ButtonShipping">
-        <slot/>
-        {{text}}
-   </div>
-</template>
-
-<script>
-export default{
-    name : 'ButtonShipping',
-    props: ["text"],
-    data(){
-        return{
-
-        }
-    }
-}
-
-
-</script>
-<style scoped>
-.ButtonShipping{
-    display: flex;
-    /* justify-content: center;
-    align-items: center; */
-    gap: 12px;
-    font-weight: 500;
-    color: #5E5873;
-}
-</style>
-

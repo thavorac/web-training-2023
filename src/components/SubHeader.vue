@@ -1,5 +1,6 @@
-<script setup>
+<script setup lang="ts">
 import { ref, onMounted } from 'vue';
+import axios from 'axios';
 
 const dropdown = ref(null);
 
@@ -14,6 +15,24 @@ const handleClick = (event) => {
     }
 };
 
+// Define the product state as a ref to an array of products
+const products = ref([]);
+
+// Function to fetch products from the API
+const getProducts = () => {
+    axios.get('http://localhost/api/products').then(res => {
+        products.value = res.data.data;
+        console.log(res);
+    }).catch(error => {
+        console.error('Error fetching products:', error);
+    });
+};
+
+// Fetch products when the component is mounted
+onMounted(() => {
+    getProducts();
+});
+
 onMounted(() => {
     document.addEventListener('click', handleClick);
 });
@@ -26,7 +45,7 @@ onMounted(() => {
                 <span class="d-flex gap-4 cursor-pointer">
                     <RouterLink class="text-decoration-none text-dark " to="/">Homepage</RouterLink>
                     <slot></slot>
-                    <a class="text-decoration-none text-indigo-600" href="">Electronic</a>
+                    <a class="text-decoration-none text-indigo-600" href="">Products</a>
                     <slot></slot>
                     <a class="text-decoration-none text-dark" href="">Customization</a>
                 </span>
@@ -36,10 +55,10 @@ onMounted(() => {
             <div class="col-md-4 pt-4" style="height: 89px;">
                 <div class="row text-dark">
                     <div class="col-6">
-                        <h5 class="ms-5">Electronic</h5>
+                        <h5 class="ms-5">Products</h5>
                     </div>
                     <div class="col-6">
-                        <span class="text-muted">110 items</span>
+                        <span class="text-muted">{{ products.length }} items</span>
                     </div>
                 </div>
             </div>
@@ -60,4 +79,3 @@ onMounted(() => {
         </div>
     </div>
 </template>
-

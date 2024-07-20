@@ -32,68 +32,18 @@ const imageTop5 = new URL("../assets/image/top5.png", import.meta.url);
 </script>
 
 <template>
-    <MenuHeader></MenuHeader>
-    <!-- sticky top-0 -->
-    <CategoriesHead></CategoriesHead>
-    <MenuProduct></MenuProduct>
-    <AdvertiseSlide></AdvertiseSlide>
-    <FlashSale></FlashSale>
-    <div class="product_card">
-        <ProductCard new_price="$123" full_price="$131" discount_price="10%" rating="(54)" brandName="Tonny Black"
-            detail="Shoulder bag-White-Plain" :productCardimage="productCardimage" />
-        <ProductCard new_price="$113" full_price="$142" discount_price="13%" rating="(100)" brandName="Reebok"
-            detail="Women's Powder sneaker" :productCardimage="shoesMid1" />
-        <ProductCard new_price="$101" full_price="$321" discount_price="21%" rating="(83)" brandName="Patso"
-            detail="Shoulder bag-Pink-Plain" :productCardimage="shoesMid2" />
-        <ProductCard new_price="$141" full_price="$114" discount_price="25%" rating="(29)" brandName="Sketchers"
-            detail="Sport-shoe 2102" :productCardimage="shoesMid3" />
+    <div class="fixed top-0 left-0 right-0  z-50">
+        <MenuHeader></MenuHeader>
+        <!-- sticky top-0 -->
+        <CategoriesHead></CategoriesHead>
+        <MenuProduct></MenuProduct>
     </div>
-    <FlashSale text="Trending must-haves"></FlashSale>
-
-    <!-- Trending collection -->
-    <div class="trending_collection">
-        <TrendingMust :isNew="true" :image="trendImg2" price="89$" nameProduct="Dotted dress-Casual"
-            category="Cool & Sexy Calvin Klein" />
-        <TrendingMust :isNew="false" :image="images" price="89$" nameProduct="Dotted dress-Casual"
-            category="Cool & Sexy Calvin Klein" />
-        <TrendingMust :isNew="true" :image="trendImg3" price="102$" nameProduct="Cream-Brown-Formal"
-            category="beige coat Zara" />
+    <div class="pt-64"></div>
+    <!-- here is place that i want to inject the content into it when i route to each category -->
+    <!-- <router-view></router-view> -->
+    <div class="">
+        <RouterView />
     </div>
-
-    <!-- Top100 -->
-    <FlashSale class="pt-10" text="Top100"></FlashSale>
-    <div class="top100Card1">
-        <Top100Card1 disPrice="120$" newPrice="$123" fullPrice="200$" productName="Mango"
-            productTitle="Komono & Caftan-Black-Regular fit" rate="(289)" :top100Img1="top100Card1"></Top100Card1>
-        <Top100Card1 disPrice="100$" newPrice="$122" fullPrice="130$" productName="Mango"
-            productTitle="Komono & Caftan-Black-Regular fit" rate="(123)" :top100Img1="imageTop3"></Top100Card1>
-        <Top100Card1 disPrice="150$" newPrice="$230" fullPrice="190$" productName="Mango"
-            productTitle="Komono & Caftan-Black-Regular fit" rate="(329)" :top100Img1="imageTop4"></Top100Card1>
-        <Top100Card1 disPrice="123$" newPrice="$43" fullPrice="100$" productName="Mango"
-            productTitle="Komono & Caftan-Black-Regular fit" rate="(214)" :top100Img1="imageTop5"></Top100Card1>
-    </div>
-
-    <!-- Top100Card4 -->
-    <div class="top100Card4">
-        <Top100Card4 nameProduct="Throwback Shirts & all-day dressed" category="Never-Ending Summer" height="383px"
-            :imageTopCard4="imageTopCard4" />
-        <Top100Card4 nameProduct="Get in gym essentials" color="#1D5159" category="The most famous sport brands"
-            :imageTopCard4="top100Card4" />
-    </div>
-
-    <!-- Banner -->
-    <div class="baner">
-        <BannerSlide color="#F7DDD0"></BannerSlide>
-    </div>
-
-    <!-- Top100Card41 -->
-    <div class="top100Card41">
-        <Top100Card41 nameProduct1="Get in gym essentials" color="#D11FB5" category1="The most famous sport brands"
-            :imageTopCard41="dressImage" height="320px" />
-        <Top100Card41 nameProduct1="Get in gym essentials" color="#0186C4" height="314px"
-            category1="The most famous sport brands" :imageTopCard41="shirtImage" />
-    </div>
-
     <!-- Sub footer -->
     <SubFooter></SubFooter>
 
@@ -103,25 +53,33 @@ const imageTop5 = new URL("../assets/image/top5.png", import.meta.url);
 </template>
 
 <style scopted>
+/* Ensure the fixed header has a background color to cover content underneath */
+
+
+/* Additional spacing for the header */
+.pt-20 {
+    padding-top: 5rem;
+    /* Adjust this value to match the height of the fixed header */
+}
+
 .product_card {
     /* width: 1260px; */
-    /* width: 1518px; */
+    width: 1518px;
     height: 380px;
     display: flex;
     /* gap: 20px; */
-    gap: 10px;
-    padding-left: 16px;
+    gap: 45px;
+    padding-left: 88px;
     margin-top: 37px;
 }
 
 .trending_collection {
-    /* width: 1260px; */
-    height: 410px;
+    width: 1260px;
+    height: 437px;
     display: flex;
-    padding-right: 20px;
     /* gap: 20px; */
-    /* gap: 60px; */
-    /* padding-left: 88px; */
+    gap: 60px;
+    padding-left: 88px;
     margin-top: 37px;
     /* margin-top: 200px; */
 }
@@ -130,22 +88,20 @@ const imageTop5 = new URL("../assets/image/top5.png", import.meta.url);
     width: 1260px;
     height: 480px;
     display: flex;
-    gap: 10px;
+    gap: 47px;
     /* gap: 20px; */
-    padding-left: 1px;
+    padding-left: 88px;
     margin-top: 37px;
-  
 }
 
 .top100Card4 {
-    /* width: 1440px; */
+    width: 1440px;
     height: 384px;
-    /* padding: 0px 90px; */
+    padding: 0px 90px;
     display: flex;
-    gap: 1px;
-    gap: 10px;
-    padding-left: 5px;
-    padding-right: 20px;
+    gap: 101px;
+    /* gap: 20px; */
+    padding-left: 88px;
     margin-top: 47px;
 }
 
@@ -154,15 +110,13 @@ const imageTop5 = new URL("../assets/image/top5.png", import.meta.url);
 }
 
 .top100Card41 {
-    /* width: 1440px; */
+    width: 1440px;
     height: 347px;
-    /* padding: 0px 90px; */
+    padding: 0px 90px;
     display: flex;
-    gap: 3px;
+    gap: 99px;
     /* ? gap: 20px; */
-    padding-left: 16px;
-    padding-right: 10px;
+    padding-left: 88px;
     margin-top: 47px;
 }
 </style>
-
