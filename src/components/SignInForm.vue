@@ -62,14 +62,8 @@ const loginData = () => {
       if (data.message === "Login successful") {
         // Dispatch the login action to the Vuex store
         store.dispatch('login', { user: data.user, token: data.access_token });
-
-        Swal.fire({
-          icon: 'success',
-          title: 'Login Successful',
-          text: data.message
-        }).then(() => {
           router.push('/Homepage');
-        });
+   
       } else {
         Swal.fire({
           icon: 'error',
@@ -83,7 +77,7 @@ const loginData = () => {
       Swal.fire({
         icon: 'error',
         title: 'Error',
-        text: 'Error, please try again'
+        text: 'Incorrect password or email. Please , try again'
       });
     });
 }

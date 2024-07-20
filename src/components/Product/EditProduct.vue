@@ -111,9 +111,7 @@ const updateProduct = async () => {
 const handleCancel = () => {
     router.push('/admin');
 };
-</script>
-
-<template>
+</script><template>
     <section class="bg-white dark:bg-gray-900">
         <div class="py-3 px-4 max-w-2xl lg:py-16">
             <p class="mb-4 font-semibold text-xl dark:text-white text-[#58AB5D]">Edit Product</p>
@@ -156,8 +154,7 @@ const handleCancel = () => {
                     <div class="sm:col-span-2">
                         <label class="block mb-2 font-semibold text-gray-900 dark:text-white" for="image">Upload
                             Image</label>
-                        <input @change="handleImageUpload"
-                            class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
+                        <input @change="handleImageUpload"class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
                             id="image" type="file">
                     </div>
                     <div class="sm:col-span-2">

@@ -70,7 +70,7 @@ const pharongRouter: Readonly<RouteRecordRaw[]> = [
   {
     path: '/signIn',
     name: 'signIn',
-    component: () => import('../../views/SignIn.vue')
+    component: () => import('../../components/SignInForm.vue')
   },
   {
     path: '/test-card',

@@ -59,21 +59,15 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+<script setup>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
+import { useRoute } from 'vue-router';
 
 const emit = defineEmits(['cancel']);
-const props = defineProps({
-  promotionId: {
-    type: Number,
-    required: true
-  }
-});
 
 const handleCancel = () => {
-  emit('cancel');
+    emit('cancel');
 };
 
 const selectedCategory = ref('');
@@ -93,105 +87,119 @@ const promotionDescription = ref('');
 const API_URL = 'http://localhost:80/api';
 
 const endpoints = {
-  promotion: (id: number) => `${API_URL}/promotions/${id}`,
-  categories: `${API_URL}/categories`,
-  productsByCategory: (categoryId: number) => `${API_URL}/categories/${categoryId}/products`
+    promotions: `${API_URL}/promotions`,
+    categories: `${API_URL}/categories`,
+    productsByCategory: (categoryId) => `${API_URL}/categories/${categoryId}/products`,
+    promotionById: (id) => `${API_URL}/promotions/${id}`
 };
 
 const fetchCategories = async () => {
-  try {
-    const response = await axios.get(endpoints.categories);
-    categories.value = response.data.data;
-  } catch (error) {
-    console.error('Error fetching categories:', error);
-  }
+    try {
+        const response = await axios.get(endpoints.categories);
+        categories.value = response.data.data;
+    } catch (error) {
+        console.error('Error fetching categories:', error);
+    }
 };
 
 const fetchProducts = async () => {
-  if (!selectedCategory.value) {
-    products.value = [];
-    return;
-  }
+    if (!selectedCategory.value) {
+        products.value = [];
+        return;
+    }
 
-  try {
-    const response = await axios.get(endpoints.productsByCategory(selectedCategory.value));
-    products.value = response.data.data;
-  } catch (error) {
-    console.error('Error fetching products:', error);
-  }
+    try {
+        const response = await axios.get(endpoints.productsByCategory(selectedCategory.value));
+        products.value = response.data;
+    } catch (error) {
+        console.error('Error fetching products:', error);
+    }
 };
 
-const fetchPromotion = async () => {
-  try {
-    const response = await axios.get(endpoints.promotion(props.promotionId));
-    const promotion = response.data.promotion;
-
-    promotionName.value = promotion.name;
-    promotionDescription.value = promotion.description;
-    discountPercentage.value = parseFloat(promotion.discount_percentage);
-    startDate.value = promotion.start_date.substring(0, 10);
-    endDate.value = promotion.end_date.substring(0, 10);
-    isActive.value = promotion.status === 1; // Assuming status 1 means active
-
-    // Fetch categories and preselect the category
-    await fetchCategories();
-    selectedCategory.value = promotion.products[0].category.id; // Assuming products are not empty
-
-    // Fetch products after setting the category
-    await fetchProducts();
-
-    // Preselect the products
-    selectedProducts.value = promotion.products.map(product => product.id);
-  } catch (error) {
-    console.error('Error fetching promotion:', error);
-  }
+const fetchPromotion = async (id) => {
+    try {
+        const response = await axios.get(endpoints.promotionById(id));
+        const promotion = response.data;
+        console.log(response.data)
+        promotionName.value = promotion.name;
+        promotionDescription.value = promotion.description;
+        discountPercentage.value = promotion.discount_percentage;
+        startDate.value = promotion.start_date;
+        endDate.value = promotion.end_date;
+        isActive.value = promotion.status;
+        selectedCategory.value = promotion.category_id;
+        selectedProducts.value = promotion.products.map(product => product.id);
+        fetchProducts(); // Refresh products after setting the category
+    } catch (error) {
+        console.error('Error fetching promotion:', error);
+    }
 };
 
-onMounted(async () => {
-  await fetchPromotion();
+const route = useRoute();
+const promotionId = ref(null);
+
+onMounted(() => {
+    const id = route.params.id; // Adjust according to your route configuration
+    if (id) {
+        promotionId.value = id;
+        fetchPromotion(id);
+    } else {
+        fetchCategories();
+    }
 });
 
 const productsByCategory = computed(() => {
-  if (!selectedCategory.value) {
-    return [];
-  }
-  return products.value.filter(product => product.category_id === selectedCategory.value);
+    if (!selectedCategory.value) {
+        return [];
+    }
+    return products.value.filter(product => product.category_id === selectedCategory.value);
 });
 
 const updatePromotion = async () => {
-  const currentDate = new Date();
-  const endDateValue = new Date(endDate.value);
-  const status = endDateValue >= currentDate && isActive.value;
+    const currentDate = new Date();
+    const endDateValue = new Date(endDate.value);
+    const status = endDateValue >= currentDate && isActive.value;
 
-  try {
-    const response = await axios.put(endpoints.promotion(props.promotionId), {
-      name: promotionName.value,
-      description: promotionDescription.value,
-      discount_percentage: discountPercentage.value,
-      start_date: startDate.value,
-      end_date: endDate.value,
-      products: selectedProducts.value,
-      status: status ? 1 : 0 // Convert boolean to integer status
-    });
-    alertMessage.value = response.data.message;
-    alertClass.value = 'alert alert-success';
-  } catch (error) {
-    if (error.response && error.response.status === 422) {
-      alertMessage.value = error.response.data.error || 'Validation error';
-      alertClass.value = 'alert alert-danger';
-    } else {
-      alertMessage.value = error.response.data.message || 'Failed to update promotion';
-      alertClass.value = 'alert alert-danger';
+    try {
+        const response = await axios.put(endpoints.promotionById(promotionId.value), {
+            name: promotionName.value,
+            description: promotionDescription.value,
+            discount_percentage: discountPercentage.value,
+            start_date: startDate.value,
+            end_date: endDate.value,
+            products: selectedProducts.value,
+            status: status
+        });
+        alertMessage.value = response.data.message;
+        alertClass.value = 'alert alert-success';
+        // Reset form fields
+        selectedCategory.value = '';
+        selectedProducts.value = [];
+        discountPercentage.value = 0;
+        startDate.value = '';
+        endDate.value = '';
+        promotionName.value = '';
+        promotionDescription.value = '';
+        isActive.value = true;
+    } catch (error) {
+        if (error.response && error.response.status === 422) {
+            alertMessage.value = error.response.data.error || 'Validation error';
+            alertClass.value = 'alert alert-danger';
+        } else {
+            alertMessage.value = error.response.data.message || 'Failed to update promotion';
+            alertClass.value = 'alert alert-danger';
+        }
+    } finally {
+        // Hide the alert message after 5 seconds
+        setTimeout(() => {
+            alertMessage.value = '';
+            alertClass.value = '';
+        }, 5000);
     }
-  } finally {
-    // Hide the alert message after 5 seconds
-    setTimeout(() => {
-      alertMessage.value = '';
-      alertClass.value = '';
-    }, 5000);
-  }
 };
 </script>
+
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');

@@ -147,9 +147,10 @@ interface Promotion {
 // Function to fetch promotions
 const fetchPromotions = () => {
   loading.value = true;
-  axios.get<{ promotions: Promotion[] }>('http://localhost:80/api/promotions')
+  axios.get<Promotion[]>('http://localhost:80/api/promotions')
     .then((response) => {
-      promotions.value = response.data.promotions;
+      promotions.value = response.data; // Directly assign the array to promotions.value
+      console.log(response.data);
     })
     .catch((error) => {
       console.error('Error fetching promotions:', error);
