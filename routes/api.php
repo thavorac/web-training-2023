@@ -15,6 +15,7 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderProductsController;
 use App\Http\Controllers\CartController;
 use App\Http\Controllers\PromotionController;
+use App\Http\Controllers\AdminAuthController;
 
 
 Route::post('/cart', [CartController::class, 'store']);
@@ -244,9 +245,8 @@ Route::prefix('admin')->group(function () {
 });
 
 //promotion
-
-
 Route::get('/promotions', [PromotionController::class, 'listAllPromotions']);
+Route::get('/promotions/{promotionId}', [PromotionController::class, 'show']);
 Route::post('/promotions', [PromotionController::class, 'createPromotion']);
 Route::put('/promotions/{id}', [PromotionController::class, 'updatePromotion']);
 Route::delete('/promotions/{id}', [PromotionController::class, 'deletePromotion']);

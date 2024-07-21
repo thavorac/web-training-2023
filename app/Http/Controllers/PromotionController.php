@@ -9,78 +9,273 @@ use Carbon\Carbon;
 use Illuminate\Support\Facades\Log;
 
 class PromotionController extends Controller
+
 {
+
     public function createPromotion(Request $request)
-    {
-        $promotion = Promotion::create([
-            'name' => $request->name,
-            'description' => $request->description,
-            'discount_percentage' => $request->discount_percentage,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'status' => $request->status,
-        ]);
+{
+    $promotion = Promotion::create([
+        'name' => $request->name,
+        'description' => $request->description,
+        'discount_percentage' => $request->discount_percentage,
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+        // 'status' => $request->status ?? 1, // assuming status is active by default
+    ]);
 
-        foreach ($request->products as $productId) {
-            $product = Product::find($productId);
+    $this->attachProductsToPromotion($promotion, $request->products);
 
-            if ($this->isPromotionActive($promotion)) {
-                $discountedPrice = $product->pricing * (1 - $promotion->discount_percentage / 100);
-                $product->update(['discounted_price' => $discountedPrice]);
-                $promotion->products()->attach($productId, ['discount_price' => $discountedPrice]);
-            } else {
-                $product->update(['discounted_price' => 0]);
-                $promotion->products()->attach($productId, ['discount_price' => 0]);
+    return response()->json($promotion, 201);
+}
+public function updatePromotion(Request $request, $id)
+{
+    $promotion = Promotion::find($id);
+
+    if (!$promotion) {
+        return response()->json(['message' => 'Promotion not found'], 404);
+    }
+
+    $promotion->update([
+        'name' => $request->name,
+        'description' => $request->description,
+        'discount_percentage' => $request->discount_percentage,
+        'start_date' => $request->start_date,
+        'end_date' => $request->end_date,
+        // 'status' => $request->status ?? $promotion->status,
+    ]);
+
+    $productIds = $request->products;
+
+    // Detach products that are not included in the update request
+    $promotion->products()->whereNotIn('product_id', $productIds)->detach();
+
+    // Update or attach products that are included in the update request
+    $this->attachProductsToPromotion($promotion, $productIds);
+
+    return response()->json($promotion);
+}
+private function attachProductsToPromotion(Promotion $promotion, array $productIds)
+{
+    foreach ($productIds as $productId) {
+        $product = Product::find($productId);
+
+        if ($product) {
+            $discountedPrice = $this->isPromotionActive($promotion) ?
+                $product->pricing * (1 - $promotion->discount_percentage / 100) :
+                $product->pricing;
+
+            $product->update(['discounted_price' => $discountedPrice]);
+            $promotion->products()->syncWithoutDetaching([$productId => ['discount_price' => $discountedPrice]]);
+        }
+    }
+
+    $this->updateProductDiscountedPrices();
+}
+private function updateProductDiscountedPrices()
+{
+    $activePromotions = Promotion::where('start_date', '<=', now())
+        ->where('end_date', '>=', now())
+        ->get();
+
+    $allProducts = Product::all();
+
+    foreach ($allProducts as $product) {
+        $activePromotion = $activePromotions->filter(function ($promotion) use ($product) {
+            return $promotion->products->contains($product->id);
+        })->first();
+
+        if ($activePromotion) {
+            $discountedPrice = $product->pricing * (1 - $activePromotion->discount_percentage / 100);
+        } else {
+            $discountedPrice = $product->pricing;
+        }
+
+        $product->update(['discounted_price' => $discountedPrice]);
+    }
+}
+
+
+    // public function createPromotion(Request $request)
+    // {
+    //     $promotion = Promotion::create([
+    //         'name' => $request->name,
+    //         'description' => $request->description,
+    //         'discount_percentage' => $request->discount_percentage,
+    //         'start_date' => $request->start_date,
+    //         'end_date' => $request->end_date,
+    //         // 'status' => $request->status ?? 1, // assuming status is active by default
+    //     ]);
+
+    //     foreach ($request->products as $productId) {
+    //         $product = Product::find($productId);
+
+    //         if ($this->isPromotionActive($promotion)) {
+    //             $discountedPrice = $product->pricing * (1 - $promotion->discount_percentage / 100);
+    //         } else {
+    //             $discountedPrice = $product->pricing;
+    //         }
+
+    //         $product->update(['discounted_price' => $discountedPrice]);
+    //         $promotion->products()->attach($productId, ['discount_price' => $discountedPrice]);
+    //     }
+
+    //     return response()->json($promotion, 201);
+    // }
+    //     public function updatePromotion(Request $request, $id)
+    //     {
+    //         $promotion = Promotion::find($id);
+
+    //         if (!$promotion) {
+    //             return response()->json(['message' => 'Promotion not found'], 404);
+    //         }
+
+    //         $promotion->update([
+    //             'name' => $request->name,
+    //             'description' => $request->description,
+    //             'discount_percentage' => $request->discount_percentage,
+    //             'start_date' => $request->start_date,
+    //             'end_date' => $request->end_date,
+    //             // 'status' => $request->status ?? $promotion->status,
+    //         ]);
+
+    //         $productIds = $request->products;
+
+    //         // Detach products that are not included in the update request
+    //         $promotion->products()->whereNotIn('product_id', $productIds)->detach();
+
+    //         // Update or attach products that are included in the update request
+    //         foreach ($productIds as $productId) {
+    //             $product = Product::find($productId);
+
+    //             if ($this->isPromotionActive($promotion)) {
+    //                 $discountedPrice = $product->pricing * (1 - $promotion->discount_percentage / 100);
+    //             } else {
+    //                 $discountedPrice = $product->pricing;
+    //             }
+
+    //             $product->update(['discounted_price' => $discountedPrice]);
+    //             $promotion->products()->syncWithoutDetaching([$productId => ['discount_price' => $discountedPrice]]);
+    //         }
+
+    //         return response()->json($promotion);
+    //     }
+        public function listAllPromotions()
+        {
+            $promotions = Promotion::with('products')->get();
+
+            $promotionsWithStatus = $promotions->map(function ($promotion) {
+                $promotion->status = $this->isPromotionActive($promotion);
+                return $promotion;
+            });
+
+            return response()->json($promotionsWithStatus);
+        }
+
+        public function show($id)
+        {
+            $promotion = Promotion::with('products')->find($id);
+
+            if (!$promotion) {
+                return response()->json(['message' => 'Promotion not found'], 404);
             }
-        }
 
-        return response()->json($promotion, 201);
-    }
-    public function listAllPromotions()
+            $promotion->status = $this->isPromotionActive($promotion);
+
+            return response()->json($promotion);
+        }
+        private function isPromotionActive(Promotion $promotion)
     {
-        $promotions = Promotion::with('products')->get();
-
-        return response()->json($promotions);
+        $now = Carbon::now();
+        return $promotion->start_date <= $now && $promotion->end_date >= $now;
     }
+    // public function createPromotion(Request $request)
+    // {
+    //     $promotion = Promotion::create([
+    //         'name' => $request->name,
+    //         'description' => $request->description,
+    //         'discount_percentage' => $request->discount_percentage,
+    //         'start_date' => $request->start_date,
+    //         'end_date' => $request->end_date,
+    //         // 'status' => $request->status,
+    //     ]);
 
-    public function updatePromotion(Request $request, $id)
-    {
-        $promotion = Promotion::find($id);
+    //     foreach ($request->products as $productId) {
+    //         $product = Product::find($productId);
 
-        if (!$promotion) {
-            return response()->json(['message' => 'Promotion not found'], 404);
-        }
+    //         if ($this->isPromotionActive($promotion)) {
+    //             $discountedPrice = $product->pricing * (1 - $promotion->discount_percentage / 100);
+    //             $product->update(['discounted_price' => $discountedPrice]);
+    //             $promotion->products()->attach($productId, ['discount_price' => $discountedPrice]);
+    //         } else {
+    //             $product->update(['discounted_price' => 0]);
+    //             $promotion->products()->attach($productId, ['discount_price' => 0]);
+    //         }
+    //     }
 
-        $promotion->update([
-            'name' => $request->name,
-            'description' => $request->description,
-            'discount_percentage' => $request->discount_percentage,
-            'start_date' => $request->start_date,
-            'end_date' => $request->end_date,
-            'status' => $request->status,
-        ]);
+    //     return response()->json($promotion, 201);
+    // }
+    // public function listAllPromotions()
+    // {
+    //     $promotions = Promotion::with('products')->get();
 
-        $productIds = $request->products;
+    //     return response()->json($promotions);
+    // }
+        
 
-        // Detach products that are not included in the update request
-        $promotion->products()->whereNotIn('product_id', $productIds)->detach();
 
-        // Update or attach products that are included in the update request
-        foreach ($productIds as $productId) {
-            $product = Product::find($productId);
 
-            if ($this->isPromotionActive($promotion)) {
-                $discountedPrice = $product->pricing * (1 - $promotion->discount_percentage / 100);
-                $product->update(['discounted_price' => $discountedPrice]);
-                $promotion->products()->syncWithoutDetaching([$productId => ['discount_price' => $discountedPrice]]);
-            } else {
-                $product->update(['discounted_price' => 0]);
-                $promotion->products()->syncWithoutDetaching([$productId => ['discount_price' => 0]]);
-            }
-        }
+    // public function show($id)
+    // {
+    //     $promotion = Promotion::with('products')->find($id);
+        
+    //     if (!$promotion) {
+    //         return response()->json(['message' => 'Promotion not found'], 404);
+    //     }
 
-        return response()->json($promotion);
-    }
+    //     return response()->json($promotion);
+    // }
+        
+
+
+
+    // public function updatePromotion(Request $request, $id)
+    // {
+    //     $promotion = Promotion::find($id);
+
+    //     if (!$promotion) {
+    //         return response()->json(['message' => 'Promotion not found'], 404);
+    //     }
+
+    //     $promotion->update([
+    //         'name' => $request->name,
+    //         'description' => $request->description,
+    //         'discount_percentage' => $request->discount_percentage,
+    //         'start_date' => $request->start_date,
+    //         'end_date' => $request->end_date,
+    //         // 'status' => $request->status,
+    //     ]);
+
+    //     $productIds = $request->products;
+
+    //     // Detach products that are not included in the update request
+    //     $promotion->products()->whereNotIn('product_id', $productIds)->detach();
+
+    //     // Update or attach products that are included in the update request
+    //     foreach ($productIds as $productId) {
+    //         $product = Product::find($productId);
+
+    //         if ($this->isPromotionActive($promotion)) {
+    //             $discountedPrice = $product->pricing * (1 - $promotion->discount_percentage / 100);
+    //             $product->update(['discounted_price' => $discountedPrice]);
+    //             $promotion->products()->syncWithoutDetaching([$productId => ['discount_price' => $discountedPrice]]);
+    //         } else {
+    //             $product->update(['discounted_price' => 0]);
+    //             $promotion->products()->syncWithoutDetaching([$productId => ['discount_price' => 0]]);
+    //         }
+    //     }
+
+    //     return response()->json($promotion);
+    // }
 
     public function deletePromotion($id)
     {
@@ -107,14 +302,8 @@ class PromotionController extends Controller
         // Return a success response
         return response()->json(['message' => 'Promotion deleted successfully'], 200);
     }
-
-
-    private function isPromotionActive(Promotion $promotion)
-    {
-        $now = Carbon::now();
-        return $promotion->status && $promotion->start_date <= $now && $promotion->end_date >= $now;
-    }
-  public function discountHistory()
+    
+    public function discountHistory()
     {
         $now = Carbon::now();
 
@@ -140,5 +329,10 @@ class PromotionController extends Controller
 
         return response()->json($history);
     }
+    
 
 }
+    // public function getPromotion($promotionId) {
+    //     $promotion = Promotion::find($promotionId);
+    //     return response()->json($promotion);
+    // }
