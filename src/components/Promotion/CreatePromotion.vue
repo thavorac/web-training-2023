@@ -21,7 +21,7 @@
           </option>
         </select>
       </div>
-      <div v-if="selectedCategory" class="form-group">
+      <div v-if="selectedCategory" class="form-group">npm
         <label>Products:</label>
         <div v-for="product in productsByCategory" :key="product.id" class="form-check">
           <input type="checkbox" v-model="selectedProducts" :value="product.id" :id="`product-${product.id}`" class="form-check-input">
