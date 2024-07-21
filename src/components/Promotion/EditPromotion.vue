@@ -88,7 +88,7 @@ const updatePromotion = async () => {
     alertClass.value = 'alert alert-success';
     setTimeout(() => {
       emit('cancel');
-      router.push('/Homepage');
+      router.push('/admin/promotion');
     }, 2000);
   } catch (error) {
     console.error('Error updating promotion:', error);

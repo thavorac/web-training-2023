@@ -21,7 +21,7 @@
           </option>
         </select>
       </div>
-      <div v-if="selectedCategory" class="form-group">npm
+      <div v-if="selectedCategory" class="form-group">
         <label>Products:</label>
         <div v-for="product in productsByCategory" :key="product.id" class="form-check">
           <input type="checkbox" v-model="selectedProducts" :value="product.id" :id="`product-${product.id}`" class="form-check-input">
@@ -159,7 +159,8 @@ const createPromotion = async () => {
         setTimeout(() => {
             alertMessage.value = '';
             alertClass.value = '';
-        }, 5000);
+        }, 2000);
+        router.push('/admin/promotion');
     }
 };
 </script>
