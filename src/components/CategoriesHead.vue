@@ -143,7 +143,6 @@ const logoutHandler = () => {
                   <SignIn text="Card">
                       <IconCard />
                       ({{ data.countCartItems }})
-
                   </SignIn>
               </RouterLink>
           </div>

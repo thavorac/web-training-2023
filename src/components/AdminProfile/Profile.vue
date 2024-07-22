@@ -96,7 +96,7 @@ if (!store.getters.isAuthenticated || !admin.value) {
                       </div>
                       <div class="row pl-5 pb-3">
                       <div class="col-sm-2">
-                        <router-link to="/Homepage" class="mr-2">
+                        <router-link to="/admin" class="mr-2">
                           <button type="button" class="btn btn-primary">Back</button>
                         </router-link>
                       </div>

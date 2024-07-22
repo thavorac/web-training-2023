@@ -56,22 +56,6 @@ const pharongRouter: Readonly<RouteRecordRaw[]> = [
     name: 'buttonshop',
     component: () => import('../../components/basic/ButtonShop.vue')
   },
-
-  {
-    path: '/forgot-password',
-    name: 'forgot-password',
-    component: () => import('../../components/Forgotpassword.vue')
-  },
-  {
-    path: '/reset-password/:token',
-    name: 'reset-password',
-    component: () => import('../../components/ResetPassword.vue')
-  },
-  {
-    path: '/signIn',
-    name: 'signIn',
-    component: () => import('../../components/SignInForm.vue')
-  },
   {
     path: '/test-card',
     name: 'testCard',

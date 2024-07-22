@@ -21,7 +21,7 @@
           </option>
         </select>
       </div>
-      <div v-if="selectedCategory" class="form-group">
+      <div v-if="selectedCategory" class="form-group">npm
         <label>Products:</label>
         <div v-for="product in productsByCategory" :key="product.id" class="form-check">
           <input type="checkbox" v-model="selectedProducts" :value="product.id" :id="`product-${product.id}`" class="form-check-input">
@@ -39,10 +39,6 @@
       <div class="form-group">
         <label for="endDate">End Date:</label>
         <input type="date" v-model="endDate" id="endDate" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <input type="checkbox" v-model="isActive" id="isActive" class="form-check-input">
-        <label for="isActive" class="form-check-label">Active</label>
       </div>
       <div class="row mt-5">
         <hr>
