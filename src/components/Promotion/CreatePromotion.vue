@@ -40,10 +40,6 @@
         <label for="endDate">End Date:</label>
         <input type="date" v-model="endDate" id="endDate" class="form-control" required>
       </div>
-      <div class="form-group">
-        <input type="checkbox" v-model="isActive" id="isActive" class="form-check-input">
-        <label for="isActive" class="form-check-label">Active</label>
-      </div>
       <div class="row mt-5">
         <hr>
       </div>
@@ -163,7 +159,8 @@ const createPromotion = async () => {
         setTimeout(() => {
             alertMessage.value = '';
             alertClass.value = '';
-        }, 5000);
+        }, 2000);
+        router.push('/admin/promotion');
     }
 };
 </script>

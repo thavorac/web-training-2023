@@ -63,7 +63,6 @@
         <thead class="text-xs text-gray-700 bg-gray-50">
           <tr>
             <th scope="col" class="px-6 py-3 text-lg font-sans">ID</th>
-            <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">Name</th> -->
             <th scope="col" class="px-6 py-3 text-lg font-sans">Description</th>
             <th scope="col" class="px-6 py-3 text-lg font-sans">Percentage</th>
             <th scope="col" class="px-6 py-3 text-lg font-sans">Start</th>
@@ -75,12 +74,12 @@
         <tbody>
           <!-- Loading State -->
           <tr v-if="loading">
-            <td colspan="5">Loading...</td>
+            <td colspan="7">Loading...</td>
           </tr>
           <!-- No Data State -->
           <template v-if="filteredData.length === 0">
             <tr>
-              <td colspan="5" class="px-6 py-6 text-center text-gray-500">No promotions found</td>
+              <td colspan="7" class="px-6 py-6 text-center text-gray-500">No promotions found</td>
             </tr>
           </template>
           <!-- Data Rows -->
@@ -88,21 +87,20 @@
             <tr v-for="(promotion, index) in filteredData" :key="index"
               :class="`bg-white ${index === filteredData.length - 1 ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`">
               <td class="px-6 py-6">{{ promotion.id }}</td>
-              <!-- <td class="px-6 py-6">{{ promotion.name }}</td> -->
               <td class="px-6 py-6">{{ promotion.description }}</td>
-              <td class="px-6 py-6">{{ promotion.discount_percentage }}</td>
+              <td class="px-6 py-6">{{ promotion.discount_percentage }}%</td>
               <td class="px-6 py-6">{{ formatDate(promotion.start_date) }}</td>
               <td class="px-6 py-6">{{ formatDate(promotion.end_date) }}</td>
-              <td class="px-6 py-6">{{ promotion.status ? 'Active' : 'Not Active' }}</td>
-              <!-- Action Icons -->
+              <td class="px-6 py-6">
+                <span :class="{ 'text-green-500': promotion.status, 'text-red-500': !promotion.status }">
+                  {{ promotion.status ? 'Active' : 'Inactive' }}
+                </span>
+              </td>
               <td class="px-6 py-6 flex space-x-2">
-                <!-- Router Link to Edit Promotion -->
                 <RouterLink :to="`/admin/promotion/${promotion.id}/edit`">
                   <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
                 </RouterLink>
-                <!-- Delete Icon with Confirmation Dialog -->
                 <IconDelete @click="() => confirmDelete(promotion.id)" class="w-6 h-6 text-red-500 cursor-pointer" />
-                <!-- Detail Icon -->
                 <RouterLink :to="`/admin/promotion/detail`">
                   <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
                 </RouterLink>
@@ -226,4 +224,5 @@ const deletePromotion = (promotionId: number) => {
 
 // Fetch promotions on component mount
 fetchPromotions();
+
 </script>
