@@ -82,19 +82,6 @@
         <div class="AddToCardButton flex justify-between">
           <AddToCardButton
             class="cursor-pointer"
-            color="#F8F6F8"
-            text="Wishlist"
-            colorText="#5E5873"
-            width="151px"
-            height="42px"
-            :icon="none"
-            raduis="4px 1px 1px 4px"
-            @click="addToWishlist(product)"
-          >
-            <CartIcon />
-          </AddToCardButton>
-          <AddToCardButton
-            class="cursor-pointer"
             color="#7367F0"
             text="Add to cart"
             colorText="#FFFFFF"
@@ -115,6 +102,7 @@
     </div>
   </div>
 </template>
+
 
 <script setup>
 import { ref, onMounted } from 'vue'
@@ -138,7 +126,7 @@ const totalPages = ref(0)
 const getProducts = async (page = 1) => {
   try {
     const response = await axios.get(`http://localhost/api/products?page=${page}`)
-    products.value = response.data;
+    products.value = response.data.data
     totalPages.value = response.data.last_page
   } catch (error) {
     console.error('Error fetching products:', error)
@@ -155,14 +143,22 @@ const goToProductDetail = (productId) => {
 }
 
 const addToCart = async (product) => {
+  const isAuthenticated = store.state.user.id;
+
+  if (!isAuthenticated) {
+    router.push('/login');
+    return;
+  }
+
   try {
     const response = await axios.post('http://localhost/api/cart', {
       product_id: product.id,
+      user_id: store.state.user.id,
       quantity: 1
-    })
-    console.log('Product added to cart:', response.data)
+    });
+    console.log('Product added to cart:', response.data);
   } catch (error) {
-    console.error('Error adding product to cart:', error)
+    console.error('Error adding product to cart:', error);
   }
 }
 
@@ -174,6 +170,7 @@ onMounted(() => {
   getProducts()
 })
 </script>
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');

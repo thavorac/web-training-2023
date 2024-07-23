@@ -140,7 +140,7 @@ option {
 .row2 .address {
     width: 560px;
     height: 20px;
-    /* gap: 8px;
+    /* gap: 8px;*/
 }
 
 .container .row2 .address p {

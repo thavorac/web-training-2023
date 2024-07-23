@@ -7,7 +7,7 @@
 </template>
 
 <script setup lang="ts">
-import { defineProps, defineEmits } from 'vue';
+import {  defineEmits } from 'vue';
 import IconEdit from '../icons/IconEdit.vue';
 import IconDelete from '../icons/IconDelete.vue';
 import IconDetail from '../icons/IconDetail.vue';

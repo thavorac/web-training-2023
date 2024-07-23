@@ -33,7 +33,7 @@
 import AddToCardButton from './basic/AddToCardButton.vue';
 import ShopIcon from './basic/ShopIcon.vue';
 import CartIcon from './basic/CartIcon.vue';
-import { defineProps } from 'vue';
+//import { defineProps } from 'vue';
 
 import { useCartStore } from '@/stores/useCartStore';
 

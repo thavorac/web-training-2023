@@ -80,7 +80,7 @@ const pharongRouter: Readonly<RouteRecordRaw[]> = [
   {
     path: '/cart',
     name: 'cart',
-    component: () => import('../../views/CartPage.vue')
+    component: () => import('../../components/AddToCart/CartPage.vue')
   },
   {
     path: '/category-page',

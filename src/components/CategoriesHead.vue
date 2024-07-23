@@ -127,7 +127,7 @@ const logoutHandler = () => {
             </template>
             <template v-else>
               <!-- Show sign-in button when not logged in -->
-              <router-link class="no-underline" to="/sign-in">
+              <router-link class="no-underline" to="/signin">
                 <SignIn text="Sign in">
                   <IconPerson />
                 </SignIn>
