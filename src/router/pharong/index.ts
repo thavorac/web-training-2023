@@ -80,6 +80,11 @@ const pharongRouter: Readonly<RouteRecordRaw[]> = [
     path: '/wishlist-page1',
     name: 'wishlistPage1',
     component: () => import('../../components/WishList1.vue')
+  },
+  {
+    path: '/figma',
+    name: 'figma',
+    component: () => import('../../views/Testing/FigmaView.vue')
   }
 ]
 

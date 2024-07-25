@@ -45,7 +45,7 @@ const getProducts = async () => {
     } catch (error) {
         console.error('Error fetching products:', error);
     }
-};
+}; 2
 
 const goToPage = (page: number) => {
     currentPage.value = page;
