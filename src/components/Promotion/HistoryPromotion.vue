@@ -108,7 +108,7 @@ const alertClass = ref<string>('');
 const fetchDiscountHistory = async () => {
   loading.value = true;
   try {
-    const response = await axios.get('http://localhost:80/api/promotions/history');
+    const response = await axios.get('http://localhost:80/api/discountHistory');
     discountHistory.value = response.data;
   } catch (error) {
     console.error('Error fetching discount history:', error);

@@ -30,7 +30,8 @@ const fetchPromotion = async () => {
     const response = await axios.get(`http://localhost:80/api/promotions/${props.promotionId}`);
     console.log('Promotion data:', response.data);
     Object.assign(promotion, response.data);
-    selectedCategory.value = response.data.category_id;
+    selectedCategory.value = response.data.products[0]?.category_id;
+    console.log('catid',selectedCategory.value)
     selectedProducts.value = response.data.products.map(product => product.id);
     promotion.start_date = moment(response.data.start_date).format('YYYY-MM-DD');
     promotion.end_date = moment(response.data.end_date).format('YYYY-MM-DD');
@@ -58,11 +59,12 @@ const fetchCategories = async () => {
   }
 };
 
-const fetchProducts = async () => {
-  if (!selectedCategory.value) return;
+const fetchProducts = async (catId=null) => {
+  if(selectedCategory.value) catId = selectedCategory.value;
+  if (!catId) return;
   try {
-    console.log(`Fetching products for category ID: ${selectedCategory.value}`);
-    const response = await axios.get(`http://localhost:80/api/categories/${selectedCategory.value}/products`);
+    console.log(`Fetching products for category ID: ${catId}`);
+    const response = await axios.get(`http://localhost:80/api/categories/${catId}/products`);
     console.log('Products data:', response.data);
     products.value = response.data;
   } catch (error) {
@@ -88,7 +90,7 @@ const updatePromotion = async () => {
     alertClass.value = 'alert alert-success';
     setTimeout(() => {
       emit('cancel');
-      router.push('/Homepage');
+      router.push('/admin/promotion');
     }, 2000);
   } catch (error) {
     console.error('Error updating promotion:', error);

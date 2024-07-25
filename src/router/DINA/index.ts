@@ -28,6 +28,11 @@ const DINARouter: Readonly<RouteRecordRaw[]> = [
         path: '/user-profile',
         name: 'userProfile',
         component: () =>import('../../components/Authentication/UserProfile.vue')
+      },
+      {
+        path:'/p-promotion',
+        name:'p_Promotion',
+        component: ()=>import('../../components/Promotion/GetProducthavePromotion.vue')
       }
 ]
 
