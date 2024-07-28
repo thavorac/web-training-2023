@@ -6,6 +6,10 @@ import { useRouter, useRoute } from 'vue-router';
 const router = useRouter();
 const route = useRoute();
 
+const handleCancel = () => {
+    router.push('/admin/supplier');
+};
+
 // Define reactive variables
 const name = ref('');
 const gender = ref('');
@@ -21,6 +25,7 @@ const errorMessage = ref('');
 const successMessage = ref('');
 const dropdownOpen = ref(false);
 const selectAll = ref(false);
+let filteredProducts = ref([]);
 
 const getSupplier = async (supplierId: number) => {
     try {
@@ -34,9 +39,9 @@ const getSupplier = async (supplierId: number) => {
         email.value = supplier.email;
         address.value = supplier.address;
         company.value = supplier.company;
-        selectedCategory.value = supplier.category_id;
+        console.log('console products',supplier.products)
+        selectedCategory.value = supplier.products[0]?.category_id;
         selectedProducts.value = supplier.products.map(product => product.id);
-
     } catch (error) {
         console.error('Error fetching supplier: ', error);
     }
@@ -46,6 +51,10 @@ const getProducts = async () => {
     try {
         const response = await axios.get('http://localhost/api/products');
         products.value = response.data;
+        
+        filteredProducts.value= products.value.filter(product => product.category_id === selectedCategory.value);
+        console.log('filtered prod',filteredProducts.value)
+
     } catch (error) {
         console.error('Error fetching products:', error);
     }
@@ -66,10 +75,6 @@ const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value;
 };
 // Computed property for filtered products
-const filteredProducts = computed(() => {
-    if (!selectedCategory.value) return products.value;
-    return products.value.filter(product => product.category_id === selectedCategory.value);
-});
 
 // Toggle select all functionality
 const toggleSelectAll = () => {
@@ -84,6 +89,31 @@ const toggleSelectAll = () => {
 // Update select all checkbox based on selected products
 const updateSelectAll = () => {
     selectAll.value = filteredProducts.value.length > 0 && filteredProducts.value.every(product => selectedProducts.value.includes(product.id));
+};
+
+const updateSupplier = async () => {
+  try {
+    console.log('Updating supplier');
+    const response =  ​await axios.put(`http://localhost:80/api/supplier/${supplierId}`, {
+      name: promotion.name,
+      description: promotion.description,
+      discount_percentage: promotion.discount_percentage,
+      start_date: promotion.start_date,
+      end_date: promotion.end_date,
+      status: promotion.status,
+      products: selectedProducts.value,
+    });
+    alertMessage.value = 'Promotion updated successfully!';
+    alertClass.value = 'alert alert-success';
+    setTimeout(() => {
+      emit('cancel');
+      router.push('/admin/promotion');
+    }, 2000);
+  } catch (error) {
+    console.error('Error updating promotion:', error);
+    alertMessage.value = 'Failed to update promotion.';
+    alertClass.value = 'alert alert-danger';
+  }
 };
 
 
@@ -196,7 +226,7 @@ onMounted(() => {
                 </div>
                 <!-- Buttons -->
                 <div class="flex flex-col md:flex-row justify-end mt-5 space-y-2 md:space-y-0 md:space-x-2">
-                    <button type="button" @click="cancel"
+                    <button type="button" @click="handleCancel()"
                         class="text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                         CANCEL
                     </button>

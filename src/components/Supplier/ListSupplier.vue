@@ -86,9 +86,6 @@ const confirmDelete = (supplierId: number) => {
 getSuppliers();
 getProducts();
 
-// Add pagination and search refs here if needed
-// const page = ref(1);
-// const search = ref("");
 </script>
 
 <template>
