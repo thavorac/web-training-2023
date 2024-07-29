@@ -104,10 +104,12 @@ interface Product {
     name: string;
     brand: string;
     pricing: number;
+    qty: number;
     category_id: number;
     size: string;
     image: string; // Corrected the type from 'text' to 'string'
     description: string;
+    status: boolean;
     created_at?: string; // Updated to match the API response field
 }
 
@@ -233,7 +235,7 @@ getProducts();
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
                         ID
                     </th>
-                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                    <th scope="col" class="px-6 py-3 text-lg font-sans ">
                         Name
                     </th>
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
@@ -242,17 +244,24 @@ getProducts();
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Price
                     </th>
-                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                    <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Category
-                    </th>
+                    </th> -->
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
-                        Size
+                        Qty
                     </th>
+                    <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Size
+                    </th> -->
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Image
                     </th>
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Description
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-lg font-sans ">
+                        Status
+
                     </th>
                     <!-- <th scope="col" class="px-6 py-3 text-lg">
                         Description
@@ -289,10 +298,12 @@ getProducts();
                         </td>
                         <td class="px-6 py-6">{{ product?.pricing }}
                         </td>
-                        <td class="px-6 py-6">{{ product?.category_id }}
+                        <td class="px-6 py-6">{{ product?.qty }}
+                        </td>
+                        <!-- <td class="px-6 py-6">{{ product?.category_id }}
                         </td>
                         <td class="px-6 py-6">{{ product?.size }}
-                        </td>
+                        </td> -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <!-- <img :src="image.replace('storage', 'app')" alt="Photo" width="50px" /> -->
 
@@ -301,6 +312,21 @@ getProducts();
                         </td>
                         <td class="px-6 py-6">
                             {{ product?.description }}
+                        </td>
+                        <td class="px-6 py-6">
+                            <!-- <button :class="[
+                                'status-button px-2 text-center align-middle rounded-lg',
+                                product.status ? 'bg-blue-400 hover:bg-blue-700' : 'bg-red-400 hover:bg-red-700'
+                            ]">
+                                {{ product?.status }}
+                            </button> -->
+                            <!-- <button :class="product?.status === 'In Stock' ? 'bg-green-500' : 'bg-red-500 w-28'"
+                                class="text-white px-3 py-1 rounded-md">{{ product?.status }}</button> -->
+                            <button :class="product.is_in_stock ? 'bg-green-500' : 'bg-red-500'"
+                                class="text-white font-semibold py-1 px-2 w-24 rounded">
+                                {{ product.is_in_stock ? 'In Stock' : 'Out Stock' }}
+                            </button>
+
                         </td>
                         <td class="px-6 py-6">
                             {{ product?.created_at }}

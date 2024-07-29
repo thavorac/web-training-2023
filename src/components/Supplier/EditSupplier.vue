@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed, onMounted } from 'vue';
+import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import { useRouter, useRoute } from 'vue-router';
 
@@ -21,40 +21,36 @@ const selectedProducts = ref([]);
 const selectedCategory = ref('');
 const products = ref([]);
 const categories = ref([]);
-const errorMessage = ref('');
-const successMessage = ref('');
 const dropdownOpen = ref(false);
 const selectAll = ref(false);
 let filteredProducts = ref([]);
+const supplierId = route.params.id;
 
 const getSupplier = async (supplierId: number) => {
     try {
         const response = await axios.get(`http://localhost/api/suppliers/${supplierId}`);
         const supplier = response.data;
 
-        //update reactive variables with product data
+        // Update reactive variables with supplier data
         name.value = supplier.name;
         gender.value = supplier.gender;
         phone.value = supplier.phone;
         email.value = supplier.email;
         address.value = supplier.address;
         company.value = supplier.company;
-        console.log('console products',supplier.products)
         selectedCategory.value = supplier.products[0]?.category_id;
         selectedProducts.value = supplier.products.map(product => product.id);
     } catch (error) {
-        console.error('Error fetching supplier: ', error);
+        console.error('Error fetching supplier:', error);
     }
-}
+};
+
 // Method to fetch products
 const getProducts = async () => {
     try {
         const response = await axios.get('http://localhost/api/products');
         products.value = response.data;
-        
-        filteredProducts.value= products.value.filter(product => product.category_id === selectedCategory.value);
-        console.log('filtered prod',filteredProducts.value)
-
+        filteredProducts.value = products.value.filter(product => product.category_id === selectedCategory.value);
     } catch (error) {
         console.error('Error fetching products:', error);
     }
@@ -74,7 +70,6 @@ const getCategories = async () => {
 const toggleDropdown = () => {
     dropdownOpen.value = !dropdownOpen.value;
 };
-// Computed property for filtered products
 
 // Toggle select all functionality
 const toggleSelectAll = () => {
@@ -91,33 +86,46 @@ const updateSelectAll = () => {
     selectAll.value = filteredProducts.value.length > 0 && filteredProducts.value.every(product => selectedProducts.value.includes(product.id));
 };
 
-const updateSupplier = async () => {
-  try {
-    console.log('Updating supplier');
-    const response =  ​await axios.put(`http://localhost:80/api/supplier/${supplierId}`, {
-      name: promotion.name,
-      description: promotion.description,
-      discount_percentage: promotion.discount_percentage,
-      start_date: promotion.start_date,
-      end_date: promotion.end_date,
-      status: promotion.status,
-      products: selectedProducts.value,
-    });
-    alertMessage.value = 'Promotion updated successfully!';
-    alertClass.value = 'alert alert-success';
-    setTimeout(() => {
-      emit('cancel');
-      router.push('/admin/promotion');
-    }, 2000);
-  } catch (error) {
-    console.error('Error updating promotion:', error);
-    alertMessage.value = 'Failed to update promotion.';
-    alertClass.value = 'alert alert-danger';
-  }
+const submitForm = async () => {
+    try {
+        const formData = {
+            name: name.value,
+            gender: gender.value,
+            phone: phone.value,
+            email: email.value,
+            address: address.value,
+            company: company.value,
+            product_ids: selectedProducts.value,
+        };
+
+        let response;
+        if (supplierId) {
+            response = await axios.patch(`http://localhost/api/suppliers/${supplierId}`, formData);
+        } else {
+            response = await axios.post('http://localhost/api/suppliers', formData);
+        }
+
+        console.log(response.data.message);
+
+        // Clear form data
+        name.value = '';
+        gender.value = '';
+        phone.value = '';
+        email.value = '';
+        address.value = '';
+        company.value = '';
+        selectedProducts.value = [];
+        selectedCategory.value = '';
+
+        // Redirect to "/admin/supplier" after successful update
+        router.push('/admin/supplier');
+
+    } catch (error) {
+        console.error('Error submitting form:', error.response ? error.response.data : error);
+    }
 };
 
-
-// Fetch product and categories when component mounts
+// Fetch supplier, products, and categories when component mounts
 onMounted(() => {
     const supplierId = Number(route.params.supplierId);
     if (!isNaN(supplierId)) {
@@ -133,7 +141,7 @@ onMounted(() => {
 <template>
     <section class="bg-white dark:bg-gray-900">
         <div class="py-3 px-4 max-w-2xl lg:py-16">
-            <p class="mb-4 font-semibold text-xl dark:text-white text-[#58AB5D]">Add a new supplier</p>
+            <p class="mb-4 font-semibold text-xl dark:text-white text-[#58AB5D]">Edit Supplier</p>
             <form @submit.prevent="submitForm">
                 <div class="pt-1 grid gap-4 sm:grid-cols-2 sm:gap-6">
                     <!-- Supplier Name -->
@@ -226,7 +234,7 @@ onMounted(() => {
                 </div>
                 <!-- Buttons -->
                 <div class="flex flex-col md:flex-row justify-end mt-5 space-y-2 md:space-y-0 md:space-x-2">
-                    <button type="button" @click="handleCancel()"
+                    <button type="button" @click="handleCancel"
                         class="text-gray-500 bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">
                         CANCEL
                     </button>
