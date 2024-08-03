@@ -3,11 +3,12 @@ import RoutingView from '@/views/RoutingView.vue'
 import MainPageView from '@/views/MainPageView.vue'
 import { adminRouter } from './admin'
 import { pharongRouter } from './pharong'
-import { DINARouter} from './DINA'
+import { DINARouter } from './DINA'
+import {supplierRouter} from './supplier'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [...adminRouter, ...pharongRouter,...DINARouter]
+  routes: [...adminRouter, ...pharongRouter, ...DINARouter,...supplierRouter]
 })
 
 export default router

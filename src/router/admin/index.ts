@@ -75,6 +75,12 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             name: 'ProductEdit',
             component: () => import('../../components/Product/EditProduct.vue'),
             props: true
+          },
+          {
+            path: ':productId/purchase',
+            name: 'PurchaseProduct',
+            component: () => import('../../components/Testing/DetailPurchase.vue'),
+            props: true
           }
         ]
       },

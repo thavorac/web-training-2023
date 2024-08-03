@@ -10,6 +10,7 @@ const route = useRoute();
 const productName = ref('');
 const brand = ref('');
 const price = ref(0);
+const origin_price = ref(0);
 const category = ref('');
 const size = ref('');
 const description = ref('');
@@ -26,6 +27,7 @@ const getProduct = async (productId: number) => {
         productName.value = product.name;
         brand.value = product.brand;
         price.value = product.pricing;
+        origin_price.value = product.origin_price;
         category.value = product.category_id
 
         description.value = product.description;
@@ -70,6 +72,7 @@ const updateProduct = async () => {
     formData.append('name', productName.value);
     formData.append('brand', brand.value);
     formData.append('pricing', price.value.toString());
+    formData.append('origin_price', origin_price.value.toString());
     formData.append('category_id', category.value);
     formData.append('size', size.value);
     formData.append('description', description.value);
@@ -92,6 +95,7 @@ const updateProduct = async () => {
         productName.value = updatedProduct.name;
         brand.value = updatedProduct.brand;
         price.value = updatedProduct.pricing;
+        origin_price.value = updatedProduct.origin_price;
         category.value = updatedProduct.category_id.toString(); // Ensure category_id is string for select binding
         size.value = updatedProduct.size;
         description.value = updatedProduct.description;
@@ -139,6 +143,12 @@ const handleCancel = () => {
                     <div class="sm:col-span-2">
                         <label for="price" class="block mb-2 font-semibold text-gray-900 dark:text-white">Price</label>
                         <input v-model.number="price" type="number" name="price" id="price"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="$2999">
+                    </div>
+                    <div class="sm:col-span-2">
+                        <label for="price" class="block mb-2 font-semibold text-gray-900 dark:text-white">Base_Pricee</label>
+                        <input v-model.number="origin_price" type="number" name="price" id="price"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="$2999">
                     </div>

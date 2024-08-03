@@ -56,7 +56,7 @@ const purchasesWithDetails = computed(() => {
         const product = products.value.find(prod => prod.id === purchase.product_id); // Assuming product_id is in purchase
         return {
             ...purchase,
-            supplier_name: supplier ? supplier.name : 'Unknown',
+            supplier_company: supplier ? supplier.company : 'Unknown',
             product_name: product ? product.name : 'Unknown', // Added product_name
             product_origin_price: product ? product.origin_price : 'Unknown',
         };
@@ -82,15 +82,30 @@ const confirmDelete = (purchaseId: number) => {
         showCancelButton: true,
         confirmButtonColor: "#3085d6",
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, delete it!"
+        confirmButtonText: "Yes, reject this order!"
     }).then((result) => {
         if (result.isConfirmed) {
             deletePurchase(purchaseId);
         }
     });
 };
-</script>
+// Swal.fire({
+//   title: "Do you want to save the changes?",
+//   showDenyButton: true,
+//   showCancelButton: true,
+//   confirmButtonText: "Save",
+//   denyButtonText: `Don't save`
+// }).then((result) => {
+//   /* Read more about isConfirmed, isDenied below */
+//   if (result.isConfirmed) {
+//     Swal.fire("Saved!", "", "success");
+//   } else if (result.isDenied) {
+//     Swal.fire("Changes are not saved", "", "info");
+//   }
+// });
 
+
+</script>
 <template>
     <div class="w-full bg-white rounded-md p-2">
         <div class="flex">
@@ -106,23 +121,10 @@ const confirmDelete = (purchaseId: number) => {
                     </div>
                 </template>
                 <RouterLink to="/admin/product"
-                    class="bg-[#7367F0] no-underline px-4 py-2 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
-                    <IconsCirclePlus className="w-10 h-10" stroke="2.0" />
-                    <span class="text-xl font-semibold">Create Purchase</span>
+                    class="bg-[#7367F0] no-underline px-4 py-3 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
+                    <!-- <IconsCirclePlus className="w-10 h-10" stroke="2.0" /> -->
+                    <span class="text-xl font-semibold"> Order Request</span>
                 </RouterLink>
-            </div>
-        </div>
-        <div class="flex pr-4 mt-4">
-            <div class="flex-grow"></div>
-            <div class="relative text-gray-400">
-                <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <IconSearch className="w-6 h-6" stroke="2.0" />
-                </div>
-                <input type="text" placeholder="Search" class="appearance-none ps-12
-                        rounded-md placeholder:text-gray-400 shadow-md font-semibold text-gray-700
-                        hover:shadow-md outline-0 hover:outline-0 focus:outline-0 
-                        focus:ring-0
-                        focus:border-0 border-0" />
             </div>
         </div>
         <div class="relative overflow-auto shadow-md sm:rounded-lg mt-4">
@@ -130,13 +132,14 @@ const confirmDelete = (purchaseId: number) => {
                 <thead class="text-xs text-gray-700 bg-gray-50">
                     <tr>
                         <th scope="col" class="px-6 py-3 text-lg font-sans"> ID</th>
-                        <th scope="col" class="px-6 py-3 text-lg font-sans"> Name</th>
                         <th scope="col" class="px-6 py-3 text-lg font-sans"> Product</th>
-                        <th scope="col" class="px-6 py-3 text-lg">Price</th>
+                        <th scope="col" class="px-6 py-3 text-lg font-sans"> Bprice</th>
                         <th scope="col" class="px-6 py-3 text-lg">Qty</th>
                         <th scope="col" class="px-6 py-3 text-lg">Total Price</th>
+                        <th scope="col" class="px-6 py-3 text-lg">Date</th>
                         <th scope="col" class="px-6 py-3 text-lg">Status</th>
-                        <th scope="col" class="px-6 py-3 text-lg">Action</th>
+                        <!-- <th scope="col" class="px-6 py-3 text-lg">Action</th> -->
+
                     </tr>
                 </thead>
                 <tbody>
@@ -149,12 +152,14 @@ const confirmDelete = (purchaseId: number) => {
                         <tr v-for="(purchase, index) in purchasesWithDetails" :key="index"
                             :class="`bg-white ${index === purchasesWithDetails.length - 1 ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`">
                             <td class="px-6 py-6">{{ purchase?.id }}</td>
-                            <td class="px-6 py-6">{{ purchase?.supplier_name }}</td>
+                            <!-- <td class="px-6 py-6">{{ purchase?.supplier_company }}</td> -->
                             <td class="px-6 py-6">{{ purchase?.product_name }}</td>
                             <td class="px-6 py-6">{{ purchase?.product_origin_price }}</td>
                             <td class="px-6 py-6">{{ purchase?.qty }}</td>
                             <td class="px-6 py-6">${{ purchase?.total_price }}</td>
-                            <td :class="{
+                            <td class="px-6 py-6">{{ purchase?.created_at }}</td>
+
+                            <!-- <td :class="{
                                 'px-6 py-6 text-left': true,
                                 'text-orange-800': purchase?.status === 'pending',
                                 ' text-teal-800': purchase?.status === 'completed',
@@ -162,13 +167,24 @@ const confirmDelete = (purchaseId: number) => {
                                 'bg-blue-200 text-blue-800': purchase?.status === 'delivery'
                             }">
                                 {{ purchase?.status }}
-                            </td>
+                            </td> -->
                             <td class="px-6 py-6 flex space-x-2">
-                                <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
-                                <IconDelete @click="confirmDelete(purchase.id)"
-                                    class="w-6 h-6 text-red-500 cursor-pointer" />
-                                <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
+
+                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="green" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+
+
+                                <svg @click="confirmDelete(purchase.id)" xmlns="http://www.w3.org/2000/svg" fill="none"
+                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
+                                    <path stroke-linecap="round" stroke-linejoin="round"
+                                        d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
+                                </svg>
+
                             </td>
+
                         </tr>
                     </template>
                 </tbody>
@@ -177,13 +193,3 @@ const confirmDelete = (purchaseId: number) => {
         </div>
     </div>
 </template>
-
-<style scoped>
-.truncate-cell {
-    max-width: 150px;
-    /* Adjust as needed */
-    overflow: hidden;
-    text-overflow: ellipsis;
-    white-space: nowrap;
-}
-</style>

@@ -45,7 +45,7 @@ const getProducts = async () => {
     } catch (error) {
         console.error('Error fetching products:', error);
     }
-}; 2
+};
 
 const goToPage = (page: number) => {
     currentPage.value = page;
@@ -104,6 +104,7 @@ interface Product {
     name: string;
     brand: string;
     pricing: number;
+    origin_price: number;
     qty: number;
     category_id: number;
     size: string;
@@ -242,6 +243,9 @@ getProducts();
                         Brand
                     </th>
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Bprice
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Price
                     </th>
                     <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">
@@ -296,9 +300,21 @@ getProducts();
                         </th>
                         <td class="px-6 py-6">{{ product?.brand }}
                         </td>
-                        <td class="px-6 py-6">{{ product?.pricing }}
+                        <td class="px-6 py-6">{{ product?.origin_price }}
                         </td>
-                        <td class="px-6 py-6">{{ product?.qty }}
+                        <td class="px-6 py-6">{{ product
+                        ?.pricing }}
+                        </td>
+                        <td class="px-6 py-6">
+                            <button :class="product.qty ? 'text-black-400' : 'text-red-400'"
+                                class="bg-slate-100 font-semibold py-1 px-2 rounded">
+                                {{ product.qty }}
+                            </button>
+                            <!-- <button :class="product.qty ? 'bg-green-400' : 'bg-red-400'"
+                                class="text-white font-semibold py-1 px-2 rounded">
+                                {{ product.qty }}
+                            </button> -->
+
                         </td>
                         <!-- <td class="px-6 py-6">{{ product?.category_id }}
                         </td>
@@ -322,7 +338,7 @@ getProducts();
                             </button> -->
                             <!-- <button :class="product?.status === 'In Stock' ? 'bg-green-500' : 'bg-red-500 w-28'"
                                 class="text-white px-3 py-1 rounded-md">{{ product?.status }}</button> -->
-                            <button :class="product.is_in_stock ? 'bg-green-500' : 'bg-red-500'"
+                            <button :class="product.is_in_stock ? 'bg-green-400' : 'bg-red-500'"
                                 class="text-white font-semibold py-1 px-2 w-24 rounded">
                                 {{ product.is_in_stock ? 'In Stock' : 'Out Stock' }}
                             </button>
@@ -337,7 +353,9 @@ getProducts();
                             </RouterLink>
                             <IconDelete @click="confirmDelete(product.id)"
                                 class=" w-6 h-6 text-red-500 cursor-pointer" />
-                            <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
+                            <RouterLink :to="`/admin/product/${product.id}/purchase`">
+                                <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
+                            </RouterLink>
                         </td>
                     </tr>
                 </template>

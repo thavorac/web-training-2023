@@ -85,7 +85,27 @@ const pharongRouter: Readonly<RouteRecordRaw[]> = [
     path: '/figma',
     name: 'figma',
     component: () => import('../../views/Testing/FigmaView.vue')
+  },
+  {
+    path: '/detail_purchase',
+    name: 'detail_purchase',
+    component: () => import('../../components/Testing/DetailPurchase.vue')
+  },
+  {
+    path: '/qty',
+    name: 'qty',
+    component: () => import('../../components/basic/Qty1.vue')
+  },
+  {
+    path: '/qty1',
+    name: 'qty1',
+    component: () => import('../../components/basic/Qty.vue')
   }
+  // {
+  //   path: '/supplier_dashborad',
+  //   name: 'Supplier_Dashborad',
+  //   component: () => import('../../components/SupplierDashborad/CreateSupplierDashborad.vue')
+  // }
 ]
 
 export { pharongRouter }
