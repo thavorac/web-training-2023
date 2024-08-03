@@ -1,39 +1,47 @@
-import { defineStore } from 'pinia'
-import api from '../apis/index'
+// Store cart.js
 
-export const useCartStore = defineStore('cart', {
-  state: () => ({
-    cart: [],
-    products: []
-  }),
-  actions: {
-    async getProducts() {
-      const products = await api.fetchProducts()
-      this.products = products
-    },
-    async addProductToCart(product) {
-      const productFound = this.cart.find((p) => p.id === product.id)
-      if (!productFound) {
-        const result = await api.addProductToCart(product.id, 17)
-        if (result) {
-          this.cart.push(product)
-        }
-      }
-    },
-    async removeProductFromCart(product) {
-      const result = await api.removeProductFromCart(product.id, 17)
-      if (result) {
-        this.cart = this.cart.filter((p) => p.id !== product.id)
-      }
-    },
-    async getProductsFromCart() {
-      const cart = await api.getProductsFromCart(17)
-      for (const product of cart) {
-        const productFound = this.products.find((p) => p.id === product.product_id)
-        if (productFound) {
-          this.cart.push(productFound)
-        }
-      }
+import axios from 'axios'
+
+const state = {
+  cart: []
+}
+
+const getters = {
+  cartProducts: (state) => state.cart,
+  cartTotal: (state) => {
+    return state.cart.reduce((total, product) => total + product.sub_total, 0)
+  }
+}
+
+const actions = {
+  async getProductsFromCart({ commit }) {
+    try {
+      const response = await axios.get('http://localhost/api/cart')
+      commit('setCart', response.data)
+    } catch (error) {
+      console.error('Error fetching cart data:', error)
+    }
+  },
+
+  async addToCart({ commit, dispatch }, product) {
+    try {
+      const response = await axios.post('http://localhost/api/cart', product)
+      commit('addProductToCart', response.data)
+      dispatch('getProductsFromCart') // Fetch updated cart data
+    } catch (error) {
+      console.error('Error adding product to cart:', error)
     }
   }
-})
+}
+
+const mutations = {
+  setCart: (state, cart) => (state.cart = cart),
+  addProductToCart: (state, product) => state.cart.push(product)
+}
+
+export default {
+  state,
+  getters,
+  actions,
+  mutations
+}

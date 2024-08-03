@@ -80,6 +80,9 @@ import CartIcon from '../../components/basic/CartIcon.vue';
 import PaginationView from '../../views/PaginationView.vue';
 import { useStore } from 'vuex';
 import { useRouter } from 'vue-router';
+import axios from '@/services/axios';
+import Swal from 'sweetalert2';
+
 
 
 const store = useStore();
@@ -139,15 +142,58 @@ const goToProductDetail = (productId) => {
 const addToWishlist = (product) => {
     store.dispatch('addToWishlist', product);
 };
+const addToCart = async (product) => {
+  const isAuthenticated = store.state.user.id;
 
-const addToCart = (product) => {
-    console.log(`Adding product to cart: ${product.name}`);
+  if (!isAuthenticated) {
+    router.push('/login');
+    return;
+  }
+
+  const cartItem = {
+    product_id: product.id,
+    quantity: 1 // Assuming quantity is always 1 here for simplicity
+  };
+
+  try {
+    const response = await axios.post('http://localhost/api/cart/add', cartItem, {
+      headers: {
+        Authorization: 'Bearer ' + store.state.token
+      }
+    });
+    console.log('Product added to cart:', response.data);
+    store.dispatch('getProductsFromCart');
+
+    // Show SweetAlert notification
+    Swal.fire({
+      icon: 'success',
+      title: 'Added to Cart',
+      text: 'The product has been added to your cart successfully!',
+      timer: 3000,
+      timerProgressBar: true,
+      showConfirmButton: false
+    });
+
+  } catch (error) {
+    console.error('Error adding product to cart:', error);
+
+    // Show SweetAlert error notification
+    Swal.fire({
+      icon: 'error',
+      title: 'Oops...',
+      text: 'There was an error adding the product to the cart.',
+      showConfirmButton: true
+    });
+  }
 };
+
+
 
 const goToPage = (page) => {
     console.log(`Navigating to page: ${page}`);
     currentPage.value = page;
 };
+
 </script>
 
 <style scoped>

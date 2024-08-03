@@ -103,7 +103,6 @@
   </div>
 </template>
 
-
 <script setup>
 import { ref, onMounted } from 'vue'
 import axios from 'axios'
@@ -112,7 +111,6 @@ import { useStore } from 'vuex'
 import PricingBtn from '../../components/basic/PricingBtn.vue'
 import AddToCardButton from '../../components/basic/AddToCardButton.vue'
 import ShopIcon from '../../components/basic/ShopIcon.vue'
-import CartIcon from '../../components/basic/CartIcon.vue'
 import PaginationView from '../../views/PaginationView.vue'
 import { RouterLink } from 'vue-router'
 
@@ -150,13 +148,19 @@ const addToCart = async (product) => {
     return;
   }
 
+  const cartItem = {
+    product_id: product.id,
+    quantity: 1 // Assuming quantity is always 1 here for simplicity
+  }
+
   try {
-    const response = await axios.post('http://localhost/api/cart', {
-      product_id: product.id,
-      user_id: store.state.user.id,
-      quantity: 1
+    const response = await axios.post('http://localhost/api/cart/add', cartItem,{
+      headers:{
+        Authorization: 'Bearer '+store.state.token
+      }
     });
     console.log('Product added to cart:', response.data);
+    store.dispatch('getProductsFromCart');
   } catch (error) {
     console.error('Error adding product to cart:', error);
   }
@@ -170,7 +174,6 @@ onMounted(() => {
   getProducts()
 })
 </script>
-
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Lato&display=swap');
@@ -245,57 +248,61 @@ onMounted(() => {
 .item .content .category .text .f-text {
   width: 38px;
   height: 20px;
-  font-size: 20px;
-  font-weight: 600;
-  color: #5e5873;
-  font-family: 'Lato', sans-serif;
-}
-
-.item .content .category .text .s-text {
-  width: 160px;
-  margin-top: 4px;
-  height: 20px;
   font-size: 14px;
   font-weight: 400;
-  line-height: 25px;
-  font-family: 'Lato', sans-serif;
-  color: #6e6b7b;
+  line-height: 140%;
+  color: #f4f4f4;
+  text-align: left;
+}
+
+.item .content .category .text .l-text {
+  width: 160px;
+  height: 16px;
+  font-size: 12px;
+  font-weight: 400;
+  line-height: 130%;
+  color: #565656;
+  text-align: left;
 }
 
 .item .content .category .icon {
-  width: 20px;
-  height: 18px;
-  border: 1.5px;
-  padding-top: 10px;
+  width: 24px;
+  height: 24px;
+  padding-top: 3px;
+}
+
+.item .content .category .icon svg {
   cursor: pointer;
-  display: inline-block;
-  transition: transform 0.3s ease;
 }
 
 .item .content .category .icon svg:hover {
-  fill: rgba(243, 174, 77, 0.804);
+  stroke: #565656;
+  fill: skyblue;
 }
 
 .item .content .star {
-  width: 260px;
-  height: 25px;
-  gap: 12px;
-  position: relative;
-  line-height: 25px;
+  width: 45px;
+  height: 12px;
+  padding-top: 3px;
+  gap: 4px;
 }
 
-.item .content .star .img {
-  width: 120px;
-  height: 24px;
+.item .content .star img {
+  width: 13.33px;
+  height: 12.67px;
+  background-size: contain;
 }
 
-.item.content .star span {
-  width: 29px;
-  height: 25px;
-  font-size: 12px;
+.item .content .star span {
+  width: 24px;
+  height: 11px;
+  color: #565656;
+  font-size: 8px;
   font-weight: 400;
-  line-height: 25px;
-  text-align: center;
-  color: #555555;
+  line-height: 140%;
+}
+
+.product-detail {
+  cursor: pointer;
 }
 </style>
