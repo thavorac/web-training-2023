@@ -15,10 +15,10 @@ const supplierRouter: Readonly<RouteRecordRaw[]> = [
       {
         path: 'dasboard',
         name: 'SupplierDashboard',
-        component: () => import('../../components/ListMenu3.vue')
+        component: () => import('../../components/SupplierDashborad/DashboardView.vue')
       },
       {
-        path: 'order',
+        path: '',
         name: 'SupplierOrderList',
         component: () => import('../../components/SupplierDashborad/OrderList.vue')
       },

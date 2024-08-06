@@ -11,11 +11,14 @@ import IconEdit from '../icons/IconEdit.vue';
 import IconDelete from '../icons/IconDelete.vue';
 import IconDetail from '../icons/IconDetail.vue';
 import Swal from 'sweetalert2';
+import { useSearchStore } from '../../stores/search';
+const searchQuery = ref(''); // Added for search input
 
 const purchases = ref([]);
 const suppliers = ref([]);
 const products = ref([]); // Added for product information
 const loading = ref(true);
+const searchStore = useSearchStore();
 
 const getPurchases = async () => {
     try {
@@ -89,6 +92,17 @@ const confirmDelete = (purchaseId: number) => {
         }
     });
 };
+const filteredPurchases = computed(() => {
+    return purchasesWithDetails.value.filter(purchase =>
+        purchase.status.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+});
+onMounted(async () => {
+    await getPurchases();
+    await getSuppliers();
+    await getProducts();
+    loading.value = false;
+});
 </script>
 
 <template>
@@ -118,7 +132,7 @@ const confirmDelete = (purchaseId: number) => {
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
                     <IconSearch className="w-6 h-6" stroke="2.0" />
                 </div>
-                <input type="text" placeholder="Search" class="appearance-none ps-12
+                <input type="text" v-model="searchQuery" placeholder="Search" class="appearance-none ps-12
                         rounded-md placeholder:text-gray-400 shadow-md font-semibold text-gray-700
                         hover:shadow-md outline-0 hover:outline-0 focus:outline-0 
                         focus:ring-0
@@ -146,8 +160,8 @@ const confirmDelete = (purchaseId: number) => {
                         </th>
                     </tr>
                     <template v-else>
-                        <tr v-for="(purchase, index) in purchasesWithDetails" :key="index"
-                            :class="`bg-white ${index === purchasesWithDetails.length - 1 ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`">
+                        <tr v-for="(purchase, index) in filteredPurchases" :key="index"
+                            :class="`bg-white ${index === filteredPurchases.length - 1 ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`">
                             <td class="px-6 py-6">{{ purchase?.id }}</td>
                             <td class="px-6 py-6">{{ purchase?.supplier_name }}</td>
                             <td class="px-6 py-6">{{ purchase?.product_name }}</td>
@@ -156,15 +170,16 @@ const confirmDelete = (purchaseId: number) => {
                             <td class="px-6 py-6">${{ purchase?.total_price }}</td>
                             <td :class="{
                                 'px-6 py-6 text-left': true,
-                                'text-orange-800': purchase?.status === 'pending',
-                                ' text-teal-800': purchase?.status === 'completed',
-                                ' text-red-800': purchase?.status === 'reject',
-                                'bg-blue-200 text-blue-800': purchase?.status === 'delivery'
+                                'text-orange-400': purchase?.status === 'pending',
+                                ' text-green-400': purchase?.status === 'accepted',
+                                ' text-red-600': purchase?.status === 'rejected',
                             }">
                                 {{ purchase?.status }}
                             </td>
                             <td class="px-6 py-6 flex space-x-2">
-                                <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
+                                <RouterLink :to="`/admin/purchase/${purchase.id}/edit`">
+                                    <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
+                                </RouterLink>
                                 <IconDelete @click="confirmDelete(purchase.id)"
                                     class="w-6 h-6 text-red-500 cursor-pointer" />
                                 <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />

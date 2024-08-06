@@ -76,10 +76,11 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             component: () => import('../../components/Product/EditProduct.vue'),
             props: true
           },
+          // create puchase by product ID
           {
-            path: ':productId/purchase',
-            name: 'PurchaseProduct',
-            component: () => import('../../components/Testing/DetailPurchase.vue'),
+            path: ':productId/create-purchase',
+            name: 'CreatePurchaseByProductId',
+            component: () => import('../../components/Purchase/CreatePurchase.vue'),
             props: true
           }
         ]
@@ -132,10 +133,12 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             name: 'ListPurchase',
             component: () => import('../../components/Purchase/ListPurchase.vue')
           },
+          // create purchase is in the product route :productId/create-purchase
           {
-            path: 'create',
-            name: 'CreatePurchase',
-            component: () => import('../../components/Purchase/CreatePurchase.vue')
+            path: '/admin/purchase/:id/edit',
+            name: 'PurchaseEdit',
+            component: () => import('../../components/Purchase/EditPurchase.vue'),
+            props: true
           }
         ]
       },

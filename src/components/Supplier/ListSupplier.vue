@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref } from 'vue';
+import { computed, ref } from 'vue';
 import axios from 'axios';
 import { RouterLink } from 'vue-router';
 import CategoryView from '../../views/CategoryView.vue';
@@ -11,10 +11,12 @@ import IconEdit from '../icons/IconEdit.vue';
 import IconDelete from '../icons/IconDelete.vue';
 import IconDetail from '../icons/IconDetail.vue';
 import Swal from 'sweetalert2';
+import { useSearchStore } from '../../stores/search';
 
 const suppliers = ref<any[]>([]);
 const products = ref<any[]>([]);
 const loading = ref(true);
+const searchStore = useSearchStore();
 
 const getSuppliers = async () => {
     try {
@@ -31,24 +33,24 @@ const getProducts = async () => {
     try {
         const response = await axios.get('http://localhost/api/products');
         products.value = response.data;
-        console.log(response.data)
+        console.log(response.data);
     } catch (error) {
         console.error('Error fetching products', error);
     } finally {
         loading.value = false;
     }
-}
-
-const deleteSupplier = (supplierId: number) => {
-    axios.delete(`http://localhost/api/suppliers/${supplierId}`)
-        .then(() => {
-            getSuppliers(); // Fetch data again after deletion
-            Swal.fire("Deleted!", "Your supplier has been deleted.", "success");
-        })
-        .catch((error) => {
-            Swal.fire("Error!", "An error occurred while deleting the supplier.", "error");
-        });
 };
+
+const deleteSupplier = async (supplierId: number) => {
+    try {
+        await axios.delete(`http://localhost/api/suppliers/${supplierId}`);
+        await getSuppliers(); // Fetch data again after deletion
+        Swal.fire("Deleted!", "Your supplier has been deleted.", "success");
+    } catch (error) {
+        Swal.fire("Error!", "An error occurred while deleting the supplier.", "error");
+    }
+};
+
 // Function to confirm deletion using SweetAlert
 const confirmDelete = (supplierId: number) => {
     Swal.fire({
@@ -61,40 +63,28 @@ const confirmDelete = (supplierId: number) => {
         confirmButtonText: "Yes, delete it!"
     }).then((result) => {
         if (result.isConfirmed) {
-            deleteSupplier(supplierId) // Just call the function
-                .then(() => {
-                    Swal.fire(
-                        "Deleted!",
-                        "Your Supplier has been deleted.",
-                        "success"
-                    );
-                })
-                .catch(() => {
-                    Swal.fire(
-                        "Error!",
-                        "An error occurred while deleting the Supplier.",
-                        "error"
-                    );
-                });
+            deleteSupplier(supplierId);
         }
     });
 };
 
-
-
+const filteredSuppliers = computed(() => {
+    return suppliers.value.filter(supplier =>
+        supplier.name.toLowerCase().includes(searchStore.search.toLowerCase())
+    );
+});
 
 getSuppliers();
 getProducts();
-
 </script>
 
 <template>
     <div class="w-full bg-white rounded-md p-2">
         <div class="flex">
             <div class="bg-gray-100 flex items-center py-3 px-3 space-x-4 rounded-md">
-                <IconCategories :w="'12'" :h="'12'" className="text-[#F66603]" />
+                <IconCategories :w="'12'" :h="'12'" class="text-[#F66603]" />
                 <template v-if="loading">
-                    <IconSkLoading className="w-6 h-6" />
+                    <IconSkLoading class="w-6 h-6" />
                 </template>
                 <template v-else>
                     <div class="flex flex-col">
@@ -104,7 +94,7 @@ getProducts();
                 </template>
                 <RouterLink to="/admin/supplier/create"
                     class="bg-[#7367F0] no-underline px-4 py-2 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
-                    <IconsCirclePlus className="w-10 h-10" stroke="2.0" />
+                    <IconsCirclePlus class="w-10 h-10" stroke="2.0" />
                     <span class="text-xl font-semibold"> Supplier</span>
                 </RouterLink>
             </div>
@@ -113,9 +103,9 @@ getProducts();
             <div class="flex-grow"></div>
             <div class="relative text-gray-400">
                 <div class="absolute inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
-                    <IconSearch className="w-6 h-6" stroke="2.0" />
+                    <IconSearch class="w-6 h-6" stroke="2.0" />
                 </div>
-                <input type="text" placeholder="Search" class="appearance-none ps-12
+                <input type="text" placeholder="Search" v-model="searchStore.search" class="appearance-none ps-12
                         rounded-md placeholder:text-gray-400 shadow-md font-semibold text-gray-700
                         hover:shadow-md outline-0 hover:outline-0 focus:outline-0 
                         focus:ring-0
@@ -137,12 +127,12 @@ getProducts();
                 </thead>
                 <tbody>
                     <tr v-if="loading">
-                        <th colspan="8">
-                            <IconSkLoading className="w-6 h-6" />
+                        <th colspan="7" class="text-center py-6">
+                            <IconSkLoading class="w-6 h-6" />
                         </th>
                     </tr>
                     <template v-else>
-                        <tr v-for="(supplier, index) in suppliers" :key="supplier.id"
+                        <tr v-for="(supplier, index) in filteredSuppliers" :key="supplier.id"
                             :class="`bg-white ${index === suppliers.length - 1 ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`">
                             <td class="px-6 py-6">{{ index + 1 }}</td>
                             <td class="px-6 py-6">{{ supplier.name }}</td>
@@ -162,7 +152,6 @@ getProducts();
                     </template>
                 </tbody>
             </table>
-            <!-- Add pagination here if needed -->
         </div>
     </div>
 </template>
@@ -170,7 +159,6 @@ getProducts();
 <style scoped>
 .truncate-cell {
     max-width: 150px;
-    /* Adjust as needed */
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;

@@ -40,6 +40,8 @@
 // src/store/index.js
 import { createStore } from 'vuex';
 
+
+
 export default createStore({
   state: {
     user: JSON.parse(localStorage.getItem('user')) || null,
@@ -87,6 +89,7 @@ export default createStore({
     getUser: state => state.user,
     getAdmin: state => state.admin,
   },
+
 });
 
 

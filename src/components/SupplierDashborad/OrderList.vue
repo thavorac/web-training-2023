@@ -1,21 +1,18 @@
 <script setup lang="ts">
 import { ref, computed, onMounted } from 'vue';
 import axios from 'axios';
-import { RouterLink } from 'vue-router';
-import CategoryView from '../../views/CategoryView.vue';
-import IconSkLoading from '@/components/loading/SmsLoading.vue';
-import IconCategories from '../icons/IconCategories.vue';
-import IconsCirclePlus from '../icons/IconCirclePlus.vue';
-import IconSearch from '../icons/IconSearch.vue';
-import IconEdit from '../icons/IconEdit.vue';
-import IconDelete from '../icons/IconDelete.vue';
-import IconDetail from '../icons/IconDetail.vue';
 import Swal from 'sweetalert2';
+import IconSkLoading from '../loading/SmsLoading.vue';
+import IconCategories from '../icons/IconCategories.vue';
+import { useSearchStore } from '../../stores/search';
 
 const purchases = ref([]);
 const suppliers = ref([]);
-const products = ref([]); // Added for product information
+const products = ref([]);
 const loading = ref(true);
+const searchStore = useSearchStore();
+
+const search = computed(() => searchStore.search);
 
 const getPurchases = async () => {
     try {
@@ -35,77 +32,67 @@ const getSuppliers = async () => {
     }
 };
 
-const getProducts = async () => { // Added function to fetch products
+const getProducts = async () => {
     try {
-        const response = await axios.get('http://localhost/api/products'); // Endpoint for products
+        const response = await axios.get('http://localhost/api/products');
         products.value = response.data;
-        console.log('list products', response.data);
     } catch (error) {
         console.error('Error fetching products:', error);
     }
 };
 
 onMounted(async () => {
-    await Promise.all([getPurchases(), getSuppliers(), getProducts()]); // Fetch products
+    await Promise.all([getPurchases(), getSuppliers(), getProducts()]);
     loading.value = false;
 });
 
 const purchasesWithDetails = computed(() => {
     return purchases.value.map(purchase => {
         const supplier = suppliers.value.find(sup => sup.id === purchase.supplier_id);
-        const product = products.value.find(prod => prod.id === purchase.product_id); // Assuming product_id is in purchase
+        const product = products.value.find(prod => prod.id === purchase.product_id);
         return {
             ...purchase,
             supplier_company: supplier ? supplier.company : 'Unknown',
-            product_name: product ? product.name : 'Unknown', // Added product_name
+            product_name: product ? product.name : 'Unknown',
             product_origin_price: product ? product.origin_price : 'Unknown',
         };
-    });
+    })
+    .filter(purchase => {
+            return purchase.product_name.toLowerCase().includes(search.value.toLowerCase());
+        });
 });
 
-const deletePurchase = (purchaseId: number) => {
-    axios.delete(`http://localhost/api/purchases/${purchaseId}`)
-        .then(() => {
-            getPurchases(); // Fetch data again after deletion
-            Swal.fire("Deleted!", "Your purchase has been deleted.", "success");
-        })
-        .catch((error) => {
-            Swal.fire("Error!", "An error occurred while deleting the purchase.", "error");
-        });
+const updatePurchaseStatus = async (purchaseId, status) => {
+    try {
+        await axios.patch(`http://localhost/api/purchase/${purchaseId}`, { status });
+        await getPurchases(); // Fetch updated data
+        Swal.fire("Updated!", `The purchase status has been updated to ${status}.`, "success");
+    } catch (error) {
+        console.error('Error updating purchase status:', error);
+        Swal.fire("Error!", "An error occurred while updating the purchase status.", "error");
+    }
 };
 
-const confirmDelete = (purchaseId: number) => {
+const confirmUpdateStatus = (purchaseId, status) => {
+    const statusAction = status === 'accepted' ? 'accept' : 'reject';
+    const confirmButtonColor = status === 'accepted' ? 'green' : '#3085d6';
+
     Swal.fire({
-        title: "Are you sure?",
+        title: `Are you sure you want to ${statusAction} this order?`,
         text: "You won't be able to revert this!",
         icon: "warning",
         showCancelButton: true,
-        confirmButtonColor: "#3085d6",
+        confirmButtonColor: confirmButtonColor,
         cancelButtonColor: "#d33",
-        confirmButtonText: "Yes, reject this order!"
+        confirmButtonText: `Yes, ${statusAction} it!`
     }).then((result) => {
         if (result.isConfirmed) {
-            deletePurchase(purchaseId);
+            updatePurchaseStatus(purchaseId, status);
         }
     });
 };
-// Swal.fire({
-//   title: "Do you want to save the changes?",
-//   showDenyButton: true,
-//   showCancelButton: true,
-//   confirmButtonText: "Save",
-//   denyButtonText: `Don't save`
-// }).then((result) => {
-//   /* Read more about isConfirmed, isDenied below */
-//   if (result.isConfirmed) {
-//     Swal.fire("Saved!", "", "success");
-//   } else if (result.isDenied) {
-//     Swal.fire("Changes are not saved", "", "info");
-//   }
-// });
-
-
 </script>
+
 <template>
     <div class="w-full bg-white rounded-md p-2">
         <div class="flex">
@@ -122,7 +109,6 @@ const confirmDelete = (purchaseId: number) => {
                 </template>
                 <RouterLink to="/admin/product"
                     class="bg-[#7367F0] no-underline px-4 py-3 space-x-2 text-white flex items-center hover:bg-[#7367F0]/90 cursor-pointer rounded-md">
-                    <!-- <IconsCirclePlus className="w-10 h-10" stroke="2.0" /> -->
                     <span class="text-xl font-semibold"> Order Request</span>
                 </RouterLink>
             </div>
@@ -138,8 +124,6 @@ const confirmDelete = (purchaseId: number) => {
                         <th scope="col" class="px-6 py-3 text-lg">Total Price</th>
                         <th scope="col" class="px-6 py-3 text-lg">Date</th>
                         <th scope="col" class="px-6 py-3 text-lg">Status</th>
-                        <!-- <th scope="col" class="px-6 py-3 text-lg">Action</th> -->
-
                     </tr>
                 </thead>
                 <tbody>
@@ -152,44 +136,33 @@ const confirmDelete = (purchaseId: number) => {
                         <tr v-for="(purchase, index) in purchasesWithDetails" :key="index"
                             :class="`bg-white ${index === purchasesWithDetails.length - 1 ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`">
                             <td class="px-6 py-6">{{ purchase?.id }}</td>
-                            <!-- <td class="px-6 py-6">{{ purchase?.supplier_company }}</td> -->
                             <td class="px-6 py-6">{{ purchase?.product_name }}</td>
                             <td class="px-6 py-6">{{ purchase?.product_origin_price }}</td>
                             <td class="px-6 py-6">{{ purchase?.qty }}</td>
                             <td class="px-6 py-6">${{ purchase?.total_price }}</td>
                             <td class="px-6 py-6">{{ purchase?.created_at }}</td>
-
-                            <!-- <td :class="{
-                                'px-6 py-6 text-left': true,
-                                'text-orange-800': purchase?.status === 'pending',
-                                ' text-teal-800': purchase?.status === 'completed',
-                                ' text-red-800': purchase?.status === 'reject',
-                                'bg-blue-200 text-blue-800': purchase?.status === 'delivery'
-                            }">
-                                {{ purchase?.status }}
-                            </td> -->
                             <td class="px-6 py-6 flex space-x-2">
-
-                                <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                <!-- accept icon -->
+                                <svg @click="confirmUpdateStatus(purchase.id, 'accepted')"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="green" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="M9 12.75 11.25 15 15 9.75M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                 </svg>
 
-
-                                <svg @click="confirmDelete(purchase.id)" xmlns="http://www.w3.org/2000/svg" fill="none"
-                                    viewBox="0 0 24 24" stroke-width="1.5" stroke="red" class="size-6">
+                                <!-- reject icon -->
+                                <svg @click="confirmUpdateStatus(purchase.id, 'rejected')"
+                                    xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
+                                    stroke-width="1.5" stroke="red" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                 </svg>
 
                             </td>
-
                         </tr>
                     </template>
                 </tbody>
             </table>
-            <!-- Add pagination here if needed -->
         </div>
     </div>
 </template>
