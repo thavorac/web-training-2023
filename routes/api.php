@@ -14,108 +14,41 @@ use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\OrderProductsController;
 use App\Http\Controllers\CartController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchaseProductController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\PromotionController;
 
 Route::post('/cart', [CartController::class, 'store']);
 
 
 
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::get('cart', [CartController::class, 'index']);
-//     Route::post('cart/add', [CartController::class, 'add']);
-//     Route::post('cart/remove', [CartController::class, 'remove']
-// );
-// Route::post('create-payment-intent', [OrderController::class, 'createPaymentIntent']);
-//     Route::post('orders', [OrderController::class, 'store']
-// );
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 Route::post('/carts', [CartController::class, 'addProductToCart']);
 Route::delete('/carts', [CartController::class, 'removeProductFromCart']);
 Route::get('/carts', [CartController::class, 'getProductsFromCart']);
 Route::post('/user', [UserController::class, 'createUser']);
 
-// // Example category routes
-// Route::post('/categories', function (Request $request){
-//     return "Create 1 category";
-// });
-// Route::get('categories/{categoryId}', function (Request $request){
-//     return "Get 1 category by categoryId";
-// });
-// Route::patch('/categories/{categoryId}', function (Request $request){
-//     return "Update 1 category";
-// });
-// Route::delete('/categories/{categoryId}', function (Request $request){
-//     return "Delete 1 category";
-// });
-
-// // API for products
-// Route::get('/products', function (Request $request){
-//     return "Get all products";
-// });
-// Route::post('/products', function (Request $request){
-//     return "Create 1 product";
-// });
-// Route::get('products/{productId}', function (Request $request){
-//     return "Get 1 product";
-// });
-// Route::patch('products/{productId}', function (Request $request){
-//     return "Update 1 product";
-// });
-// Route::delete('/products/{productId}', function (Request $request){
-//     return "Delete 1 product";
-// });
-// Route::get('/categories/{categoryId}/products', function (Request $request){
-//     return "Get all products belong to categoryId";
-// });
-
-// Route::post('/categories', function (Request $request){
-//     return "Create 1 category";
-// });
-// Route::get('categories/{categoryId}', function (Request $request){
-//     return "Get 1 category by categoryId";
-// } );
-// Route::patch('/categories/{catogoryId}' , function (Request $request){
-//     return "Update 1 category";
-// });
-// Route::delete('/categories/{categoryId}' , function (Request $request){
-//     return "Delete 1 category";
-// });
-
-// // api for products
-
-// Route::get('/products' , function (Request $request){{
-//     return "Get all products";
-// }});
-// Route::post('/products' , function (Request $request){
-//     return "Create 1 product";
-// });
-// Route::get('products/{productId}', function (Request $request){
-//     return "Get 1 product ";
-// }); 
-// Route::patch('products/{productId', function (Request $request){
-//     return "Update 1 product";
-// });
-// Route::delete('/products/{productId}' , function (Request $request){
-//     return "Delete 1 product";
-// });
-// Route::get('/products/{productId}/products' , function (Request $request){
-//     return "Get all products belong to categoryId";
-// });
-
 // api for suppliers
+Route::get('/suppliers',[SupplierController::class,'getSuppliers']);
+Route::get('suppliers/{supplierId}',[SupplierController::class,'getSupplier']);
+Route::post('/suppliers',[SupplierController::class,'createSupplier']);
+Route::patch('/suppliers/{supplierId}',[SupplierController::class,'updateSupplier']);
+Route::delete('/suppliers/{supplierId}',[SupplierController::class,'deleteSupplier']);
+
+// api for purchases
+Route::get('/purchases',[PurchaseController::class,'getPurchases']);
+Route::get('purchases/{purchaseId}',[PurchaseController::class,'getPurchase']);
+Route::post('/purchases',[PurchaseController::class,'createPurchase']);
+Route::patch('/purchases/{purchaseId}',[PurchaseController::class,'updatePurchase']);
+Route::delete('/purchases/{purchaseId}',[PurchaseController::class,'deletePurchase']);
+Route::patch('/purchase/{purchaseId}', [PurchaseController::class, 'updateStatus']);
+
+// api for purchaseProducts
+Route::get('/purchaseProducts',[PurchaseProductController::class,'getPurchaseProducts']);
+Route::get('purchaseProducts/{purchaseProductId}',[PurchaseProductController::class,'getPurchaseProduct']);
+Route::post('/purchaseProducts',[PurchaseProductController::class,'createPurchaseProduct']);
+Route::patch('/purchaseProducts/{purchaseProductId}',[PurchaseProductController::class,'updatePurchaseProduct']);
+Route::delete('/purchaseProducts/{purchaseProductId}',[PurchaseProductController::class,'deletePurchaseProduct']);
 
 
 
@@ -148,6 +81,8 @@ Route::patch('/products/{productId}', [ProductController::class,'updateProduct']
 Route::delete('/products/{productId}', [ProductController::class,'deleteProduct']);
 Route::get('/products/{productId}/images', [ProductController::class,'getImagesOfProduct']);
 Route::get('/products/{productId}/categories',[ProductController::class,'findProductsOfCategory']);
+Route::get('products/{productId}/suppliers', [ProductController::class, 'getSuppliersByProduct']);
+
 
 //suppliers api urls
 Route::get('/suppliers',[SupplierController::class,'getSuppliers']);
