@@ -79,6 +79,14 @@ const sidebars = ref([
     path: "/admin/setting",
     title: "Setting"
   },
+  {
+    path: "/admin/supplier",
+    title: "Supplier"
+  },
+  {
+    path: "/admin/purchase",
+    title: "Purchase"
+  },
 
 
 
@@ -143,6 +151,12 @@ body {
               </template>
               <template v-else-if="side.path.match('/admin/accounts')">
                 <AccountantIcon className="w-6 h-6 text-white items-center" />
+              </template>
+              <template v-else-if="side.path.match('/admin/supplier')">
+                <IconPromotion className="w-6 h-6 text-white items-center" />
+              </template>
+              <template v-else-if="side.path.match('/admin/purchase')">
+                <IconPromotion className="w-6 h-6 text-white items-center" />
               </template>
             </SidebarLink>
             <div

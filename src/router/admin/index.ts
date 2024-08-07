@@ -6,7 +6,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
     path: '/login',
     name: 'login',
     component: () => import('../../components/AdminLogin.vue')
-} ,
+  },
   {
     path: '/logout',
     name: 'logout',
@@ -75,6 +75,13 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             name: 'ProductEdit',
             component: () => import('../../components/Product/EditProduct.vue'),
             props: true
+          },
+          // create puchase by product ID
+          {
+            path: ':productId/create-purchase',
+            name: 'CreatePurchaseByProductId',
+            component: () => import('../../components/Purchase/CreatePurchase.vue'),
+            props: true
           }
         ]
       },
@@ -93,6 +100,49 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
         name: 'Banner',
         component: () => import('../../components/Banner/BannerItem.vue')
       },
+      {
+        path: 'supplier',
+        name: 'AdminSupplier',
+        component: () => import('../../components/Supplier/SupplierItem.vue'),
+        children: [
+          {
+            path: '',
+            name: 'ListSupplier',
+            component: () => import('../../components/Supplier/ListSupplier.vue')
+          },
+          {
+            path: 'create',
+            name: 'CreateSupplier',
+            component: () => import('../../components/Supplier/CreateSupplier.vue')
+          },
+          {
+            path: ':supplierId/edit',
+            name: 'SupplierEdit',
+            component: () => import('../../components/Supplier/EditSupplier.vue'),
+            props: true
+          }
+        ]
+      },
+      {
+        path: 'purchase',
+        name: 'AdminPurchase',
+        component: () => import('../../components/Purchase/PurchaseItem.vue'),
+        children: [
+          {
+            path: '',
+            name: 'ListPurchase',
+            component: () => import('../../components/Purchase/ListPurchase.vue')
+          },
+          // create purchase is in the product route :productId/create-purchase
+          {
+            path: '/admin/purchase/:id/edit',
+            name: 'PurchaseEdit',
+            component: () => import('../../components/Purchase/EditPurchase.vue'),
+            props: true
+          }
+        ]
+      },
+
       {
         path: 'promotion',
         name: 'promotion',
@@ -159,10 +209,9 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             name: 'HistoryPromotion',
             component: () => import('../../components/Accountant/HistoryTransection.vue'),
             props: true
-          },
+          }
         ]
-      },
-
+      }
     ]
   }
 ]
