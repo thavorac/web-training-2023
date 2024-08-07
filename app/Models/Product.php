@@ -21,7 +21,7 @@ class Product extends Model
     protected $fillable = [
         'name', 'pricing', 'discounted_price', 'tags', 'promotion_date', 'color', 
         'rating', 'purchased_num', 'size', 'brand', 'style', 'model', 'shipping', 
-        'description', 'image', 'category_id'
+        'description', 'image', 'category_id,quantity'
     ];
 
     public function category(): BelongsTo
@@ -49,5 +49,9 @@ class Product extends Model
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d');
+    }
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
     }
 }

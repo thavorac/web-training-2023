@@ -26,10 +26,8 @@ class AdminAuthController extends Controller
                 'token' => $token,
             ], 200);
         }
-
         return response()->json(['error' => 'Unauthorized'], 401);
     }
-
     public function logout(Request $request)
     {
         $request->user()->currentAccessToken()->delete();
