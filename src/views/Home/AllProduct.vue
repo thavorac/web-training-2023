@@ -1,37 +1,22 @@
 <template>
   <div class="icon">
     <RouterLink to="/Homepage">
-      <svg
-        xmlns="http://www.w3.org/2000/svg"
-        fill="white"
-        viewBox="0 0 24 24"
-        strokeWidth="1.5"
-        stroke="green"
-        className="size-6"
-      >
+      <svg xmlns="http://www.w3.org/2000/svg" fill="white" viewBox="0 0 24 24" strokeWidth="1.5" stroke="green"
+        className="size-6">
         <title>Back To Home Page</title>
-        <path
-          strokeLinecap="round"
-          strokeLinejoin="round"
-          d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z"
-        />
+        <path strokeLinecap="round" strokeLinejoin="round"
+          d="m11.25 9-3 3m0 0 3 3m-3-3h7.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
       </svg>
     </RouterLink>
   </div>
 
   <div class="container mx-auto">
     <div class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-4">
-      <div
-        v-for="(product, index) in products"
-        :key="index"
-        class="item bg-white rounded-lg overflow-hidden shadow-md"
-      >
+      <div v-for="(product, index) in products" :key="index" class="item bg-white rounded-lg overflow-hidden shadow-md">
         <div class="pic bg-gray-200 group relative overflow-hidden">
-          <img
-            :src="`http://localhost/storage/${product.image}`"
+          <img :src="`http://localhost/storage/${product.image}`"
             class="object-cover overflow-hidden transform transition-transform duration-500 group-hover:scale-110"
-            alt="Product Image"
-          />
+            alt="Product Image" />
         </div>
         <div class="content">
           <div class="category">
@@ -42,27 +27,13 @@
               </p>
             </div>
             <div class="icon">
-              <svg
-                xmlns="http://www.w3.org/2000/svg"
-                @click="goToProductDetail(product.id)"
-                title="click to see product detail"
-                fill="skyblue"
-                viewBox="0 0 24 24"
-                stroke-width="1.5"
-                stroke="currentColor"
-                class="size-6"
-              >
+              <svg xmlns="http://www.w3.org/2000/svg" @click="goToProductDetail(product.id)"
+                title="click to see product detail" fill="skyblue" viewBox="0 0 24 24" stroke-width="1.5"
+                stroke="currentColor" class="size-6">
                 <title>click to see product detail</title>
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z"
-                />
-                <path
-                  stroke-linecap="round"
-                  stroke-linejoin="round"
-                  d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z"
-                />
+                <path stroke-linecap="round" stroke-linejoin="round"
+                  d="M2.036 12.322a1.012 1.012 0 0 1 0-.639C3.423 7.51 7.36 4.5 12 4.5c4.638 0 8.573 3.007 9.963 7.178.07.207.07.431 0 .639C20.577 16.49 16.64 19.5 12 19.5c-4.638 0-8.573-3.007-9.963-7.178Z" />
+                <path stroke-linecap="round" stroke-linejoin="round" d="M15 12a3 3 0 1 1-6 0 3 3 0 0 1 6 0Z" />
               </svg>
             </div>
           </div>
@@ -71,39 +42,23 @@
             <span>{{ product.rate }}</span>
           </div>
           <div>
-            <PricingBtn
-              style="margin-top: 8px; margin-left: -10px"
-              discountBtn="-10%"
-              :newPriceBtn="`$${product.pricing}`"
-              fullPriceBtn="$290"
-            ></PricingBtn>
+            <div v-if="product.pricing === product.discounted_price">
+              <PricingBtn style="margin-top: 8px; margin-left: -10px" :newPriceBtn="`$${product.pricing}`" />
+            </div>
+            <div v-else>
+              <PricingBtn style="margin-top: 8px; margin-left: -10px" :discountBtn="calculateDiscount(product)"
+                :newPriceBtn="`$${product.discounted_price}`" :fullPriceBtn="`$${product.pricing}`" />
+            </div>
           </div>
+
         </div>
         <div class="AddToCardButton flex justify-between">
-          <AddToCardButton
-            class="cursor-pointer"
-            color="#F8F6F8"
-            text="Wishlist"
-            colorText="#5E5873"
-            width="151px"
-            height="42px"
-            :icon="none"
-            raduis="4px 1px 1px 4px"
-            @click="addToWishlist(product)"
-          >
+          <AddToCardButton class="cursor-pointer" color="#F8F6F8" text="Wishlist" colorText="#5E5873" width="151px"
+            height="42px" :icon="none" raduis="4px 1px 1px 4px" @click="addToWishlist(product)">
             <CartIcon />
           </AddToCardButton>
-          <AddToCardButton
-            class="cursor-pointer"
-            color="#7367F0"
-            text="Add to cart"
-            colorText="#FFFFFF"
-            width="151px"
-            height="42px"
-            :icon="none"
-            raduis="1px 4px 4px"
-            @click="addToCart(product)"
-          >
+          <AddToCardButton class="cursor-pointer" color="#7367F0" text="Add to cart" colorText="#FFFFFF" width="151px"
+            height="42px" :icon="none" raduis="1px 4px 4px" @click="addToCart(product)">
             <ShopIcon />
           </AddToCardButton>
         </div>
@@ -169,6 +124,12 @@ const addToCart = async (product) => {
 const addToWishlist = (product) => {
   store.dispatch('addToWishlist', product)
 }
+
+
+const calculateDiscount = (product) => {
+  const discount = ((product.pricing - product.discounted_price) / product.pricing) * 100;
+  return `-${discount.toFixed(0)}%`;
+};
 
 onMounted(() => {
   getProducts()

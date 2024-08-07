@@ -54,8 +54,9 @@ export default {
     height: 20px;
     font-family: 'Lato', sans-serif;
     font-weight: 400;
-    font-size: 12px;
+    font-size: 14px;
     line-height: 20px;
+    font-weight: bold;
     color: rgba(255, 46, 0, 1);
 
 }

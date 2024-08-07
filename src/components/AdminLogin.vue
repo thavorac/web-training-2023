@@ -58,7 +58,7 @@ const loginAdmin = async () => {
         title: 'Login Successful',
         text: data.message
       }).then(() => {
-        router.push('/admin-profile'); // Adjust path to admin profile page
+        router.push('/admin/setting'); // Adjust path to admin profile page
       });
     } else {
       Swal.fire({

@@ -1,60 +1,3 @@
-<template>
-  <div class="container">
-    <div v-if="alertMessage" :class="alertClass">{{ alertMessage }}</div>
-
-    <h2>Create Promotion</h2>
-    <form @submit.prevent="createPromotion" class="form">
-      <div class="form-group">
-        <label for="promotionName">Promotion Name:</label>
-        <input type="text" v-model="promotionName" id="promotionName" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="promotionDescription">Description:</label>
-        <textarea v-model="promotionDescription" id="promotionDescription" class="form-control"></textarea>
-      </div>
-      <div class="form-group">
-        <label for="category">Category:</label>
-        <select v-model="selectedCategory" @change="fetchProducts" id="category" class="form-control">
-          <option value="" disabled>Select a category</option>
-          <option v-for="category in categories" :key="category.id" :value="category.id">
-            {{ category.name }}
-          </option>
-        </select>
-      </div>
-      <div v-if="selectedCategory" class="form-group">
-        <label>Products:</label>
-        <div v-for="product in productsByCategory" :key="product.id" class="form-check">
-          <input type="checkbox" v-model="selectedProducts" :value="product.id" :id="`product-${product.id}`" class="form-check-input">
-          <label :for="`product-${product.id}`" class="form-check-label">{{ product.name }}</label>
-        </div>
-      </div>
-      <div class="form-group">
-        <label for="discountPercentage">Discount Percentage:</label>
-        <input type="number" v-model.number="discountPercentage" id="discountPercentage" class="form-control" required min="0" max="100">
-      </div>
-      <div class="form-group">
-        <label for="startDate">Start Date:</label>
-        <input type="date" v-model="startDate" id="startDate" class="form-control" required>
-      </div>
-      <div class="form-group">
-        <label for="endDate">End Date:</label>
-        <input type="date" v-model="endDate" id="endDate" class="form-control" required>
-      </div>
-      <div class="row mt-5">
-        <hr>
-      </div>
-      <div class="row">
-        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5 me-9">
-          <button type="button" @click="handleCancel"
-                  class="text-[#82868B] bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">CANCEL</button>
-          <button type="submit"
-                  class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">CREATE</button>
-        </div>
-      </div>
-    </form>
-  </div>
-</template>
-
 <script setup>
 import { defineEmits } from 'vue';
 import { ref, onMounted, computed } from 'vue';
@@ -163,7 +106,64 @@ const createPromotion = async () => {
         router.push('/admin/promotion');
     }
 };
-</script>
+</script><template>
+  <div class="container">
+    <div v-if="alertMessage" :class="alertClass">{{ alertMessage }}</div>
+
+    <h2>Create Promotion</h2>
+    <form @submit.prevent="createPromotion" class="form">
+      <div class="form-group">
+        <label for="promotionName">Promotion Name:</label>
+        <input type="text" v-model="promotionName" id="promotionName" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="promotionDescription">Description:</label>
+        <textarea v-model="promotionDescription" id="promotionDescription" class="form-control"></textarea>
+      </div>
+      <div class="form-group">
+        <label for="category">Category:</label>
+        <select v-model="selectedCategory" @change="fetchProducts" id="category" class="form-control">
+          <option value="" disabled>Select a category</option>
+          <option v-for="category in categories" :key="category.id" :value="category.id">
+            {{ category.name }}
+          </option>
+        </select>
+      </div>
+      <div v-if="selectedCategory" class="form-group">
+        <label>Products:</label>
+        <div v-for="product in productsByCategory" :key="product.id" class="form-check">
+          <input type="checkbox" v-model="selectedProducts" :value="product.id" :id="`product-${product.id}`" class="form-check-input">
+          <label :for="`product-${product.id}`" class="form-check-label">{{ product.name }}</label>
+        </div>
+      </div>
+      <div class="form-group">
+        <label for="discountPercentage">Discount Percentage:</label>
+        <input type="number" v-model.number="discountPercentage" id="discountPercentage" class="form-control" required min="0" max="100">
+      </div>
+      <div class="form-group">
+        <label for="startDate">Start Date:</label>
+        <input type="date" v-model="startDate" id="startDate" class="form-control" required>
+      </div>
+      <div class="form-group">
+        <label for="endDate">End Date:</label>
+        <input type="date" v-model="endDate" id="endDate" class="form-control" required>
+      </div>
+      <div class="row mt-5">
+        <hr>
+      </div>
+      <div class="row">
+        <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5 me-9">
+          <button type="button" @click="handleCancel"
+                  class="text-[#82868B] bg-white border border-gray-300 focus:outline-none hover:bg-gray-100 focus:ring-4 focus:ring-gray-100 font-medium rounded-lg text-sm px-5 py-2.5 me-2 mb-2 dark:bg-gray-800 dark:text-white dark:border-gray-600 dark:hover:bg-gray-700 dark:hover:border-gray-600 dark:focus:ring-gray-700">CANCEL</button>
+          <button type="submit"
+                  class="focus:outline-none text-white bg-purple-700 hover:bg-purple-800 focus:ring-4 focus:ring-purple-300 font-medium rounded-lg text-sm px-5 py-2.5 mb-2 dark:bg-purple-600 dark:hover:bg-purple-700 dark:focus:ring-purple-900">CREATE</button>
+        </div>
+      </div>
+    </form>
+  </div>
+</template>
+
+
 
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');

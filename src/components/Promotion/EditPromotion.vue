@@ -101,6 +101,7 @@ const updatePromotion = async () => {
 
 const handleCancel = () => {
   emit('cancel');
+  router.push('/admin/promotion'); 
 };
 
 const productsByCategory = computed(() => {

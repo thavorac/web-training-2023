@@ -8,6 +8,9 @@ import { DINARouter} from './DINA'
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
   routes: [...adminRouter, ...pharongRouter,...DINARouter]
-})
+});
+
+
+
 
 export default router

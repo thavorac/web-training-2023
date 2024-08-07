@@ -1,3 +1,117 @@
+<script setup lang="ts">
+import { ref, computed } from 'vue';
+import axios from 'axios';
+import Swal from 'sweetalert2';
+import Datepicker from 'vue3-datepicker';
+import IconCategories from '../icons/IconCategories.vue';
+import IconsCirclePlus from '../icons/IconCirclePlus.vue';
+import IconSkLoading from '@/components/loading/SmsLoading.vue';
+import { RouterLink } from 'vue-router';
+import IconEdit from '../icons/IconEdit.vue';
+import IconDelete from '../icons/IconDelete.vue';
+import IconDetail from '../icons/IconDetail.vue';
+
+// Define reactive variables
+const promotions = ref<Promotion[]>([]);
+const loading = ref(false);
+const startDate = ref<Date | null>(null);
+const endDate = ref<Date | null>(null);
+
+interface Promotion {
+  id: number;
+  name: string;
+  description?: string;
+  discount_percentage: string;
+  start_date: string;
+  end_date: string;
+  status: boolean;
+}
+
+// Function to fetch promotions
+const fetchPromotions = () => {
+  loading.value = true;
+  axios.get<Promotion[]>('http://localhost:80/api/promotions')
+    .then((response) => {
+      promotions.value = response.data; // Directly assign the array to promotions.value
+      console.log(response.data);
+    })
+    .catch((error) => {
+      console.error('Error fetching promotions:', error);
+    })
+    .finally(() => {
+      loading.value = false;
+    });
+};
+
+// Function to format dates
+const formatDate = (dateString: string): string => {
+  const options: Intl.DateTimeFormatOptions = {
+    year: 'numeric',
+    month: 'short',
+    day: 'numeric',
+  };
+  const date = new Date(dateString);
+  return date.toLocaleDateString('en-US', options);
+};
+
+// Function to filter promotions by date range
+const filteredData = computed(() => {
+  if (!startDate.value || !endDate.value) {
+    return promotions.value;
+  }
+  const start = startDate.value.getTime();
+  const end = endDate.value.getTime();
+  return promotions.value.filter((promotion) => {
+    const promotionStartDate = new Date(promotion.start_date).getTime();
+    const promotionEndDate = new Date(promotion.end_date).getTime();
+    return promotionStartDate >= start && promotionEndDate <= end;
+  });
+});
+
+// Function to confirm deletion
+const confirmDelete = (promotionId: number) => {
+  Swal.fire({
+    title: 'Are you sure?',
+    text: 'You will not be able to recover this promotion!',
+    icon: 'warning',
+    showCancelButton: true,
+    confirmButtonColor: '#DC2626',
+    cancelButtonColor: '#4F46E5',
+    confirmButtonText: 'Yes, delete it!',
+    cancelButtonText: 'Cancel',
+  }).then((result) => {
+    if (result.isConfirmed) {
+      deletePromotion(promotionId);
+    }
+  });
+};
+
+// Function to delete promotion
+const deletePromotion = (promotionId: number) => {
+  axios.delete(`http://localhost:80/api/promotions/${promotionId}`)
+    .then(() => {
+      Swal.fire(
+        'Deleted!',
+        'The promotion has been deleted.',
+        'success'
+      );
+      fetchPromotions();
+    })
+    .catch((error) => {
+      console.error('Error deleting promotion:', error);
+      Swal.fire(
+        'Error!',
+        'Failed to delete the promotion.',
+        'error'
+      );
+    });
+};
+
+// Fetch promotions on component mount
+fetchPromotions();
+
+</script>
+
 <template>
   <div class="container mx-auto">
     <!-- Header Section -->
@@ -113,116 +227,3 @@
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, computed } from 'vue';
-import axios from 'axios';
-import Swal from 'sweetalert2';
-import Datepicker from 'vue3-datepicker';
-import IconCategories from '../icons/IconCategories.vue';
-import IconsCirclePlus from '../icons/IconCirclePlus.vue';
-import IconSkLoading from '@/components/loading/SmsLoading.vue';
-import { RouterLink } from 'vue-router';
-import IconEdit from '../icons/IconEdit.vue';
-import IconDelete from '../icons/IconDelete.vue';
-import IconDetail from '../icons/IconDetail.vue';
-
-// Define reactive variables
-const promotions = ref<Promotion[]>([]);
-const loading = ref(false);
-const startDate = ref<Date | null>(null);
-const endDate = ref<Date | null>(null);
-
-interface Promotion {
-  id: number;
-  name: string;
-  description?: string;
-  discount_percentage: string;
-  start_date: string;
-  end_date: string;
-  status: boolean;
-}
-
-// Function to fetch promotions
-const fetchPromotions = () => {
-  loading.value = true;
-  axios.get<Promotion[]>('http://localhost:80/api/promotions')
-    .then((response) => {
-      promotions.value = response.data; // Directly assign the array to promotions.value
-      console.log(response.data);
-    })
-    .catch((error) => {
-      console.error('Error fetching promotions:', error);
-    })
-    .finally(() => {
-      loading.value = false;
-    });
-};
-
-// Function to format dates
-const formatDate = (dateString: string): string => {
-  const options: Intl.DateTimeFormatOptions = {
-    year: 'numeric',
-    month: 'short',
-    day: 'numeric',
-  };
-  const date = new Date(dateString);
-  return date.toLocaleDateString('en-US', options);
-};
-
-// Function to filter promotions by date range
-const filteredData = computed(() => {
-  if (!startDate.value || !endDate.value) {
-    return promotions.value;
-  }
-  const start = startDate.value.getTime();
-  const end = endDate.value.getTime();
-  return promotions.value.filter((promotion) => {
-    const promotionStartDate = new Date(promotion.start_date).getTime();
-    const promotionEndDate = new Date(promotion.end_date).getTime();
-    return promotionStartDate >= start && promotionEndDate <= end;
-  });
-});
-
-// Function to confirm deletion
-const confirmDelete = (promotionId: number) => {
-  Swal.fire({
-    title: 'Are you sure?',
-    text: 'You will not be able to recover this promotion!',
-    icon: 'warning',
-    showCancelButton: true,
-    confirmButtonColor: '#DC2626',
-    cancelButtonColor: '#4F46E5',
-    confirmButtonText: 'Yes, delete it!',
-    cancelButtonText: 'Cancel',
-  }).then((result) => {
-    if (result.isConfirmed) {
-      deletePromotion(promotionId);
-    }
-  });
-};
-
-// Function to delete promotion
-const deletePromotion = (promotionId: number) => {
-  axios.delete(`http://localhost:80/api/promotions/${promotionId}`)
-    .then(() => {
-      Swal.fire(
-        'Deleted!',
-        'The promotion has been deleted.',
-        'success'
-      );
-      fetchPromotions();
-    })
-    .catch((error) => {
-      console.error('Error deleting promotion:', error);
-      Swal.fire(
-        'Error!',
-        'Failed to delete the promotion.',
-        'error'
-      );
-    });
-};
-
-// Fetch promotions on component mount
-fetchPromotions();
-
-</script>

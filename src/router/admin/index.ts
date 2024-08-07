@@ -18,7 +18,6 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
       component: () => import('../../components/AdminProfile/Profile.vue')
    },
 
-
   {
     path: '/admin',
     name: 'AdminLayout',
@@ -116,9 +115,49 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             props: true
           },
           {
-            path: 'HistoryPromotion',
-            name: 'HistoryPromotion',
+            path: 'history',
+            name: 'historyPromotion',
             component: () => import('../../components/Promotion/HistoryPromotion.vue'),
+          },
+        ]
+      },
+      {
+        path: 'accounts',
+        name: 'accountant',
+        component: () => import('../../components/Accountant/AccountItem.vue'),
+        children: [
+          {
+            path: '',
+            name: 'ListAccount',
+            component: () => import('../../components/Accountant/ListAccount.vue')
+          },
+          {
+            path: 'create-account',
+            name: 'CreateAccount',
+            component: () => import('../../components/Accountant/CreateAccount.vue')
+          },
+          {
+            path: ':accountsId/edit',
+            name: 'accountEdit',
+            component: () => import('../../components/Accountant/EditAccount.vue'),
+            props: true
+          },
+          {
+            path: 'detail/:accountId',
+            name: 'accountDetail',
+            component: () => import('../../components/Accountant/AccountDetail.vue'),
+            props: true
+          },
+          {
+            path: 'transfer',
+            name: 'TransferBalance',
+            component: () => import('../../components/Accountant/TransferFrom.vue'),
+            props: true
+          },        
+          {
+            path: 'History',
+            name: 'HistoryPromotion',
+            component: () => import('../../components/Accountant/HistoryTransection.vue'),
             props: true
           },
         ]

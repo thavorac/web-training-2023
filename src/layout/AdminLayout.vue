@@ -11,6 +11,7 @@ import IconBag from '@/components/icons/IconBag.vue'
 import IconControl from '@/components/icons/IconControl.vue';
 import IconOrder from '@/components/icons/IconOrder.vue';
 import IconPromotion from '@/components/icons/IconPromotion.vue';
+import AccountantIcon from '@/components/icons/AccountantIcon.vue';
 import IconPerson from '../components/icons/IconPerson.vue';
 const { route } = useSidebar();
 const showSide = ref(true);
@@ -51,9 +52,27 @@ const sidebars = ref([
         title: "Promotion"
       },
       {
-        path: "/admin/promotion/HistoryPromotion",
+        path: "/admin/promotion/history",
         title: "History"
       },
+    ]
+  },
+  {
+    path: "/admin/accounts",
+    title: "Accountan",
+    children: [
+      {
+        path: "/admin/accounts",
+        title: "Accountant"
+      },
+      {
+        path: "/admin/accounts/transfer",
+        title: "Transfer"
+      },
+      // {
+      //   path: "/admin/accounts/History",
+      //   title: "History"
+      // },
     ]
   },
   {
@@ -121,6 +140,9 @@ body {
               </template>
               <template v-else-if="side.path.match('/admin/promotion')">
                 <IconPromotion className="w-6 h-6 text-white items-center" />
+              </template>
+              <template v-else-if="side.path.match('/admin/accounts')">
+                <AccountantIcon className="w-6 h-6 text-white items-center" />
               </template>
             </SidebarLink>
             <div

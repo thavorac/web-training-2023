@@ -41,8 +41,16 @@
                                     <span>{{ product.rate }}</span>
                                 </div>
                                 <div>
-                                    <PricingBtn style="margin-top: 8px; margin-left: -10px;" discountBtn="-10%"
-                                        :newPriceBtn="`$${product.pricing}`" fullPriceBtn="$290" />
+                                    <div v-if="product.pricing === product.discounted_price">
+                                        <PricingBtn style="margin-top: 8px; margin-left: -10px"
+                                            :newPriceBtn="`$${product.pricing}`" />
+                                    </div>
+                                    <div v-else>
+                                        <PricingBtn style="margin-top: 8px; margin-left: -10px"
+                                            :discountBtn="calculateDiscount(product)"
+                                            :newPriceBtn="`$${product.discounted_price}`"
+                                            :fullPriceBtn="`$${product.pricing}`" />
+                                    </div>
                                 </div>
                             </div>
                             <div class="AddToCardButton flex justify-between" @click="addToWishlist(product)">
@@ -125,6 +133,10 @@ watch(
     },
     { immediate: true }
 );
+const calculateDiscount = (product) => {
+  const discount = ((product.pricing - product.discounted_price) / product.pricing) * 100;
+  return `-${discount.toFixed(0)}%`;
+};
 
 onMounted(() => {
     fetchProducts(categoryId.value);
