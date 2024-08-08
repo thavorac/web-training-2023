@@ -14,8 +14,8 @@ class AddStatusAndQtyToProductsTable extends Migration
     public function up()
     {
         Schema::table('products', function (Blueprint $table) {
-            // $table->boolean('status')->default(1)->after('size'); // Default to 1 (in stock)
-            // $table->integer('qty')->default(0)->after('pricing'); // Defaulpt to 0
+             $table->boolean('status')->default(1)->after('size'); // Default to 1 (in stock)
+             $table->integer('qty')->default(0)->after('pricing'); // Defaulpt to 0
             $table->double('origin_price')->after('name');
         });
     }

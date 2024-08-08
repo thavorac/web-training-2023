@@ -25,7 +25,7 @@ class Product extends Model
         'name', 'pricing', 'discounted_price', 'tags', 'promotion_date', 'color', 
         'rating', 'purchased_num', 'size', 'brand', 'style', 'model', 'shipping', 
         'description', 'image', 'category_id,quantity'
-        'name','origin_price', 'pricing', 'discount', 'color', 'category_id', 'image', 'qty'
+        ,'origin_price', 'discount', 'qty'
     ];
 
     public function category(): BelongsTo
