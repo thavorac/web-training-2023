@@ -36,6 +36,8 @@ Route::post('/transfer', [TransactionController::class, 'transfer']);
 
 
 use App\Http\Controllers\PurchaseController;
+
+
 use App\Http\Controllers\PurchaseProductController;
 
 

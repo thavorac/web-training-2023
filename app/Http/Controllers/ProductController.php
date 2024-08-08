@@ -209,12 +209,29 @@ class ProductController extends Controller
     } else {
         return response()->json(["message" => "Product not found"], 404);
     }
+
+    if ($productFound) {
+        // Delete associated image file from storage
+        if ($productFound->image && Storage::disk('public')->exists($productFound->image)) {
+            Storage::disk('public')->delete($productFound->image);
+        }
+
+        // Delete the product record from the database
+        $productFound->delete();
+
+        return ["message" => "Delete success"];
+    } else {
+        return response()->json(["message" => "Product not found"], 404);
+    }
 }
 
 public function getProduct($productId)
 {
     $product = Product::find($productId);
 
+    if (!$product) {
+        return response()->json(['error' => 'Product not found'], 404);
+    }
     if (!$product) {
         return response()->json(['error' => 'Product not found'], 404);
     }

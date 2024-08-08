@@ -28,7 +28,6 @@ class OrderController extends Controller
             'user_id' => auth()->id(),
             'total' => $request->total,
         ]);
-
         // Add products to the order...
 
         return response()->json($order, 201);
