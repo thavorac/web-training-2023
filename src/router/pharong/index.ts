@@ -76,6 +76,36 @@ const pharongRouter: Readonly<RouteRecordRaw[]> = [
     path: '/wishlist-page1',
     name: 'wishlistPage1',
     component: () => import('../../components/WishList1.vue')
+  },
+  {
+    path: '/figma',
+    name: 'figma',
+    component: () => import('../../views/Testing/FigmaView.vue')
+  },
+  // {
+  //   path: '/editPurchase',
+  //   name: 'EditPurchase',
+  //   component: () => import('../../components/Testing/EditPurchase.vue')
+  // },
+  {
+    path: '/detail_purchase',
+    name: 'detail_purchase',
+    component: () => import('../../components/Purchase/CreatePurchase.vue')
+  },
+  {
+    path: '/qty',
+    name: 'qty',
+    component: () => import('../../components/basic/Qty1.vue')
+  },
+  {
+    path: '/qty1',
+    name: 'qty1',
+    component: () => import('../../components/basic/Qty.vue')
+  },
+  {
+    path: '/dashboard-view',
+    name: 'DashboardView',
+    component: () => import('../../components/SupplierDashborad/DashboardView.vue')
   }
 ]
 

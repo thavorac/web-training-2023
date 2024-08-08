@@ -4,12 +4,18 @@
             <p class="mb-4 font-semibold text-xl dark:text-white text-[#58AB5D]">Add a new product</p>
             <form @submit.prevent="submitForm">
                 <div class="pt-1 grid gap-4 sm:grid-cols-2 sm:gap-6">
-                    <div class="sm:col-span-2">
+                    <div class="w-full">
                         <label for="name" class="block mb-2 font-semibold text-gray-900 dark:text-white">Product
                             Name</label>
                         <input v-model="form.name" type="text" name="name" id="name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Type product name" required>
+                    </div>
+                    <div class="w-full">
+                        <label for="origin_price" class="block mb-2 font-semibold text-gray-900 dark:text-white">Origin Price</label>
+                        <input v-model="form.origin_price" type="number" name="origin_price" id="origin_price"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="$29" required>
                     </div>
                     <div class="w-full">
                         <label for="brand" class="block mb-2 font-semibold text-gray-900 dark:text-white">Brand</label>
@@ -43,13 +49,20 @@
                         </select>
                     </div>
                     <div>
+                        <label for="qty" class="block mb-2 font-semibold text-gray-900 dark:text-white">Qty</label>
+                        <input v-model="form.qty" type="number" name="qty" id="qty"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="$2999" required>
+                    </div>
+
+                    <!-- <div>
                         <label for="size" class="block mb-2 font-semibold text-gray-900 dark:text-white">Size</label>
                         <select v-model="form.size" id="size"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="" disabled>Select size</option>
                             <option v-for="size in sizes" :key="size" :value="size">{{ size }}</option>
                         </select>
-                    </div>
+                    </div> -->
                     <!-- <div class="w-full">
                         <label for="size" class="block mb-2 font-semibold text-gray-900 dark:text-white">Size
                         </label>
@@ -91,6 +104,7 @@
             <p v-if="successMessage" class="text-green-500 mt-4">{{ successMessage }}</p>
         </div>
     </section>
+    
 </template>
 
 <script setup>
@@ -104,15 +118,17 @@ const form = reactive({
     name: '',
     brand: '',
     pricing: '',
+    origin_price: '',
     category_id: '',
-    size: '',
+    qty: '',
+    status: '',
     image: null,
     description: '',
 });
 
 const brands = ['Brand A', 'Brand B', 'Brand C']; // Example brands
 
-const sizes = ['Small', 'Medium', 'Large']; // Example sizes
+// const qty = ['Small', 'Medium', 'Large']; // Example sizes
 const uploadedImageUrl = ref(null);
 const errorMessage = ref('');
 const successMessage = ref('');
@@ -154,7 +170,8 @@ const submitForm = async () => {
         const formData = new FormData();
         formData.append('name', form.name);
         formData.append('pricing', form.pricing);
-        formData.append('size', form.size);
+        formData.append('origin_price',form.origin_price);
+        formData.append('qty', form.qty);
         formData.append('brand', form.brand);
         formData.append('description', form.description);
         formData.append('category_id', form.category_id);

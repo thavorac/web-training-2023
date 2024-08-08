@@ -5,11 +5,11 @@ import MainPageView from '@/views/MainPageView.vue'
 import { adminRouter } from './admin'
 import { pharongRouter } from './pharong'
 import { DINARouter } from './DINA'
-import { PichRouter } from './Pich'
+import {supplierRouter} from './supplier'
 
 const router = createRouter({
   history: createWebHistory(import.meta.env.BASE_URL),
-  routes: [...adminRouter, ...pharongRouter, ...DINARouter, ...PichRouter]
+  routes: [...adminRouter, ...pharongRouter, ...DINARouter,...supplierRouter]
 })
 
 export default router

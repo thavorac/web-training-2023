@@ -104,10 +104,13 @@ interface Product {
     name: string;
     brand: string;
     pricing: number;
+    origin_price: number;
+    qty: number;
     category_id: number;
     size: string;
     image: string; // Corrected the type from 'text' to 'string'
     description: string;
+    status: boolean;
     created_at?: string; // Updated to match the API response field
 }
 
@@ -230,29 +233,39 @@ getProducts();
         <table class="w-full overflow-auto text-sm text-left rtl:text-right text-gray-500">
             <thead class="text-xs text-gray-700  bg-gray-50">
                 <tr>
-                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                    <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">
                         ID
-                    </th>
-                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                    </th> -->
+                    <th scope="col" class="px-6 py-3 text-lg font-sans ">
                         Name
                     </th>
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Brand
                     </th>
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Bprice
+                    </th>
+                    <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Price
                     </th>
-                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                    <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Category
-                    </th>
+                    </th> -->
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
-                        Size
+                        Qty
                     </th>
+                    <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">
+                        Size
+                    </th> -->
                     <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Image
                     </th>
-                    <th scope="col" class="px-6 py-3 text-lg font-sans">
+                    <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">
                         Description
+                    </th> -->
+                    <th scope="col" class="px-6 py-3 text-lg font-sans ">
+                        Status
+
                     </th>
                     <!-- <th scope="col" class="px-6 py-3 text-lg">
                         Description
@@ -280,27 +293,57 @@ getProducts();
                     <tr v-for="(product, index) in filteredData"
                         :class="`bg - white ${index == filteredData.length - 1 ? '' : 'border-b'} border - gray - 200 cursor - pointer hover: bg - gray - 100`"
                         :key="index">
-                        <td class="px-6 py-6">
+                        <!-- <td class="px-6 py-6">
                             {{ product?.id }}
-                        </td>
+                        </td> -->
                         <th scope="row" class="px-6 py-6 font-medium text-gray-800">{{ product?.name }}
                         </th>
                         <td class="px-6 py-6">{{ product?.brand }}
                         </td>
-                        <td class="px-6 py-6">{{ product?.pricing }}
+                        <td class="px-6 py-6">{{ product?.origin_price }}
                         </td>
-                        <td class="px-6 py-6">{{ product?.category_id }}
+                        <td class="px-6 py-6">{{ product
+                            ?.pricing }}
+                        </td>
+                        <td class="px-6 py-6">
+                            <button :class="product.qty ? 'text-black-400' : 'text-red-400'"
+                                class="bg-slate-100 font-semibold py-1 px-2 rounded">
+                                {{ product.qty }}
+                            </button>
+                            <!-- <button :class="product.qty ? 'bg-green-400' : 'bg-red-400'"
+                                class="text-white font-semibold py-1 px-2 rounded">
+                                {{ product.qty }}
+                            </button> -->
+
+                        </td>
+                        <!-- <td class="px-6 py-6">{{ product?.category_id }}
                         </td>
                         <td class="px-6 py-6">{{ product?.size }}
-                        </td>
+                        </td> -->
                         <td class="px-6 py-4 whitespace-nowrap">
                             <!-- <img :src="image.replace('storage', 'app')" alt="Photo" width="50px" /> -->
 
                             <!-- <img :src="`http://localhost/storage/${image.images}.jpg`" alt="image"> -->
                             <img :src="`http://localhost/storage/${product.image}`" alt="image" width="50px" />
                         </td>
-                        <td class="px-6 py-6">
+                        <!-- <td class="px-6 py-6">
                             {{ product?.description }}
+                        </td> -->
+                        <td class="px-6 py-6">
+                            <!-- <button :class="[
+                                'status-button px-2 text-center align-middle rounded-lg',
+                                product.status ? 'bg-blue-400 hover:bg-blue-700' : 'bg-red-400 hover:bg-red-700'
+                            ]">
+                                {{ product?.status }}
+                            </button> -->
+                            <!-- <button :class="product?.status === 'In Stock' ? 'bg-green-500' : 'bg-red-500 w-28'"
+                                class="text-white px-3 py-1 rounded-md">{{ product?.status }}</button> -->
+                            <RouterLink :to="`/admin/product/${product.id}/create-purchase`">
+                                <button :class="product.is_in_stock ? 'bg-green-400' : 'bg-red-500'"
+                                    class="text-white font-semibold py-1 px-2 w-24 rounded">
+                                    {{ product.is_in_stock ? 'In Stock' : 'Out Stock' }}
+                                </button>
+                            </RouterLink>
                         </td>
                         <td class="px-6 py-6">
                             {{ product?.created_at }}
@@ -311,7 +354,9 @@ getProducts();
                             </RouterLink>
                             <IconDelete @click="confirmDelete(product.id)"
                                 class=" w-6 h-6 text-red-500 cursor-pointer" />
-                            <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
+                            <RouterLink :to="`/admin/product/${product.id}/create-purchase`">
+                                <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
+                            </RouterLink>
                         </td>
                     </tr>
                 </template>
