@@ -12,22 +12,23 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('cart_items', function (Blueprint $table) {
-            $table->id();
+            $table->id(); 
             $table->timestamps();
-
-            $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
-
+            $table->bigInteger('cart_id')->unsigned();
+            $table->foreign('cart_id')->references('id')->on('carts'); 
             $table->bigInteger('product_id')->unsigned();
-            $table->foreign('product_id')->references('id')->on('products');
+            $table->foreign('product_id')->references('id')->on('products')->onDelete('cascade'); 
+            $table->double('pricing');
+            $table->integer('quantity')->default(1);
+            $table->double('discounted_price')->comment('price after discount');
         });
     }
-
+    
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('carts');
+        Schema::dropIfExists('cart_items'); // Correct the table name in the drop statement
     }
 };

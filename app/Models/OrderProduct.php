@@ -8,13 +8,22 @@ use Illuminate\Database\Eloquent\Model;
 class OrderProduct extends Model
 {
     use HasFactory;
+    protected $table='orders_product';
+    
 
-    protected $table = 'orders_product';
     protected $fillable = [
         'order_id',
-        'product_id',
-        'quantity',
-        'price'
-        // Add other attributes here as needed
+        'product_id', 
+        'pricing', 
+        'quantity', 
+        'discounted_price'
     ];
+
+    /**
+     * Get the product associated with the cart item.
+     */
+    public function product()
+    {
+        return $this->belongsTo(Product::class);
+    }
 }

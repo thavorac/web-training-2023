@@ -9,114 +9,55 @@ use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthenticationController;
 use App\Http\Controllers\PaymentController;
-use App\Http\Controllers\OrderDetailController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
-use App\Http\Controllers\OrderProductsController;
 use App\Http\Controllers\CartController;
-
-
-Route::post('/cart/add', [CartController::class, 'addProductToCart']);
-Route::post('/cart/remove', [CartController::class, 'removeProductFromCart']);
-Route::get('/cart/products', [CartController::class, 'getProductsFromCart']);
-
+use App\Http\Controllers\CartItemController;
+use App\Http\Controllers\OrderProductController;
+use App\Http\Controllers\RecipeController;
 
 
 
-// Route::middleware('auth:sanctum')->group(function () {
-//     Route::get('cart', [CartController::class, 'index']);
-//     Route::post('cart/add', [CartController::class, 'add']);
-//     Route::post('cart/remove', [CartController::class, 'remove']
-// );
-// Route::post('create-payment-intent', [OrderController::class, 'createPaymentIntent']);
-//     Route::post('orders', [OrderController::class, 'store']
-// );
-
-/*
-|--------------------------------------------------------------------------
-| API Routes
-|--------------------------------------------------------------------------
-|
-| Here is where you can register API routes for your application. These
-| routes are loaded by the RouteServiceProvider and all of them will
-| be assigned to the "api" middleware group. Make something great!
-|
-*/
-
-// Route::middleware('auth:sanctum')->get('/user', function (Request $request) {
-//     return $request->user();
-// });
 
 
-// // Example category routes
-// Route::post('/categories', function (Request $request){
-//     return "Create 1 category";
-// });
-// Route::get('categories/{categoryId}', function (Request $request){
-//     return "Get 1 category by categoryId";
-// });
-// Route::patch('/categories/{categoryId}', function (Request $request){
-//     return "Update 1 category";
-// });
-// Route::delete('/categories/{categoryId}', function (Request $request){
-//     return "Delete 1 category";
-// });
+//Route Cart_Item
+Route::prefix('cart-items')->group(function () {
+    Route::get('/', [CartItemController::class, 'index']); // List all cart items
+    Route::post('/', [CartItemController::class, 'store']); // Add a new cart item
+    Route::get('/{cartItem}', [CartItemController::class, 'show']); // Show a specific cart item
+    Route::put('/{cartItem}', [CartItemController::class, 'update']); // Update a specific cart item
+    Route::delete('/{cartItem}', [CartItemController::class, 'destroy']); // Remove a specific cart item
+});
 
-// // API for products
-// Route::get('/products', function (Request $request){
-//     return "Get all products";
-// });
-// Route::post('/products', function (Request $request){
-//     return "Create 1 product";
-// });
-// Route::get('products/{productId}', function (Request $request){
-//     return "Get 1 product";
-// });
-// Route::patch('products/{productId}', function (Request $request){
-//     return "Update 1 product";
-// });
-// Route::delete('/products/{productId}', function (Request $request){
-//     return "Delete 1 product";
-// });
-// Route::get('/categories/{categoryId}/products', function (Request $request){
-//     return "Get all products belong to categoryId";
-// });
+// Route Cart
+Route::post('/cart/add', [CartController::class, 'add'])->middleware('auth:sanctum');
+Route::delete('/cart/remove/{id}', [CartController::class, 'remove'])->middleware('auth:sanctum');
+Route::get('/cart', [CartController::class, 'view'])->middleware('auth:sanctum');  
 
-// Route::post('/categories', function (Request $request){
-//     return "Create 1 category";
-// });
-// Route::get('categories/{categoryId}', function (Request $request){
-//     return "Get 1 category by categoryId";
-// } );
-// Route::patch('/categories/{catogoryId}' , function (Request $request){
-//     return "Update 1 category";
-// });
-// Route::delete('/categories/{categoryId}' , function (Request $request){
-//     return "Delete 1 category";
-// });
+// Order Products API URLs
+Route::get('/order-products', [OrderProductController::class, 'index']);
+Route::post('/order-products', [OrderProductController::class, 'store'])->middleware('auth:sanctum');
+Route::get('/order-products/{orderProduct}', [OrderProductController::class, 'view']);
+Route::patch('/order-products/{orderProduct}', [OrderProductController::class, 'update']);
+Route::delete('/order-products/{orderProduct}', [OrderProductController::class, 'destroy']);
 
-// // api for products
+//Orders api urls
+Route::get('/orders', [OrderController::class, 'view'])->middleware('auth:sanctum');
+Route::post('/orders', [OrderController::class, 'add'])->middleware('auth:sanctum');
+Route::get('/orders/{orderId}', [OrderController::class, 'show'])->middleware('auth:sanctum');
+Route::patch('/orders/{orderId}', [OrderController::class, 'update'])->middleware('auth:sanctum');
+Route::delete('/orders/{orderId}', [OrderController::class, 'remove'])->middleware('auth:sanctum');
 
-// Route::get('/products' , function (Request $request){{
-//     return "Get all products";
-// }});
-// Route::post('/products' , function (Request $request){
-//     return "Create 1 product";
-// });
-// Route::get('products/{productId}', function (Request $request){
-//     return "Get 1 product ";
-// }); 
-// Route::patch('products/{productId', function (Request $request){
-//     return "Update 1 product";
-// });
-// Route::delete('/products/{productId}' , function (Request $request){
-//     return "Delete 1 product";
-// });
-// Route::get('/products/{productId}/products' , function (Request $request){
-//     return "Get all products belong to categoryId";
-// });
+// Route Payment
+Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
 
-// api for suppliers
+// Define API routes for the RecipeController
+// Route::apiResource('recipes', RecipeController::class);
+Route::get('/recipes', [RecipeController::class, 'index']);
+Route::post('/recipes', [RecipeController::class, 'store']);
+Route::get('/orders/{id}/recipes', [RecipeController::class, 'show']);
+Route::put('/orders/{id}/recipes', [RecipeController::class, 'update']);
+Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
 
 
 
@@ -165,25 +106,8 @@ Route::patch('/images/{imageId}',[ImageController::class,'updateImage']);
 Route::get('/images/{imageId}',[ImageController::class,'getImage']);
 Route::delete('images/{imageId}',[ImageController::class,'deleteImage']);
 
-//Orders api urls
-Route::get('/orders',[OrderController::class,'getOrders']);
-Route::post('/orders',[OrderController::class,'createOrder']);
-Route::get('/orders/{orderId}',[OrderController::class,'getOrder']);
-Route::patch('/orders/{orderId}',[OrderController::class,'updateOrder']);
-Route::delete('/orders/{orderId}',[OrderController::class,'deleteOrder']);
-
-//Order_products api urls
-// Route::get('/order_products',[Order_productsController::class,'getOrderProducts']);
-// Route::post('/order_products',[Order_productsController::class,'createOrderProduct']);
-// Route::get('/order_products/{order_productsId}',[Order_productsController::class , 'getOrderProduct']);
-// Route::patch('/order_products/{order_productsId}',[Order_productsController::class , 'updateOrderProduct']);
-// Route::delete('/order_products/{order_productsId}',[Order_productsController::class,'deleteOrderProduct']);
 
 
-Route::post('/create-payment-intent', [StripeController::class, 'createPaymentIntent']);
-Route::post('/webhook', [StripeController::class, 'handlePaymentWebhook']);
-// api for Authentication
-// Route::post('/register',[AuthenticationController::class,'register']);
 
 
 // add product form 
@@ -215,20 +139,7 @@ Route::get('reset-password/{token}', [AuthenticationController::class, 'showRese
 Route::post('reset-password', [AuthenticationController::class, 'resetPassword']);
 Route::post('/logout', [AuthenticationController::class, 'logout']);
 
-// Stripe payment session routes
-Route::post('/create-checkout-session', [StripeController::class, 'session']);
-Route::get('/success', [StripeController::class, 'success'])->name('success');
-Route::get('/cancel', [StripeController::class, 'cancel'])->name('cancel');
 
-// Order Details API
-Route::get('orderdetails', [OrderDetailController::class, 'index']);
-Route::post('orderdetails', [OrderDetailController::class, 'store']);
-Route::get('orderdetails/{orderDetail}', [OrderDetailController::class, 'show']);
-Route::put('orderdetails/{orderDetail}', [OrderDetailController::class, 'update']);
-Route::delete('orderdetails/{orderDetail}', [OrderDetailController::class, 'destroy']);
-
-// Corrected route definition for products
-// Route::get('products', [ProductController::class, 'index']);
 
 // User purchase route
 Route::post('purchase', [UserController::class, 'purchase']);
