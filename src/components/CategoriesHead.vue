@@ -10,6 +10,7 @@ import IconHeart from '../components/icons/IconHeart.vue';
 import IconCard from '../components/icons/IconCard.vue';
 import IconCategories from '../components/icons/IconCategories.vue';
 import { useCartStore } from '@/stores/useCartStore';
+import CartPage from '@/views/Cart/CartPage.vue';
 
 
 const store = useStore();
