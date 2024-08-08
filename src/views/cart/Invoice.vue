@@ -1,26 +1,26 @@
 <template>
   <div class="container pt-5">
-    <div v-for="(orderProduct, show) in orderProducts" :key="index">
+    <div v-if="order">
       <!-- Invoice section -->
-      <div class="invoice pt-5" v-show="showInvoice">
-        <h1>Invoice</h1>
+      <div class="invoice pt-5">
+        <h1>Recipe</h1>
         <aside>
           <address id="from">
-            WeasyPrint
+            WeasyPrint<br />
             Cambodia
           </address>
           <address id="to">
-            To
-            Address:
-            Tek Tla,
+            To<br />
+            Address:<br />
+            Tek Tla,<br />
             Phnom Penh
           </address>
         </aside>
         <dl id="informations">
           <dt>Invoice number</dt>
-          <dd>12345</dd>
+          <dd>{{ order.id }}</dd>
           <dt>Date</dt>
-          <dd>March 31, 2018</dd>
+          <dd>{{ new Date(order.created_at).toLocaleDateString() }}</dd>
         </dl>
         <!-- Invoice items table -->
         <div>
@@ -34,11 +34,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr  class="whitespace-nowrap odd:bg-white even:bg-gray-100">
-                <td class="py-3 px-2">{{ findProduct(orderProduct.product_id).name }}</td>
-                <td class="py-3 px-2">{{ findProduct(orderProduct.product_id).pricing }}</td>
+              <tr v-for="orderProduct in order.order_products" :key="orderProduct.id" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
+                <td class="py-3 px-2">{{ orderProduct.product.name || 'Unknown' }}</td>
+                <td class="py-3 px-2">{{ orderProduct.product.pricing || 0 }}</td>
                 <td class="py-3 px-2">{{ orderProduct.quantity }}</td>
-                <td class="py-3 px-2">{{ findProduct(orderProduct.product_id).price * orderProduct.quantity }}</td>
+                <td class="py-3 px-2">{{ (orderProduct.product.pricing || 0) * orderProduct.quantity }}</td>
               </tr>
             </tbody>
           </table>
@@ -56,9 +56,9 @@
               </thead>
               <tbody>
                 <tr>
-                  <td>{{ order.created_at }}</td>
+                  <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
                   <td>132 456 789 012</td>
-                  <td>{{ orders.orderTotal }}</td>
+                  <td>{{ order.total }}</td>
                 </tr>
               </tbody>
             </table>
@@ -67,11 +67,7 @@
       </div>
       <!-- Buttons -->
       <div class="d-flex p-5 ps-5 gap-6">
-        <div v-show="!showInvoice">
-          <!-- Show Invoice Button -->
-          <button @click="toggleInvoiceVisibility" class="btn btn-primary mt-3">Show Invoice</button>
-        </div>
-        <div v-show="showInvoice">
+        <div >
           <!-- Print Invoice Button -->
           <button @click="printInvoice" class="btn btn-primary mt-3">Print Invoice</button>
         </div>
@@ -83,108 +79,38 @@
 <script setup lang="ts">
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
-import Swal from 'sweetalert2';
-import { useStore } from 'vuex';
-import { useRouter } from 'vue-router';
 
-const store = useStore();
-const router = useRouter();
-const Products = ref([]);
+const order = ref(null);
 const orderProducts = ref([]);
-const orders = ref([]);
-const users = ref([]);
-const showInvoice = ref(false);
-const orderTotal = ref(0);
+const recipes = ref([]);
+const Products = ref([]); // Make sure you initialize this if it will be used
 
-interface Orders {
-  id: number;
-  user_first_name: string;
-  user_last_name: string;
-  quantity: number;
-  total_price: number;
-  order_date: string;
-  status: string;
-}
 
-const toggleInvoiceVisibility = () => {
-  showInvoice.value = !showInvoice.value;
+const fetchRecipes = async (receiptid:number) => {
+  try {
+    const response = await axios.get(`http://localhost:80/api/orders/${receiptid}/recipes`);
+    recipes.value = response.data;
+    console.log(response.data);
+  } catch (error) {
+    console.error('Failed to fetch recipes:', error);
+  }
 };
+
+onMounted(() => {
+  const orderId = 1; // Replace with dynamic order ID as needed
+  fetchRecipes(orderId);
+});
 
 const printInvoice = () => {
-  // Show all elements for printing
   const elementsToPrint = document.querySelectorAll('.container > div');
   elementsToPrint.forEach((element) => {
-    element.style.display = 'block'; // Ensure element is visible during printing
+    element.style.display = 'block';
   });
-  // Trigger browser's print dialog
   window.print();
-  // Reset display styles after printing
   elementsToPrint.forEach((element) => {
-    element.style.display = ''; // Reset display to default
+    element.style.display = '';
   });
 };
-const fetchOrdersProduct = async () => {
-  try {
-    console.log('Fetching ordersProduct...');
-    const response = await axios.get('http://localhost:80/api/order-products', {
-      headers: {
-        Authorization: 'Bearer ' + store.state.token
-      }
-    });
-    orders_product.value = response.data;
-    console.log('OrdersProduct fetched:', response.data);
-    if (orders_product.value.length > 0) {
-      const orderId = orders.value[0].id;
-      await fetchOrderProducts(orderId); // Fetch order products for the first order
-    }
-  } catch (error) {
-    console.error('Failed to fetch orders Product:', error);
-  }
-};
-
-
-
-const fetchOrders = async () => {
-  try {
-    console.log('Fetching orders...');
-    const response = await axios.get('http://localhost:80/api/orders', {
-      headers: {
-        Authorization: 'Bearer ' + store.state.token
-      }
-    });
-    orders.value = response.data;
-    console.log('Orders fetched:', response.data);
-    if (orders.value.length > 0) {
-      const orderId = orders.value[0].id;
-      await fetchOrderProducts(orderId); // Fetch order products for the first order
-    }
-  } catch (error) {
-    console.error('Failed to fetch orders:', error);
-  }
-};
-
-const fetchProducts = async () => {
-  try {
-    console.log('Fetching products...');
-    const response = await axios.get('http://localhost:80/api/products');
-    Products.value = response.data;
-    console.log('Products fetched:', response.data);
-  } catch (error) {
-    console.error('Error fetching products:', error);
-    throw error;
-  }
-};
-
-const findProduct = (productId) => {
-  return Products.value.find(product => product.id === productId) || {};
-};
-
-onMounted(async () => {
-  await fetchProducts();
-  await fetchOrders();
-  await fetchOrdersProduct();
-  
-});
 </script>
 
 <style scoped>
@@ -229,6 +155,7 @@ aside {
   margin: 2em 0 4em;
 }
 aside address {
+  
   font-style: normal;
   white-space: pre-line;
 }
