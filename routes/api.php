@@ -15,6 +15,10 @@ use App\Http\Controllers\CartController;
 use App\Http\Controllers\CartItemController;
 use App\Http\Controllers\OrderProductController;
 use App\Http\Controllers\RecipeController;
+use App\Http\Controllers\PurchaseController;
+use App\Http\Controllers\PurchaseProductController;
+use App\Http\Controllers\AdminAuthController;
+use App\Http\Controllers\PromotionController;
 
 
 
@@ -58,6 +62,32 @@ Route::post('/recipes', [RecipeController::class, 'store']);
 Route::get('/orders/{id}/recipes', [RecipeController::class, 'show']);
 Route::put('/orders/{id}/recipes', [RecipeController::class, 'update']);
 Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
+Route::post('/carts', [CartController::class, 'addProductToCart']);
+Route::delete('/carts', [CartController::class, 'removeProductFromCart']);
+Route::get('/carts', [CartController::class, 'getProductsFromCart']);
+Route::post('/user', [UserController::class, 'createUser']);
+
+// api for suppliers
+Route::get('/suppliers',[SupplierController::class,'getSuppliers']);
+Route::get('suppliers/{supplierId}',[SupplierController::class,'getSupplier']);
+Route::post('/suppliers',[SupplierController::class,'createSupplier']);
+Route::patch('/suppliers/{supplierId}',[SupplierController::class,'updateSupplier']);
+Route::delete('/suppliers/{supplierId}',[SupplierController::class,'deleteSupplier']);
+
+// api for purchases
+Route::get('/purchases',[PurchaseController::class,'getPurchases']);
+Route::get('purchases/{purchaseId}',[PurchaseController::class,'getPurchase']);
+Route::post('/purchases',[PurchaseController::class,'createPurchase']);
+Route::patch('/purchases/{purchaseId}',[PurchaseController::class,'updatePurchase']);
+Route::delete('/purchases/{purchaseId}',[PurchaseController::class,'deletePurchase']);
+Route::patch('/purchase/{purchaseId}', [PurchaseController::class, 'updateStatus']);
+
+// api for purchaseProducts
+Route::get('/purchaseProducts',[PurchaseProductController::class,'getPurchaseProducts']);
+Route::get('purchaseProducts/{purchaseProductId}',[PurchaseProductController::class,'getPurchaseProduct']);
+Route::post('/purchaseProducts',[PurchaseProductController::class,'createPurchaseProduct']);
+Route::patch('/purchaseProducts/{purchaseProductId}',[PurchaseProductController::class,'updatePurchaseProduct']);
+Route::delete('/purchaseProducts/{purchaseProductId}',[PurchaseProductController::class,'deletePurchaseProduct']);
 
 
 
@@ -90,6 +120,8 @@ Route::patch('/products/{productId}', [ProductController::class,'updateProduct']
 Route::delete('/products/{productId}', [ProductController::class,'deleteProduct']);
 Route::get('/products/{productId}/images', [ProductController::class,'getImagesOfProduct']);
 Route::get('/products/{productId}/categories',[ProductController::class,'findProductsOfCategory']);
+Route::get('products/{productId}/suppliers', [ProductController::class, 'getSuppliersByProduct']);
+
 
 //suppliers api urls
 Route::get('/suppliers',[SupplierController::class,'getSuppliers']);

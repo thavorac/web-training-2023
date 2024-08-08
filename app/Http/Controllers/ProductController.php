@@ -38,64 +38,70 @@ class ProductController extends Controller
         
             return response()->json(['message' => 'First image retrieved successfully', 'data' => $firstImage]);
         }
-        public function createProduct(Request $request)
-        {
-            // Validate incoming request if needed
-            $request->validate([
-                'name' => 'required|string',
-                'pricing' => 'required|numeric',
-                'size' => 'required|string',
-                'brand' => 'required|string',
-                'category_id' => 'required|exists:categories,id',
-                'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Example validation rules for image upload
-                'description' => 'required|string',
-            ]);
-            
-            // Check if product name already exists
-            $existingProduct = Product::where('name', $request->input('name'))->first();
-            if ($existingProduct) {
-                return response()->json([
-                    'error' => 'Product with this name already exists'
-                ], 409); // HTTP 409 Conflict status code
-            }
-        
-            // Handle image upload
-            if ($request->hasFile('image')) {
-                // Get the file name with extension
-                $fileNameWithExt = $request->file('image')->getClientOriginalName();
-                // Get just the file name
-                $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
-                // Get just the extension
-                $extension = $request->file('image')->getClientOriginalExtension();
-                // File name to store
-                $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
-                // Upload Image to public storage
-                $path = $request->file('image')->storeAs('public', $fileNameToStore);
-            } else {
-                // Default image path if no image is uploaded
-                $fileNameToStore = 'noimage.jpg';
-            }
-        
-            // Create new product
-            $product = new Product();
-            $product->name = $request->get('name');
-            $product->pricing = $request->get('pricing');
-            // $product->discounted_price = $request->get('discounted_price');
-            // $product->color = $request->get('color');
-            $product->size = $request->get('size');
-            $product->brand = $request->get('brand');
-            $product->description = $request->get('description');
-            $product->image = $fileNameToStore; // Assign the image file name to the 'image' field
-            $product->category_id = $request->get('category_id');
-            // $product->supplier_id = $request->get('supplier_id');
-
-            $product->save();
-        
+    public function createProduct(Request $request)
+    {
+        // Validate incoming request if needed
+        $request->validate([
+            'name' => 'required|string',
+            'origin_price' => 'required|numeric',
+            'pricing' => 'required|numeric',
+            'size' => 'nullable',
+            'qty' => 'required|numeric',
+            // 'status'=>'required|boolean',
+            'brand' => 'required|string',
+            'category_id' => 'required|exists:categories,id',
+            'image' => 'required|image|mimes:jpeg,png,jpg,gif|max:2048', // Example validation rules for image upload
+            'description' => 'required|string',
+        ]);
+    
+        // Check if product name already exists
+        $existingProduct = Product::where('name', $request->input('name'))->first();
+        if ($existingProduct) {
             return response()->json([
-                'message' => 'Product created successfully',
-                'data' => $product
-            ], 201);
+                'error' => 'Product with this name already exists'
+            ], 409); // HTTP 409 Conflict status code
         }
+    
+        // Handle image upload
+        if ($request->hasFile('image')) {
+            // Get the file name with extension
+            $fileNameWithExt = $request->file('image')->getClientOriginalName();
+            // Get just the file name
+            $fileName = pathinfo($fileNameWithExt, PATHINFO_FILENAME);
+            // Get just the extension
+            $extension = $request->file('image')->getClientOriginalExtension();
+            // File name to store
+            $fileNameToStore = $fileName . '_' . time() . '.' . $extension;
+            // Upload Image to public storage
+            $path = $request->file('image')->storeAs('public', $fileNameToStore);
+        } else {
+            // Default image path if no image is uploaded
+            $fileNameToStore = 'noimage.jpg';
+        }
+    
+        // Create new product
+        $product = new Product();
+        $product->name = $request->input('name');
+        $product->origin_price = $request->input('origin_price');
+        $product->pricing = $request->input('pricing');
+        $product->qty = $request->input('qty');
+        // Other fields
+        // $product->size = $request->input('size');
+        // $product->status = $request->input('status');
+        $product->brand = $request->input('brand');
+        $product->category_id = $request->input('category_id');
+        $product->image = $fileNameToStore; // Assign the image file name to the 'image' field
+        $product->description = $request->input('description');
+
+        // dd($product);
+    
+        $product->save();
+    
+        return response()->json([
+            'message' => 'Product created successfully',
+            'data' => $product
+        ], 201);
+    }
     
     public function updateProduct(Request $request, $productId)
     {
@@ -103,8 +109,11 @@ class ProductController extends Controller
             // Validate the request data
             $validatedData = $request->validate([
                 'name' => 'nullable|string|max:255',
+                'origin_price' => 'nullable|numeric',
                 'pricing' => 'nullable|numeric',
-                'size' => 'nullable|string|max:255',
+                'qty' => 'nullable|numeric',
+                'size' => 'nullable',
+                // 'status' => 'nullable|boolean',
                 'brand' => 'nullable|string|max:255',
                 'category_id' => 'nullable|integer|exists:categories,id',
                 'image' => 'nullable|image|max:2048',
@@ -118,11 +127,20 @@ class ProductController extends Controller
                 if ($request->has('name')) {
                     $productFound->name = $validatedData['name'];
                 }
+                if ($request->has('origin_price')) {
+                    $productFound->origin_price = $validatedData['origin_price'];
+                }
                 if ($request->has('pricing')) {
                     $productFound->pricing = $validatedData['pricing'];
                 }
+                if ($request->has('qty')) {
+                    $productFound->qty = $validatedData['qty'];
+                }
                 if ($request->has('size')) {
                     $productFound->size = $validatedData['size'];
+                }
+                if ($request->has('status')) {
+                    $productFound->status = $validatedData['status'];
                 }
                 if ($request->has('brand')) {
                     $productFound->brand = $validatedData['brand'];
@@ -220,5 +238,21 @@ public function getProduct($productId)
             return response(["message" => "Can't found that product"], 400);
         }
     }
+
+    // In your ProductController or a relevant controller
+
+    public function getSuppliersByProduct($productId) {
+        $product = Product::find($productId);
+
+        if (!$product) {
+            return response()->json(["message" => "Product not found"], 404);
+        }
+
+        $suppliers = $product->suppliers; // Assuming you have a suppliers relationship defined in your Product model
+        return response()->json($suppliers);
+    }
+
 }
+
+
 

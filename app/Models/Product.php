@@ -1,63 +1,58 @@
 <?php
+// app/Models/Product.php
 namespace App\Models;
+// namespace App\Models\suppliers;
+
 use Illuminate\Database\Eloquent\Factories\HasFactory;
-use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
-use Carbon\Carbon;
+
 
 class Product extends Model
 {
     use HasFactory;
 
     protected $fillable = [
-        'name', 'pricing', 'discount','color','category_id','image'
+        'name','origin_price', 'pricing', 'discount', 'color', 'category_id', 'image', 'qty'
     ];
 
     public function category(): BelongsTo
     {
-        return $this->belongsTo(Category::class);  // if we want to find that product belong to which category 
-    }
-    public function images(){
-        return $this->hasMany(Image::class,'product_id','id');
+        return $this->belongsTo(Category::class);
     }
 
-    // add new code 
+    public function images(): HasMany
+    {
+        return $this->hasMany(Image::class, 'product_id', 'id');
+    }
+
     public function firstImage()
     {
         return $this->hasOne(Image::class)->oldestOfMany();
-    }
-
-    public function promotions(): BelongsToMany
-    {
-        return $this->belongsToMany(Promotion::class, 'product_promotion')
-                    ->withPivot('discount_price')
-                    ->withTimestamps();
-    }
-
-    public function applyDiscount()
-    {
-        $activePromotion = $this->promotions()
-                                ->where('start_date', '<=', Carbon::now())
-                                ->where('end_date', '>=', Carbon::now())
-                                ->first();
-
-        if ($activePromotion) {
-            if ($activePromotion->discount_percentage) {
-                $discountedPrice = $this->price - ($this->price * ($activePromotion->discount_percentage / 100));
-            } else {
-                // Handle fixed discount if implemented
-                $discountedPrice = $this->price; 
-            }
-            $this->update(['discounted_price' => $discountedPrice]);
-        } else {
-            $this->update(['discounted_price' => null]);
-        }
     }
 
     protected function serializeDate(\DateTimeInterface $date)
     {
         return $date->format('Y-m-d');
     }
+
+    public function suppliers(): BelongsToMany
+    {
+        return $this->belongsToMany(Supplier::class, 'product_supplier');
+    }
+
+    public function isInStock(): bool
+    {
+        return $this->qty > 0;
+    }
+
+    public function toArray()
+    {
+        $array = parent::toArray();
+        $array['is_in_stock'] = $this->isInStock();
+        return $array;
+    }
+    
 }
