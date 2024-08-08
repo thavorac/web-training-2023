@@ -11,20 +11,19 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('order_details', function (Blueprint $table) {
+        Schema::create('recipes', function (Blueprint $table) {
             $table->id();
-            $table->foreignId('product_id')->constrained('products')->onDelete('cascade');
-            $table->integer('quantity');
-            $table->decimal('price', 8, 2);
+            $table->bigInteger('order_id')->unsigned();
+            $table->foreign('order_id')->references('id')->on('orders');
             $table->timestamps();
+
         });
     }
-
     /**
      * Reverse the migrations.
      */
     public function down(): void
     {
-        Schema::dropIfExists('order_details');
+        Schema::dropIfExists('recipes');
     }
 };

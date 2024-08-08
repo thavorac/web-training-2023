@@ -16,18 +16,13 @@ return new class extends Migration
             $table->timestamps();
 
             $table->bigInteger('user_id')->unsigned();
-            $table->foreign('user_id')->references('id')->on('users');
+            $table->foreign('user_id')->references('id')->on('users')->onDelete('cascade');
 
-            $table->bigInteger('product_id')->unsigned();
-            $table->foreign('product_id')->references('id')->on('products');
-        });
+            $table->double('total')->default(0);
+            $table->boolean('active')->default(true);
+
+       });
     }
-        // DB::table('carts')->insert([
-        //     'product_id' => 2,
-        //     'user_id' => $userId,
-        //     'updated_at' => now(),
-        //     'created_at' => now(),
-        // ]);
     
 
     /**

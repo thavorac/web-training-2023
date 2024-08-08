@@ -106,7 +106,7 @@ class ProductController extends Controller
     
     public function updateProduct(Request $request, $productId)
     {
-        try {
+        try { 
             // Validate the request data
             $validatedData = $request->validate([
                 'name' => 'nullable|string|max:255',

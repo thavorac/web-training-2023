@@ -4,54 +4,69 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use App\Models\Cart;
-use App\Models\User; // Make sure you have imported the User model if needed
+use App\Models\CartItem;
 use App\Models\Product;
+use Illuminate\Support\Facades\Auth;
 
 class CartController extends Controller
 {
-    // Add product to cart
-    public function addProductToCart(Request $request) {
-        $userId = 1;//auth()->id(); // Retrieve authenticated user's ID
+    public function add(Request $request)
+    {
+        $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'quantity' => 'required|integer|min:1',
+        ]);
 
-        // Create a new Cart instance
-        $cart = new Cart();
-
-        // Set product_id and user_id from the request
-        $cart->product_id = $request->get('product_id');
-        $cart->user_id = $userId; // Assign the retrieved user ID
-
-        // Save the cart item
-        $cart->save();
-
-        // Return success response with the saved cart item
-        return [ "message" => "success", "data" => $cart ];
-    }
-
-    // Remove product from cart
-    public function removeProductFromCart(Request $request) {
-        $userId = auth()->id(); // Retrieve authenticated user's ID
-
-        // Attempt to delete the cart item for the specified product and user
-        $success = Cart::where("product_id", $request->get('product_id'))
-                        ->where("user_id", $userId) // Use retrieved user ID
-                        ->delete();
-
-        // Return success or fail message based on deletion success
-        if ($success) {
-            return ["message" => "success"];
-        } else {
-            return ["message" => "fail"];
+        $product = Product::findOrFail($request->product_id);
+        $subtotal = $product->price * $request->quantity;
+        $cart = Cart::where('user_id',Auth::id())->where('active',true)->first();
+        if(!$cart){
+            $cart = Cart::create([
+                'user_id' => Auth::id(),
+                'active' => true,
+                'total' => 0,
+            ]);
         }
+        $cartItem = CartItem::firstOrNew(
+            [
+                'cart_id'=>$cart->id,
+                'product_id'=>$product->id
+            ],
+            [
+                'cart_id'=>$cart->id,
+                'product_id'=>$product->id, 
+                'pricing'=>$product->pricing, 
+                'quantity'=>$request->quantity,
+                'discounted_price' => $product->pricing
+            ]
+        );
+        if($cartItem->id)$cartItem->quantity+=$request->quantity;
+        $cartItem->save();
+
+        return response()->json(['message' => 'Product added to cart successfully!', 'cart' => $cart]);
     }
 
-    // Get products from cart for a specific user
-    public function getProductsFromCart(Request $request) {
-        $userId = auth()->id(); // Retrieve authenticated user's ID
+    public function remove(Request $request, $id)
+    {
+        $cart = Cart::where('user_id', Auth::id())->where('id', $id)->first();
 
-        // Retrieve all cart items for the specified user
-        $products = Cart::where("user_id", $userId)->get();
+        if (!$cart) {
+            return response()->json(['message' => 'Cart item not found.'], 404);
+        }
 
-        // Return the retrieved products
-        return $products;
+        $cart->delete();
+
+        return response()->json(['message' => 'Product removed from cart successfully!']);
+    }
+
+    public function view()
+    {
+        $cart = Cart::where('user_id', Auth::id())
+            ->where('active',true)->first();
+        if($cart){
+            $items = CartItem::where('cart_id',$cart->id)->with('product')->get();
+            return response()->json($items);
+        }
+        return response()->json([]);
     }
 }

@@ -4,18 +4,25 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Order extends Model
 {
     use HasFactory;
 
-    protected $guarded = [];
+    protected $fillable = [
+        'user_id',
+        'status',
+        'total',
+    ];
 
-    public function user(){
-        return $this->belongTo(User::class);
+    /**
+     * Get all of the cartItems for the Cart
+     *
+     * @return \Illuminate\Database\Eloquent\Relations\HasMany
+     */
+    public function OrderProduct(): HasMany
+    {
+        return $this->hasMany(OrderProduct::class);
     }
-    public function products(){
-        return $this->belongsToMany(products::class)->withPivot('quantity');
-    }
-
 }
