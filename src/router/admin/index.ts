@@ -174,7 +174,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
       },
       {
         path: 'order',
-        name: 'ListProduct',
+        name: 'ListOrder',
         component: () => import('../../components/Order/ListOrder.vue')
       },
 

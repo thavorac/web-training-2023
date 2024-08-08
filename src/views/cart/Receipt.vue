@@ -17,7 +17,7 @@
           </address>
         </aside>
         <dl id="informations">
-          <dt>Invoice number</dt>
+          <dt>Order ID</dt>
           <dd>{{ order.id }}</dd>
           <dt>Date</dt>
           <dd>{{ new Date(order.created_at).toLocaleDateString() }}</dd>
@@ -34,11 +34,11 @@
               </tr>
             </thead>
             <tbody>
-              <tr v-for="recipe in recipes" :key="receiptid" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
-                <td class="py-3 px-2">{{ recipe.product.name }}</td>
-                <td class="py-3 px-2">{{ recipe.order_product.product.pricing || 0 }}</td>
-                <td class="py-3 px-2">{{ recipe.order_product.quantity }}</td>
-                <td class="py-3 px-2">{{ (recipe.order_product.product.pricing || 0) * recipe.order_product.quantity }}</td>
+              <tr v-for="recipe in recipes" :key="recipe.id" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
+                <td class="py-3 px-2">{{ order.product.name }}</td>
+                <td class="py-3 px-2">{{ recipe.product.pricing || 0 }}</td>
+                <td class="py-3 px-2">{{ recipe.quantity }}</td>
+                <td class="py-3 px-2">{{ (recipe.product.pricing || 0) * recipe.quantity }}</td>
               </tr>
             </tbody>
           </table>
@@ -57,8 +57,9 @@
               <tbody>
                 <tr>
                   <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
-                  <td>132 456 789 012</td>
-                  <td>{{ receipt.order.total }}</td>
+                  <!-- <td>{{ order.user_id }}</td> -->
+                  <td>{{ order.user_id }}</td>
+                  <td>{{ order.total || 0 }}</td>
                 </tr>
               </tbody>
             </table>
@@ -83,12 +84,11 @@ import axios from 'axios';
 const order = ref(null);
 const recipes = ref([]);
 
-const fetchRecipes = async (receiptid: number) => {
+const fetchRecipes = async (orderId: number) => {
   try {
-    const response = await axios.get(`http://localhost:80/api/orders/${receiptid}/recipes`);
-    recipes.value = response.data;
-    order.value = recipes.value[0]?.order || null;
-    console.log(response.data);
+    const response = await axios.get(`http://localhost:80/api/orders/${orderId}/recipes`);
+    recipes.value = response.data.recipes; // Adjust according to the API response
+    order.value = response.data.order; // Adjust according to the API response
   } catch (error) {
     console.error('Failed to fetch recipes:', error);
   }
@@ -111,7 +111,6 @@ const printInvoice = () => {
 };
 </script>
 
-  
   <style scoped>
   /* Scoped styles for the component */
   @font-face {

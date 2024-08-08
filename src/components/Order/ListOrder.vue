@@ -6,8 +6,7 @@ import Datepicker from 'vue3-datepicker';
 import IconCategories from '../icons/IconCategories.vue';
 import IconSearch from '../icons/IconSearch.vue';
 import IconSkLoading from '@/components/loading/SmsLoading.vue';
-import IconRecipe from '../icons/IconRecipe.vue';
-import IconPurchase from '../icons/IconPurchase.vue';
+// import IconRecipe from '../icons/IconRecipe.vue';
 
 // Define reactive variables
 const page = ref(1);
