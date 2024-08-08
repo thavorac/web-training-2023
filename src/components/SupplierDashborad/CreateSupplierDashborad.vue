@@ -155,7 +155,7 @@ const filteredData = computed(() => {
             <div class="overview-boxes">
                 <div class="box">
                     <div class="right-side">
-                        <div class="box-topic">Total Order</div>
+                        <div class="box-topic ">Total Order</div>
                         <div class="number">0{{ purchases.length }}</div>
                         <div class="indicator">
                             <i class="bx bx-up-arrow-alt"></i>
