@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Models\Recipe;
 use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderProduct;
@@ -44,8 +45,9 @@ class OrderController extends Controller
                 ]);
             }
             $cart->update(['active'=>false]);
+            $r= Recipe::create(['order_id'=>$order->id]);
     
-            return response()->json(['message' => 'Product added to order successfully!', 'order' => $order]);
+            return response()->json(['message' => 'Product added to order successfully!', 'order' => $order, 'recipe'=>$r]);
         } catch (\Exception $e) {
             Log::error('Order creation failed', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Failed to add product to order', 'error' => $e->getMessage()], 500);
