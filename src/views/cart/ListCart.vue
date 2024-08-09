@@ -7,7 +7,6 @@
 <script setup>
 import { ref } from 'vue'
 import { onMounted, watch } from 'vue'
-
 const cartItems = ref([])
 
 const addToCart = (product) => {

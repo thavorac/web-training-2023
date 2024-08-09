@@ -2,6 +2,7 @@
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
+import { RouterLink } from 'vue-router';
 import Datepicker from 'vue3-datepicker';
 import IconCategories from '../icons/IconCategories.vue';
 import IconSearch from '../icons/IconSearch.vue';
@@ -116,10 +117,18 @@ const viewPurchase = (orderId: number) => {
                         <button @click="viewRecipe(order.id)" class="text-blue-600 hover:text-blue-800">
                             <IconRecipe class="w-5 h-5" />
                         </button>
-                        <button @click="viewPurchase(order.id)" class="text-green-600 hover:text-green-800 ml-2">
+                        <!-- <button @click="viewPurchase(order.id)" class="text-green-600 hover:text-green-800 ml-2">
                             <IconPurchase class="w-5 h-5" />
-                        </button>
+                        </button> -->
                     </td>
+                    <!-- <td class="px-6 py-6 flex space-x-2">
+                            <RouterLink :to="`/admin/product/${product.id}/edit`">
+                                <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
+                            </RouterLink>
+                            <RouterLink :to="`/admin/product/${product.id}/create-purchase`">
+                                <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
+                            </RouterLink>
+                    </td> -->
                 </tr>
             </tbody>
         </table>
