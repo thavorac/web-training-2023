@@ -1,5 +1,4 @@
 <script setup>
-import { defineProps } from 'vue';
 import ChevronRight from './icons/ChevronRight.vue';
 import ChevronLeft from './icons/ChevronLeft.vue';
 

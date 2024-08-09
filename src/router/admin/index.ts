@@ -211,7 +211,14 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             props: true
           }
         ]
-      }
+      },
+      {
+        path: 'order',
+        name: 'ListOrder',
+        component: () => import('../../components/Order/ListOrder.vue')
+      },
+
+
     ]
   }
 ]

@@ -17,7 +17,6 @@
 <script setup>
 
 
-import { defineProps } from 'vue';
 const props = defineProps({
     nameProduct: String,
     category: String,

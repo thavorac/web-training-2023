@@ -1,7 +1,7 @@
 <script setup>
 import IconPerson from "../icons/IconPerson.vue";
 // Import the necessary components
-import { defineProps } from 'vue';
+//import { defineProps } from 'vue';
 
 // Define props for the icon and text
 const props = defineProps({

@@ -61,11 +61,7 @@ const pharongRouter: Readonly<RouteRecordRaw[]> = [
     name: 'testCard',
     component: () => import('../../views/TestCard.vue')
   },
-  {
-    path: '/cart',
-    name: 'cart',
-    component: () => import('../../views/CartPage.vue')
-  },
+
   {
     path: '/category-page',
     name: 'CategoryPage',

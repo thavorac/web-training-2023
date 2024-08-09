@@ -7,7 +7,7 @@
         <button type="submit" class="submit-button">Submit Payment</button>
       </form>
     </div>
-  </template>
+</template>
   
   <script setup>
   import { ref, onMounted } from 'vue';

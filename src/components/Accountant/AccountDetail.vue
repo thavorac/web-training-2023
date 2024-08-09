@@ -9,12 +9,11 @@ import Datepicker from 'vue3-datepicker'; // Import the datepicker component
 interface Transaction {
   id: number;
   account_name: string;
-  type: string;
+  type_Tran: string;
   balance: number;
   total_balance: number;
   description: string;
   date: string; // Format 'YYYY-MM-DD'
-
 }
 
 const transactions = ref<Transaction[]>([]);
@@ -25,6 +24,15 @@ const route = useRoute();
 
 onMounted(async () => {
   const accountId = route.params.accountId as string;
+
+  // Set end date to today
+  const today = new Date();
+  endDate.value = today;
+
+  // Set start date to one month before today
+  const lastMonth = new Date(today.getFullYear(), today.getMonth() - 1, today.getDate());
+  startDate.value = lastMonth;
+
   try {
     const response = await axios.get<{ transactions: Transaction[] }>(`http://localhost/api/account-histroy/${accountId}`);
     transactions.value = response.data.transactions.map(transaction => ({
@@ -32,32 +40,28 @@ onMounted(async () => {
       balance: typeof transaction.balance === 'string' ? parseFloat(transaction.balance) : transaction.balance,
       total_balance: typeof transaction.total_balance === 'string' ? parseFloat(transaction.total_balance) : transaction.total_balance,
     }));
+    console.log(response.data.transactions);
   } catch (error) {
     console.error('Error fetching transaction history:', error);
   }
 });
 
-const formatBalance = (type: string, balance: number) => {
-  return type === 'income' ? `+${balance}$` : `-${balance}$`;
+const formatBalance = (type_Tran: string, balance: number) => {
+  return type_Tran === 'income' ? `+${balance}$` : `-${balance}$`;
 };
 
 const totalIncome = computed(() => {
   return filteredData.value
-    .filter(transaction => transaction.type === 'income')
+    .filter(transaction => transaction.type_Tran === 'income')
     .reduce((sum, transaction) => sum + transaction.balance, 0);
 });
 
 const totalOutcome = computed(() => {
   return filteredData.value
-    .filter(transaction => transaction.type === 'outcome')
+    .filter(transaction => transaction.type_Tran === 'outcome')
     .reduce((sum, transaction) => sum + transaction.balance, 0);
 });
-// const totalBalance = computed(() => totalIncome.value - totalOutcome.value);
-const totalBalance = computed(() => {
-  const balance = totalIncome.value - totalOutcome.value;
-  console.log('Total Balance:', balance);
-  return balance;
-});
+
 
 
 const parseDate = (dateString: string): Date => {
@@ -78,7 +82,6 @@ const filteredData = computed(() => {
   return transactions.value.filter(transaction => {
     const transactionDate = parseDate(transaction.date).getTime();
 
-    // Log transaction date and check if it's valid
     if (isNaN(transactionDate)) {
       console.error(`Invalid transaction date: ${transaction.date}`);
       return false; // Exclude invalid dates from filtering
@@ -89,14 +92,12 @@ const filteredData = computed(() => {
   });
 });
 
-
 watch([startDate, endDate], () => {
   console.log('Start Date:', startDate.value);
   console.log('End Date:', endDate.value);
 });
-
-
 </script>
+
 
 <template>
   <div class="container mx-auto">
@@ -112,7 +113,7 @@ watch([startDate, endDate], () => {
         <div class="total-box mr-4 flex items-center">
           <DollaIcon class="mt-2 mr-6" />
           <div>
-            <span>Balance <h4>{{ totalBalance }}</h4></span>
+            <span>Balance <h4>{{ transactions[0]?.total_balance }}</h4></span>
           </div>
         </div>
         <div class="total-box mr-4 flex items-center">
@@ -176,11 +177,11 @@ watch([startDate, endDate], () => {
             <td class="px-6 py-3">{{ transaction.id }}</td>
             <td class="px-6 py-3">{{ transaction.account_name }}</td>
             <td class="px-6 py-3">{{ transaction.description }}</td>
-            <td :class="{ 'text-green-600': transaction.type === 'income', 'text-red-600': transaction.type === 'outcome' }" class="px-6 py-3">
-              {{ transaction.type }}
+            <td :class="{ 'text-green-600': transaction.type_Tran === 'income', 'text-red-600': transaction.type_Tran === 'outcome' }" class="px-6 py-3">
+              {{ transaction.type_Tran }}
             </td>
-            <td :class="{ 'text-green-600': transaction.type === 'income', 'text-red-600': transaction.type === 'outcome' }" class="px-6 py-3">
-              {{ formatBalance(transaction.type, transaction.balance) }}
+            <td :class="{ 'text-green-600': transaction.type_Tran === 'income', 'text-red-600': transaction.type_Tran === 'outcome' }" class="px-6 py-3">
+              {{ formatBalance(transaction.type_Tran, transaction.balance) }}
             </td>
             <td class="px-6 py-3">{{ transaction.date }}</td>
           </tr>

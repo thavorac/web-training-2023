@@ -1,7 +1,7 @@
 <script setup>
 import ChevronRight from '@/components/icons/ChevronRight.vue';
 // Import the necessary components
-import { defineProps } from 'vue';
+//import { defineProps } from 'vue';
 
 // Define props for the icon and text
 const props = defineProps({

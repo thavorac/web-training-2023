@@ -9,7 +9,7 @@
                     <label for="FromaccountName">From Account</label>
                     <select v-model="FromAccountId" id="FromaccountName" class="form-control" required>
                         <option value="" disabled>Select Account</option>
-                        <option v-for="account in incomeAndMainAccounts" :key="account.id" :value="account.id">
+                        <option v-for="account in accounts" :key="account.id" :value="account.id">
                             {{ account.name }}
                         </option>
                     </select>
@@ -18,7 +18,7 @@
                     <label for="ToaccountName">To Account</label>
                     <select v-model="ToAccountId" id="ToaccountName" class="form-control" required>
                         <option value="" disabled>Select Account</option>
-                        <option v-for="account in incomeAndMainAccounts" :key="account.id" :value="account.id">
+                        <option v-for="account in filteredAccounts" :key="account.id" :value="account.id">
                             {{ account.name }}
                         </option>
                     </select>
@@ -52,7 +52,7 @@
 <script setup>
 import { ref, onMounted, computed } from 'vue';
 import axios from 'axios';
-import {  useRouter } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 const router = useRouter();
 
@@ -65,14 +65,15 @@ const ToAccountId = ref(null);
 const amount = ref(0);
 const description = ref('');
 
+// Filter accounts to exclude the selected 'from account'
+const filteredAccounts = computed(() => {
+    return accounts.value.filter(account => account.id !== FromAccountId.value);
+});
+
 const handleCancel = () => {
     emit('cancel');
     router.push('/admin/accounts');
 };
-// const incomeAccounts = computed(() => accounts.value.filter(account=> account.type === 'income'));
-const incomeAndMainAccounts = computed(() =>
-  accounts.value.filter(account => account.type === 'income' || account.type === 'main')
-);
 
 const fetchAccounts = async () => {
     try {
@@ -83,14 +84,21 @@ const fetchAccounts = async () => {
     }
 };
 
-
 const transferBalance = async () => {
     try {
+        if (amount.value <= 0) {
+            alertMessage.value = 'Transfer amount must be greater than 0';
+            alertClass.value = 'alert alert-danger';
+            return;
+        }
+
         const response = await axios.post('http://localhost:80/api/transfer', {
             from_account_id: FromAccountId.value,
             to_account_id: ToAccountId.value,
-            balance: amount.value
+            balance: amount.value,
+            description: description.value
         });
+
         alertMessage.value = response.data.message;
         alertClass.value = 'alert alert-success';
         fetchAccounts();
@@ -105,70 +113,70 @@ onMounted(fetchAccounts);
 </script>
 
 <style scoped>
-@import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
-
-label,
-button {
-    font-family: "Rubik", sans-serif;
-}
-
-.container {
-    margin: 0 auto;
-}
-
-.form {
-    margin-top: 30px;
-}
-
-.form-group {
-    margin-bottom: 15px;
-}
-
-.form-label {
-    font-weight: bold;
-}
-
-.form-control {
-    width: 100%;
-    padding: 10px;
-    font-size: 16px;
-    border: 1px solid #ccc;
-    border-radius: 4px;
-}
-
-.type {
-    padding-top: 30px;
-}
-
-.btn {
-    padding: 10px 20px;
-    font-size: 16px;
-    border: none;
-    border-radius: 4px;
-    background-color: #007bff;
-    color: #fff;
-    cursor: pointer;
-}
-
-.btn:hover {
-    background-color: #0056b3;
-}
-
-.alert {
-    margin-top: 20px;
-    padding: 15px;
-    border-radius: 4px;
-}
-
-.alert-success {
-    background-color: #d4edda;
-    border-color: #c3e6cb;
-    color: #155724;
-}
-
-.alert-danger {
-    background-color: #f8d7da;
-    border-color: #f5c6cb;
-    color: #721c24;
-}
+  @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
+  
+  label,
+  button {
+      font-family: "Rubik", sans-serif;
+  }
+  
+  .container {
+      margin: 0 auto;
+  }
+  
+  .form {
+      margin-top: 30px;
+  }
+  
+  .form-group {
+      margin-bottom: 15px;
+  }
+  
+  .form-label {
+      font-weight: bold;
+  }
+  
+  .form-control {
+      width: 100%;
+      padding: 10px;
+      font-size: 16px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+  }
+  
+  .type {
+      padding-top: 30px;
+  }
+  
+  .btn {
+      padding: 10px 20px;
+      font-size: 16px;
+      border: none;
+      border-radius: 4px;
+      background-color: #007bff;
+      color: #fff;
+      cursor: pointer;
+  }
+  
+  .btn:hover {
+      background-color: #0056b3;
+  }
+  
+  .alert {
+      margin-top: 20px;
+      padding: 15px;
+      border-radius: 4px;
+  }
+  
+  .alert-success {
+      background-color: #d4edda;
+      border-color: #c3e6cb;
+      color: #155724;
+  }
+  
+  .alert-danger {
+      background-color: #f8d7da;
+      border-color: #f5c6cb;
+      color: #721c24;
+  }
 </style>
