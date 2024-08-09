@@ -165,18 +165,79 @@ const removeProduct = async (cartItemId) => {
   }
 }
 
+// const checkout = async () => {
+//   const result = await Swal.fire({
+//     title: 'Do you want to Pay by bank or Cash?',
+//     showDenyButton: true,
+//     showCancelButton: true,
+//     confirmButtonText: 'Bank',
+//     denyButtonText: `Cash`,
+//   })
+  
+//   if (result.isConfirmed) {
+//     Swal.fire('Proceeding to payment...', '', 'success')
+//     await handleStripePayment()
+//   } else if (result.isDenied) {
+//     try {
+//       const response = await axios.post('http://localhost:80/api/orders', { cart_id: cartId.value }, {
+//         headers: {
+//           Authorization: 'Bearer ' + store.state.token,
+//           'Content-Type': 'application/json'
+//         }
+//       })
+//       console.log('Order created successfully', response.data)
+//       Swal.fire('Order created successfully', '', 'success')
+//     } catch (error) {
+//       console.error('Order creation failed', error.response ? error.response.data : error.message)
+//       Swal.fire('Order creation failed', error.response ? error.response.data : error.message, 'error')
+//     }
+//   }
+// }
+// const checkout = async () => {
+//   const result = await Swal.fire({
+//     title: 'Do you want to Pay by bank or Cash?',
+//     showDenyButton: true,
+//     showCancelButton: true,
+//     confirmButtonText: 'Bank',
+//     denyButtonText: 'Cash',
+//   });
+
+//   if (result.isConfirmed) {
+//     Swal.fire('Proceeding to payment...', '', 'success');
+//     await handleStripePayment();
+//   } else if (result.isDenied) {
+//     try {
+//       const response = await axios.post('http://localhost:80/api/orders', { cart_id: cartId.value }, {
+//         headers: {
+//           Authorization: 'Bearer ' + store.state.token,
+//           'Content-Type': 'application/json'
+//         }
+//       });
+      
+//       console.log('Order created successfully', response.data);
+//       Swal.fire('Order created successfully', '', 'success');
+      
+//       // Navigate to the receipt page with the order ID
+//       router.push({ name: 'Receipt', params: { orderId: response.data.id } });
+      
+//     } catch (error) {
+//       console.error('Order creation failed', error.response ? error.response.data : error.message);
+//       Swal.fire('Order creation failed', error.response ? error.response.data : error.message, 'error');
+//     }
+//   }
+// }
 const checkout = async () => {
   const result = await Swal.fire({
     title: 'Do you want to Pay by bank or Cash?',
     showDenyButton: true,
     showCancelButton: true,
     confirmButtonText: 'Bank',
-    denyButtonText: `Cash`,
-  })
-  
+    denyButtonText: 'Cash',
+  });
+
   if (result.isConfirmed) {
-    Swal.fire('Proceeding to payment...', '', 'success')
-    await handleStripePayment()
+    Swal.fire('Proceeding to payment...', '', 'success');
+    await handleStripePayment();
   } else if (result.isDenied) {
     try {
       const response = await axios.post('http://localhost:80/api/orders', { cart_id: cartId.value }, {
@@ -184,15 +245,24 @@ const checkout = async () => {
           Authorization: 'Bearer ' + store.state.token,
           'Content-Type': 'application/json'
         }
-      })
-      console.log('Order created successfully', response.data)
-      Swal.fire('Order created successfully', '', 'success')
+      });
+      
+      const orderId = response.data.recipe.id; // Ensure this is the correct way to get the order ID from the response
+      console.log('Order created successfully', response.data);
+      Swal.fire('Order created successfully', '', 'success');
+      
+      // Navigate to the receipt page with the order ID
+      router.push({ name: 'Receipt', params: { id:orderId } });
+      
     } catch (error) {
-      console.error('Order creation failed', error.response ? error.response.data : error.message)
-      Swal.fire('Order creation failed', error.response ? error.response.data : error.message, 'error')
+      console.error('Order creation failed', error.response ? error.response.data : error.message);
+      Swal.fire('Order creation failed', error.response ? error.response.data : error.message, 'error');
     }
   }
 }
+
+
+
 
 const handleStripePayment = async () => {
   const stripe = await loadStripe(publishableKey)

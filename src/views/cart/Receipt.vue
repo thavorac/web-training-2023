@@ -1,9 +1,9 @@
 <template>
   <div class="container pt-5">
     <div v-if="order">
-      <!-- Invoice section -->
-      <div class="invoice pt-5">
-        <h1>Invoice</h1>
+      <!-- receipt section -->
+      <div class="receipt pt-5">
+        <h1>Receipt</h1>
         <aside>
           <address id="from">
             WeasyPrint<br />
@@ -22,7 +22,7 @@
           <dt>Date</dt>
           <dd>{{ new Date(order.created_at).toLocaleDateString() }}</dd>
         </dl>
-        <!-- Invoice items table -->
+        <!-- receipt items table -->
         <div>
           <table>
             <thead>
@@ -35,7 +35,7 @@
             </thead>
             <tbody>
               <tr v-for="recipe in recipes" :key="recipe.id" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
-                <td class="py-3 px-2">{{ order.product.name }}</td>
+                <td class="py-3 px-2">{{ recipe.product.name }}</td>
                 <td class="py-3 px-2">{{ recipe.product.pricing || 0 }}</td>
                 <td class="py-3 px-2">{{ recipe.quantity }}</td>
                 <td class="py-3 px-2">{{ (recipe.product.pricing || 0) * recipe.quantity }}</td>
@@ -44,7 +44,7 @@
           </table>
         </div>
         <!-- Total footer -->
-        <div class="footer-total">
+        <div class="footer-total ">
           <footer>
             <table id="total">
               <thead>
@@ -55,9 +55,9 @@
                 </tr>
               </thead>
               <tbody>
-                <tr>
+                <tr >
                   <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
-                  <!-- <td>{{ order.user_id }}</td> -->
+                  <!-- Assuming account number is user_id -->
                   <td>{{ order.user_id }}</td>
                   <td>{{ order.total || 0 }}</td>
                 </tr>
@@ -67,10 +67,10 @@
         </div>
       </div>
       <!-- Buttons -->
-      <div class="d-flex p-5 ps-5 gap-6">
+      <div class=" p-5 ps-5 gap-6 print:hidden">
         <div>
-          <!-- Print Invoice Button -->
-          <button @click="printInvoice" class="btn btn-primary mt-3">Print Invoice</button>
+          <!-- Print receipt Button -->
+          <button @click="printreceipt" class="btn btn-primary mt-3 ">Print Receipt</button>
         </div>
       </div>
     </div>
@@ -78,39 +78,59 @@
 </template>
 
 <script setup lang="ts">
+// import { ref, onMounted } from 'vue';
+// import axios from 'axios';
+
+// const order = ref(null);
+// const recipes = ref([]);
 import { ref, onMounted } from 'vue';
 import axios from 'axios';
+import { useRoute } from 'vue-router';
 
 const order = ref(null);
 const recipes = ref([]);
+const route = useRoute();
 
 const fetchRecipes = async (orderId: number) => {
   try {
     const response = await axios.get(`http://localhost:80/api/orders/${orderId}/recipes`);
-    recipes.value = response.data.recipes; // Adjust according to the API response
+    recipes.value = response.data.order.order_product; // Adjust according to the API response
     order.value = response.data.order; // Adjust according to the API response
+    console.log(response.data)
   } catch (error) {
     console.error('Failed to fetch recipes:', error);
   }
 };
 
 onMounted(() => {
-  const orderId = 1; // Replace with dynamic order ID as needed
+  let orderId = +route.params.id; // Replace with dynamic order ID as needed
+  console.log('recipt id',route.params);
   fetchRecipes(orderId);
 });
+// const fetchRecipes = async (orderId) => {
+//   try {
+//     const response = await axios.get(`http://localhost:80/api/orders/${orderId}/recipes`);
+//     recipes.value = response.data.order.order_product; // Adjust according to the API response
+//     order.value = response.data.order; // Adjust according to the API response
+//     console.log(response.data);
+//   } catch (error) {
+//     console.error('Failed to fetch recipes:', error);
+//   }
+// };
 
-const printInvoice = () => {
-  const elementsToPrint = document.querySelectorAll('.container > div');
-  elementsToPrint.forEach((element) => {
-    element.style.display = 'block';
-  });
+// onMounted(() => {
+//   const orderId = route.params.orderId; // Get orderId from route params
+//   fetchRecipes(orderId);
+// });
+
+const printreceipt = () => {
+  const originalContent = document.body.innerHTML;
+  const receiptContent = document.querySelector('.container').innerHTML;
+  document.body.innerHTML = receiptContent;
   window.print();
-  elementsToPrint.forEach((element) => {
-    element.style.display = '';
-  });
+  document.body.innerHTML = originalContent;
 };
 </script>
-
   <style scoped>
   /* Scoped styles for the component */
   @font-face {
@@ -138,7 +158,6 @@ const printInvoice = () => {
   body {
     margin: 0;
   }
-  
   /* Header styling */
   h1 {
     color: #1ee494;
@@ -225,14 +244,17 @@ const printInvoice = () => {
     height: 6cm;
   }
   table#total {
-    background: #f6f6f6;
+    background: #e6e5e5;
     border-color: #f6f6f6;
     border-style: solid;
-    border-width: 2cm 3cm;
+    border-width: 2px; 
     font-size: 20pt;
-    margin: 0 -3cm;
-    position: absolute;
+    margin: 0 auto; 
+    padding: 20px; 
     width: 100%;
+    box-sizing: border-box; 
+    height: auto;
   }
+
   </style>
   
