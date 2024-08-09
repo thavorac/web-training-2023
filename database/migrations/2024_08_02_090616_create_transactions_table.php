@@ -17,8 +17,8 @@ class CreateTransactionsTable extends Migration
 
             $table->bigInteger('account_id')->unsigned();
             $table->foreign('account_id')->references('id')->on('accounts');
-            $table->bigInteger('product_id')->unsigned()->nullable(); // Optional: Add this line
-            $table->foreign('product_id')->references('id')->on('products')->onDelete('set null'); // Optional: Add this line
+            $table->bigInteger('order_id')->unsigned()->nullable(); // Optional: Add this line
+            $table->foreign('order_id')->references('id')->on('orders_product')->onDelete('set null'); // Optional: Add this line
         });
     }
 

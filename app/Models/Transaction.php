@@ -1,8 +1,5 @@
 <?php
-
 namespace App\Models;
-use App\Models\Product;
-
 
 use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
@@ -12,15 +9,20 @@ class Transaction extends Model
     use HasFactory;
 
     protected $fillable = [
-        'account_id', 'type_Tran', 'balance', 'description','product_id', 
+        'account_id', 
+        'type_Tran', 
+        'balance', 
+        'description',
+        'order_id', 
     ];
 
     public function account()
     {
         return $this->belongsTo(Account::class);
     }
-    public function product()
+    
+    public function orderProduct()
     {
-        return $this->belongsTo(Product::class);
+        return $this->belongsTo(OrderProduct::class, 'order_id');
     }
 }

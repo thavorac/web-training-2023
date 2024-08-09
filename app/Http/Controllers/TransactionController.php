@@ -6,6 +6,8 @@ use App\Models\Account;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\Product;
+use App\Models\OrderProduct; // Import Order model
+use Illuminate\Support\Facades\DB;
 
 
 class TransactionController extends Controller
@@ -155,46 +157,41 @@ class TransactionController extends Controller
 // }
 public function productSold(Request $request)
 {
-    $validated = $request->validate([
-        'order_id' => 'required|exists:orders,id',
-        'payment_amount' => 'required|numeric|min:0',
-        'account_id' => 'required|exists:accounts,id'
+    // Validate the request data
+    $request->validate([
+        'order_id' => 'required|exists:order_products,id',
+        'description' => 'nullable|string',
     ]);
 
-    $order = Order::findOrFail($validated['order_id']);
-    $account = Account::findOrFail($validated['account_id']);
-    $paymentAmount = $validated['payment_amount'];
+    DB::beginTransaction();
+    try {
+        // Retrieve the OrderProduct model
+        $orderProduct = OrderProduct::findOrFail($request->order_id);
 
-    // Check if payment amount matches the order total
-    if ($paymentAmount != $order->total_amount) {
-        return response()->json(['message' => 'Payment amount does not match order total'], 400);
+        // Create a new transaction using the pricing from the OrderProduct
+        $transaction = Transaction::create([
+            'account_id' => 1, // Set account_id to 1
+            'type_Tran' => 'income', // Assuming income for product sold
+            'balance' => $orderProduct->price, // Use the pricing from OrderProduct
+            'description' => $request->description,
+            'order_id' => $orderProduct->id,
+        ]);
+
+        // You can add additional logic here, e.g., update the order product status
+
+        DB::commit();
+
+        return response()->json([
+            'status' => 'success',
+            'data' => $transaction,
+        ]);
+    } catch (\Exception $e) {
+        DB::rollBack();
+        return response()->json([
+            'status' => 'error',
+            'message' => $e->getMessage(),
+        ], 500);
     }
-
-    // Update the order status to 'paid'
-    $order->status = 'paid';
-    $order->save();
-
-    // Update account balance (assuming it's an income account)
-    $account->balance += $paymentAmount;
-    $account->save();
-
-    // Create transaction record
-    Transaction::create([
-        'account_id' => $account->id,
-        'type_Tran' => 'income',
-        'balance' => $paymentAmount,
-        'description' => 'Payment for order ID: ' . $order->id,
-        'order_id' => $order->id
-    ]);
-
-    // Optionally, send a receipt or confirmation email to the user
-    // Mail::to($user->email)->send(new PaymentConfirmation($order));
-
-    return response()->json([
-        'message' => 'Payment processed successfully',
-        'order_id' => $order->id,
-        'remaining_balance' => $account->balance
-    ], 200);
 }
 
 // public function orderProducts(Request $request)
@@ -303,7 +300,7 @@ public function history()
         return [
             'id' => $transaction->id,
             'account_name' => $transaction->account->name,
-            'type_Tran' => $transaction->type,
+            'type_Tran' => $transaction->type_Tran,
             'balance' => number_format($transaction->balance, 2), // Correctly formatted balance
             'description' => $transaction->description,
             'date' => $transaction->created_at->format('d/m/Y'),

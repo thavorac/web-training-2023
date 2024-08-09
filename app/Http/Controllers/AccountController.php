@@ -7,26 +7,29 @@ use Illuminate\Http\Request;
 class AccountController extends Controller
 {
     public function createAccount(Request $request)
-{
-    try {
-        // Validate the request data
-        $validatedData = $request->validate([
-            'name' => 'required|string|max:255',
-            'type' => 'required|in:income',
-            'balance' => 'nullable|numeric|min:0',
-        ]);
-
-        // Create a new account with validated data
-        $account = Account::create($validatedData);
-
-        return response()->json(['success' => true, 'account' => $account], 201);
-    } catch (\Exception $e) {
-        // Log the exception message
-        \Log::error('Account creation failed: ' . $e->getMessage());
-
-        return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+    {
+        try {
+            // Validate the request data
+            $validatedData = $request->validate([
+                'name' => 'required|string|max:255',
+            ]);
+    
+            // Create a new account with the validated name, a balance of 0, and type as 'income'
+            $account = Account::create([
+                'name' => $validatedData['name'],
+                'balance' => 0, // Set balance to 0
+                'type' => 'income', // Enforce the type as 'income'
+            ]);
+    
+            return response()->json(['success' => true, 'account' => $account], 201);
+        } catch (\Exception $e) {
+            // Log the exception message
+            \Log::error('Account creation failed: ' . $e->getMessage());
+    
+            return response()->json(['success' => false, 'message' => $e->getMessage()], 400);
+        }
     }
-}
+    
 
 
     public function showAllAccounts()
@@ -72,7 +75,7 @@ class AccountController extends Controller
             return [
                 'id' => $transaction->id,
                 'account_name' => $account->name,
-                'type' => $transaction->type,
+                'type_Tran' => $transaction->type_Tran,
                 'balance' => $transaction->balance,
                 'total_balance'=>$account->balance,
                 'description' => $transaction->description,
