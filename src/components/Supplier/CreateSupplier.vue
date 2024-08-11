@@ -27,9 +27,9 @@
                         <select v-model="gender" id="gender"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
                             <option value="">Select gender</option>
-                            <option value="M">Male</option>
-                            <option value="F">Female</option>
-                            <option value="O">Other</option>
+                            <option value="Male">Male</option>
+                            <option value="Female">Female</option>
+                            <option value="Other">Other</option>
                         </select>
                     </div>
 

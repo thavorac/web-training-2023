@@ -5,6 +5,20 @@ import Swal from 'sweetalert2';
 import IconSkLoading from '../loading/SmsLoading.vue';
 import IconCategories from '../icons/IconCategories.vue';
 import { useSearchStore } from '../../stores/search';
+import { useStore } from 'vuex';
+import { usePurchasesStore } from '../../stores/purchases';
+
+const printreceipt = () => {
+  const originalContent = document.body.innerHTML;
+  const receiptContent = document.querySelector('.container').innerHTML;
+  document.body.innerHTML = receiptContent;
+  window.print();
+  document.body.innerHTML = originalContent;
+};
+
+const purchaseStore = usePurchasesStore();
+const store = useStore();
+const supplier = computed(() => store.getters.getSupplier);
 
 const purchases = ref([]);
 const suppliers = ref([]);
@@ -23,14 +37,15 @@ const getPurchases = async () => {
     }
 };
 
-const getSuppliers = async () => {
+const getPurchasesOfSupplier = async (supplierId: number) => {
     try {
-        const response = await axios.get('http://localhost/api/suppliers');
-        suppliers.value = response.data;
+        const response = await axios.get(`http://localhost/api/suppliers/${supplierId}/purchases`);
+        purchases.value = response.data;
+        // console.log('all purchases of supplier: ', response.data);
     } catch (error) {
-        console.error('Error fetching suppliers:', error);
+        console.log('Error fetching purchases of one supplier :', error);
     }
-};
+}
 
 const getProducts = async () => {
     try {
@@ -42,7 +57,8 @@ const getProducts = async () => {
 };
 
 onMounted(async () => {
-    await Promise.all([getPurchases(), getSuppliers(), getProducts()]);
+    // console.log('log supplier store', supplier.value.id);
+    await Promise.all([getPurchasesOfSupplier(supplier.value.id), getProducts()]);
     loading.value = false;
 });
 
@@ -57,7 +73,7 @@ const purchasesWithDetails = computed(() => {
             product_origin_price: product ? product.origin_price : 'Unknown',
         };
     })
-    .filter(purchase => {
+        .filter(purchase => {
             return purchase.product_name.toLowerCase().includes(search.value.toLowerCase());
         });
 });
@@ -65,7 +81,8 @@ const purchasesWithDetails = computed(() => {
 const updatePurchaseStatus = async (purchaseId, status) => {
     try {
         await axios.patch(`http://localhost/api/purchase/${purchaseId}`, { status });
-        await getPurchases(); // Fetch updated data
+        // purchaseStore.fetchAllData();
+        // await getPurchases(); // Fetch updated data
         Swal.fire("Updated!", `The purchase status has been updated to ${status}.`, "success");
     } catch (error) {
         console.error('Error updating purchase status:', error);
@@ -157,6 +174,12 @@ const confirmUpdateStatus = (purchaseId, status) => {
                                     <path stroke-linecap="round" stroke-linejoin="round"
                                         d="m9.75 9.75 4.5 4.5m0-4.5-4.5 4.5M21 12a9 9 0 1 1-18 0 9 9 0 0 1 18 0Z" />
                                 </svg>
+
+                                <!-- print receipt -->
+
+                                <i @click="printreceipt"  class='bx bx-printer text-blue-600 text-xl '></i>
+
+                                <!-- <button @click="printreceipt" class="btn btn-primary ">Print Receipt</button> -->
 
                             </td>
                         </tr>
