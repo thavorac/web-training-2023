@@ -6,7 +6,7 @@ use Illuminate\Http\Request;
 use App\Models\Supplier;
 use App\Models\Product;
 use App\Models\Purchase;
-
+use Illuminate\Support\Facades\Hash;
 
 class SupplierController extends Controller
 {
@@ -35,6 +35,7 @@ class SupplierController extends Controller
         $supplier->email = $request->get('email');
         $supplier->phone = $request->get('phone');
         $supplier->gender = $request->get('gender'); // Add this line
+        $supplier->password =Hash::make( $request->get('password'));
         
         $supplier->save();
 
@@ -70,7 +71,7 @@ class SupplierController extends Controller
         }
     }
 
-    // public function deleteSupplier($supplierId){
+    // public function deleteSupplier(Request $request ,$supplierId){
     //     $supplierFound = Supplier::where("product_id",$request->get('product_id'));
 
     //     if($supplierFound){
@@ -82,26 +83,53 @@ class SupplierController extends Controller
     //     }
     // }
 
-    public function deleteSupplier($supplierId){
-        // Fetch supplier by supplierId
+    // DELETE supplier 
+    public function deleteSupplier($supplierId){//part parameter automatic convert
         $supplierFound = Supplier::find($supplierId);
-    
+
         if($supplierFound){
-            // Check for related purchases
-            $relatedPurchases = Purchase::where('supplier_id', $supplierId)->exists();
-    
-            if($relatedPurchases){
-                return response(["message" => "Cannot delete supplier with existing purchases"], 400);
-            }
-    
-            // Delete the supplier if no related purchases
             $supplierFound->delete();
-    
-            return ["message" => "Delete supplier success", "data" => $supplierFound];
+
+            return ["message" => "delete success"];
         }else{
-            return response(["message" => "Supplier not Found"], 400);
+            return response(["message" =>"supplier not found"],400); 
+        }
+        return "delete 1 supplier";
+
+    }
+    // public function deleteSupplier($supplierId){
+    //     // Fetch supplier by supplierId
+    //     $supplierFound = Supplier::find($supplierId);
+    
+    //     if($supplierFound){
+    //         // Check for related purchases
+    //         $relatedPurchases = Purchase::where('supplier_id', $supplierId)->exists();
+    
+    //         if($relatedPurchases){
+    //             return response(["message" => "Cannot delete supplier with existing purchases"], 400);
+    //         }
+    
+    //         // Delete the supplier if no related purchases
+    //         $supplierFound->delete();
+    
+    //         return ["message" => "Delete supplier success", "data" => $supplierFound];
+    //     }else{
+    //         return response(["message" => "Supplier not Found"], 400);
+    //     }
+    // }
+
+    //get all the purchases that belong to 1 supplier
+    public function getPurchasesOfSupplier($supplierId){
+        $supplier = Supplier::find($supplierId);
+        // dd($supplier);
+
+        if($supplier){
+            return $supplier->purchases()->orderBy('created_at', 'desc')->get();
+        }else{
+            return \response(["message"=>"Supplier not Found"],400);
         }
     }
+
     
 
 
