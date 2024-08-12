@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { ref, computed } from 'vue';
+import { ref, computed, watch } from 'vue';
 import axios from 'axios';
 import Swal from 'sweetalert2';
 import Datepicker from 'vue3-datepicker';
@@ -9,7 +9,6 @@ import IconSkLoading from '@/components/loading/SmsLoading.vue';
 import { RouterLink } from 'vue-router';
 import IconEdit from '../icons/IconEdit.vue';
 import IconDelete from '../icons/IconDelete.vue';
-import IconDetail from '../icons/IconDetail.vue';
 import EyeICon from '../icons/EyeICon.vue';
 
 // Define reactive variables
@@ -28,6 +27,7 @@ interface Account {
   type: string;
   balance: number;
   date: string;
+  default?: boolean; 
 }
 
 // Function to fetch accounts
@@ -35,7 +35,7 @@ const fetchAccounts = () => {
   loading.value = true;
   axios.get<Account[]>('http://localhost:80/api/accounts')
     .then((response) => {
-      accounts.value = response.data; // Directly assign the array to accounts.value
+      accounts.value = response.data;
       console.log(response.data);
     })
     .catch((error) => {
@@ -154,6 +154,7 @@ fetchAccounts();
             <th scope="col" class="px-6 py-3 text-lg font-sans">ID</th>
             <th scope="col" class="px-6 py-3 text-lg font-sans">Account Name</th>
             <th scope="col" class="px-6 py-3 text-lg font-sans">Account Number</th>
+            <th scope="col" class="px-6 py-3 text-lg font-sans">Default</th> <!-- Added Default column -->
             <th scope="col" class="px-6 py-3 text-lg font-sans">Type</th>
             <th scope="col" class="px-6 py-3 text-lg font-sans">Balance</th>
             <th scope="col" class="px-6 py-3 text-lg">Action</th>
@@ -177,12 +178,14 @@ fetchAccounts();
               <td class="px-6 py-6">{{ account.id }}</td>
               <td class="px-6 py-6">{{ account.name }}</td>
               <td class="px-6 py-6">{{ account.card_number }}</td>
+              <td class="px-6 py-6">{{ account.default }}</td>
               <td class="px-6 py-6">{{ account.type }}</td>
+              
               <!-- <td v-else class="px-6 py-6 text-red-600">{{ account.type }}</td> -->
 
-              <!-- <td v-if="account.type === 'outcome'"  class="px-6 py-6 text-red-600">{{ account.balance }}$</td>
-              <td v-else-if="account.type === 'income'" class="px-6 py-6 text-success">{{ account.balance }}$</td> -->
-              <td class="px-6 py-6 text-success">{{ account.balance }}$</td>
+              <td v-if="account.type === 'outcome'"  class="px-6 py-6 text-red-600">-{{ account.balance }}$</td>
+              <td v-else-if="account.type === 'income'" class="px-6 py-6 text-success">{{ account.balance }}$</td>
+              <!-- <td class="px-6 py-6 text-success">{{ account.balance }}$</td> -->
               
               <td class="px-6 py-6 flex space-x-2">
                 <RouterLink :to="`/admin/accounts/${account.id}/edit`">

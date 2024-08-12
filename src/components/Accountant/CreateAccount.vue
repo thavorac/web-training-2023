@@ -14,7 +14,28 @@
                     <input v-model="accountBalance" type="number" id="accountBalance" class="form-control" required>
                 </div> -->
             </div>
-         
+            <div class="row type">
+                <div class="col-sm-6 form-group">
+                    <label for="type">Account Type</label>
+                    <select v-model="selectedType" id="type" class="form-control" required>
+                        <option value="" disabled>Select a Type</option>
+                        <option value="income">Income</option>
+                        <option value="outcome">Outcome</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row default">
+                <div class="col-sm-6 form-group">
+                    <label for="default">Default Type</label>
+                    <select v-model="selectedDefault" id="default" class="form-control" required>
+                        <option value="" disabled>Select Default Type</option>
+                        <option value="main">Main</option>
+                        <option value="sale">Sale</option>
+                        <option value="buy">Buy</option>
+                        <option value="employee_salaries">Employee Salaries</option>
+                    </select>
+                </div>
+            </div>
             <div class="row bt">
                 <div class="d-grid gap-2 d-md-flex justify-content-md-end mt-5 me-9">
                     <button type="button" @click="handleCancel"
@@ -36,6 +57,8 @@ const router = useRouter();
 
 const accountName = ref('');
 // const accountBalance = ref('');
+const selectedType = ref('');
+const selectedDefault = ref('main'); // Default value for 'default'
 const alertMessage = ref('');
 const alertClass = ref('');
 
@@ -50,6 +73,8 @@ const createAccount = async () => {
     try {
         const response = await axios.post('http://localhost:80/api/accounts', {
             name: accountName.value,
+            type: selectedType.value,
+            default: selectedDefault.value
             // balance: accountBalance.value
         });
 
@@ -59,8 +84,10 @@ const createAccount = async () => {
             alertMessage.value = 'Account created successfully!';
             alertClass.value = 'alert alert-success';
             accountName.value = '';
+            selectedType.value = '';
             // accountBalance.value = '';
             router.push('/admin/accounts');
+            selectedDefault.value = 'main'; // Reset to default
         } else {
             throw new Error(response.data.message || 'Account creation failed.');
         }
@@ -104,12 +131,13 @@ button {
     border-radius: 4px;
 }
 
-.type {
-    padding-top: 50px;
+.type .default{
+    padding-top: 20px;
 }
 
+
 .bt {
-    padding-top: 150px;
+    padding-top: 10px;
 }
 
 .btn {

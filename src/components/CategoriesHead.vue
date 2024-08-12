@@ -27,8 +27,13 @@ const toggleProfileDropdown = () => {
 
 // Getters and state from Vuex
 const isAuthenticated = computed(() => store.getters.isAuthenticated);
-const user = computed(() => store.getters.getUser);
+// const user = computed(() => store.getters.getUser);
 
+const user = computed(() => {
+  const userData = store.getters.getUser;
+  console.log('User data:', userData);
+  return userData;
+});
 // Logout function
 const logoutHandler = () => {
   store.dispatch('logout');

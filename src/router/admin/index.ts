@@ -220,7 +220,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
       {
         path: '/receipt/:id',
         name: 'Receipt',
-        component: () => import('../../views/Cart/Receipt.vue'), // Adjust the path to your component
+        component: () => import('../../views/cart/Receipt.vue'), // Adjust the path to your component
       }
 
 

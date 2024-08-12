@@ -34,7 +34,6 @@
 <script setup lang="ts">
 import { ref } from 'vue';
 import axios from '../services/axios';
-import Swal from 'sweetalert2';
 import { useRouter } from 'vue-router';
 import { useStore } from 'vuex';
 
@@ -52,28 +51,12 @@ const loginAdmin = async () => {
 
     if (data.message === 'Login successful') {
       store.dispatch('login', { admin: data.admin, token: data.token });
-
-      Swal.fire({
-        icon: 'success',
-        title: 'Login Successful',
-        text: data.message
-      }).then(() => {
-        router.push('/admin/setting'); // Adjust path to admin profile page
-      });
+      router.push('/admin/setting'); // Adjust path to admin profile page
     } else {
-      Swal.fire({
-        icon: 'error',
-        title: 'Login Failed',
-        text: data.message
-      });
+      console.error('Login failed:', data.message);
     }
   } catch (error) {
     console.error('Error while logging in:', error);
-    Swal.fire({
-      icon: 'error',
-      title: 'Error',
-      text: 'Error, please try again'
-    });
   }
 };
 </script>

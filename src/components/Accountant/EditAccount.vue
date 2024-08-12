@@ -10,6 +10,7 @@ const accountId = ref<number | null>(null);
 const accountName = ref<string>('');
 const accountBalance = ref<string>('');
 const selectedType = ref<string>('');
+    const isDefault = ref<string>(''); // Added default field
 const alertMessage = ref<string>('');
 const alertClass = ref<string>('');
 
@@ -35,6 +36,7 @@ const fetchAccount = async () => {
         accountName.value = account.name;
         accountBalance.value = account.balance;
         selectedType.value = account.type;
+        isDefault.value = account.default; // Handle default field
     } catch (error) {
         console.error('Error fetching account details:', error);
         alertMessage.value = 'Failed to load account details. Please check the console for more details.';
@@ -54,7 +56,8 @@ const editAccount = async () => {
         const response = await axios.put(`http://localhost:80/api/accounts/${accountId.value}`, {
             name: accountName.value,
             type: selectedType.value,
-            balance: accountBalance.value
+            balance: accountBalance.value,
+            default: isDefault.value 
         });
 
         if (response.data) {
@@ -101,10 +104,10 @@ onMounted(() => {
                     <label for="accountName">Account Name</label>
                     <input v-model="accountName" type="text" id="accountName" class="form-control" required>
                 </div>
-                <div class="col-sm-6 form-group">
+                <!-- <div class="col-sm-6 form-group">
                     <label for="accountBalance">Balance</label>
                     <input v-model="accountBalance" type="number" id="accountBalance" class="form-control" required>
-                </div>
+                </div> -->
             </div>
             <div class="row type">
                 <div class="col-sm-6 form-group">
@@ -113,6 +116,18 @@ onMounted(() => {
                         <option value="" disabled>Select a Type</option>
                         <option value="income">Income</option>
                         <option value="outcome">Outcome</option>
+                    </select>
+                </div>
+            </div>
+            <div class="row">
+                <div class="col-sm-6 form-group">
+                    <label for="default">Default Account</label>
+                    <select v-model="isDefault" id="type" class="form-control" required>
+                        <option value="" disabled>Select a default</option>
+                        <option value="main">Main</option>
+                        <option value="sale">Sale</option>
+                        <option value="buy">Buy</option>
+                        <option value="employee_salaries">Employee Salaries</option>
                     </select>
                 </div>
             </div>

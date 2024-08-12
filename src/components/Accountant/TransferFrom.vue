@@ -9,7 +9,7 @@
                     <label for="FromaccountName">From Account</label>
                     <select v-model="FromAccountId" id="FromaccountName" class="form-control" required>
                         <option value="" disabled>Select Account</option>
-                        <option v-for="account in accounts" :key="account.id" :value="account.id">
+                        <option v-for="account in filteredFromAccounts" :key="account.id" :value="account.id">
                             {{ account.name }}
                         </option>
                     </select>
@@ -18,7 +18,7 @@
                     <label for="ToaccountName">To Account</label>
                     <select v-model="ToAccountId" id="ToaccountName" class="form-control" required>
                         <option value="" disabled>Select Account</option>
-                        <option v-for="account in filteredAccounts" :key="account.id" :value="account.id">
+                        <option v-for="account in filteredToAccounts" :key="account.id" :value="account.id">
                             {{ account.name }}
                         </option>
                     </select>
@@ -65,9 +65,18 @@ const ToAccountId = ref(null);
 const amount = ref(0);
 const description = ref('');
 
-// Filter accounts to exclude the selected 'from account'
-const filteredAccounts = computed(() => {
-    return accounts.value.filter(account => account.id !== FromAccountId.value);
+// Filtered accounts for the 'From Account' dropdown
+const filteredFromAccounts = computed(() => {
+    return accounts.value.filter(account => 
+        (account.type === 'income' || account.type === 'main') && account.id !== ToAccountId.value
+    );
+});
+
+// Filtered accounts for the 'To Account' dropdown
+const filteredToAccounts = computed(() => {
+    return accounts.value.filter(account => 
+        (account.type === 'income' || account.type === 'main')
+    );
 });
 
 const handleCancel = () => {
@@ -92,6 +101,17 @@ const transferBalance = async () => {
             return;
         }
 
+        // Fetch the balance of the 'From Account'
+        const accountResponse = await axios.get(`http://localhost:80/api/accounts/${FromAccountId.value}`);
+        const fromAccountBalance = accountResponse.data.balance;
+
+        if (amount.value > fromAccountBalance) {
+            alertMessage.value = 'Insufficient balance in the selected account';
+            alertClass.value = 'alert alert-danger';
+            return;
+        }
+
+        // Proceed with the transfer if balance is sufficient
         const response = await axios.post('http://localhost:80/api/transfer', {
             from_account_id: FromAccountId.value,
             to_account_id: ToAccountId.value,
@@ -102,12 +122,15 @@ const transferBalance = async () => {
         alertMessage.value = response.data.message;
         alertClass.value = 'alert alert-success';
         fetchAccounts();
-        router.push('/admin/accounts');
+        setTimeout(() => {
+            router.push('/admin/accounts');
+        }, 1000);
     } catch (error) {
-        alertMessage.value = error.response.data.message || 'An error occurred';
+        alertMessage.value = error.response?.data?.message || 'An error occurred';
         alertClass.value = 'alert alert-danger';
     }
 };
+
 
 onMounted(fetchAccounts);
 </script>
