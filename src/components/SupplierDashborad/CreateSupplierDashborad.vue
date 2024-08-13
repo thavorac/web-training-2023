@@ -175,7 +175,7 @@ getPurchasesOfSupplier(supplier.value.id);
             <div v-if="listPurchase" class="relative">
                 <i class='bx bxs-bell-ring text-3xl text-green-500'></i>
                 <span
-                    class="absolute top-0 right-0  transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full px-1">{{
+                    class="absolute top-0 right-0  transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full px-2 py-1">{{
                         listPurchase.length }}</span>
             </div>
             <div v-if="supplier" class="profile-details ">

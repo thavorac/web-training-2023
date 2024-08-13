@@ -92,11 +92,13 @@ const confirmDelete = (purchaseId: number) => {
         }
     });
 };
-const filteredPurchases = computed(() => {
-    return purchasesWithDetails.value.filter(purchase =>
-        purchase.status.toLowerCase().includes(searchQuery.value.toLowerCase())
-    );
-});
+
+    const filteredPurchases = computed(() => {
+        return purchasesWithDetails.value.filter(purchase =>
+            purchase.status.toLowerCase().includes(searchQuery.value.toLowerCase())
+        );
+    });
+    
 onMounted(async () => {
     await getPurchases();
     await getSuppliers();
