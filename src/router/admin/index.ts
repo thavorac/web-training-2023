@@ -1,5 +1,6 @@
 import { Components } from 'ant-design-vue/es/date-picker/generatePicker'
 import type { RouteRecordRaw } from 'vue-router'
+import { useStore } from 'vuex'
 
 const adminRouter: Readonly<RouteRecordRaw[]> = [
   {
@@ -22,9 +23,16 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
     path: '/admin',
     name: 'AdminLayout',
     component: () => import('../../layout/AdminLayout.vue'),
-    redirect: (to) => {
-      return { name: 'ListProduct' }
-    },
+    redirect: { name: 'ListProduct' },
+      beforeEnter:(to, from, next)=>{
+        const store = useStore();
+        console.log('to', to,from, store.getters.getAdmin)
+        if(store.getters.getAdmin){
+          next()
+        }else{
+          next({name: 'login'})
+        }
+      },
     children: [
       {
         path: 'category',

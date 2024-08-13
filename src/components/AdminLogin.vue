@@ -51,7 +51,7 @@ const loginAdmin = async () => {
 
     if (data.message === 'Login successful') {
       store.dispatch('login', { admin: data.admin, token: data.token });
-      router.push('/admin/setting'); // Adjust path to admin profile page
+      router.push('/admin'); // Adjust path to admin profile page
     } else {
       console.error('Login failed:', data.message);
     }

@@ -96,6 +96,18 @@ watch([startDate, endDate], () => {
   console.log('Start Date:', startDate.value);
   console.log('End Date:', endDate.value);
 });
+const printreceipt = () => {
+  const originalContent = document.body.innerHTML;
+  const receiptContent = document.querySelector('.data')?.outerHTML; // Use optional chaining
+  if (receiptContent) { // Ensure receiptContent is not null
+    document.body.innerHTML = receiptContent; // Replace body content with the table
+    window.print();
+    document.body.innerHTML = originalContent; // Restore original content after printing
+  } else {
+    console.error('Table content not found');
+  }
+};
+
 </script>
 
 
@@ -137,7 +149,8 @@ watch([startDate, endDate], () => {
 
     <div v-else class="relative overflow-auto shadow-md sm:rounded-lg mt-4">
       <!-- Datepicker for start date -->
-      <div class="flex items-center space-x-1">
+        <div class="d-flex justify-between">
+          <div class="flex items-center space-x-1">
         <div class="relative">
           <div class="absolute z-30 inset-y-0 start-0 flex items-center ps-3 pointer-events-none">
             <svg class="w-4 h-4 text-gray-500 dark:text-gray-400" aria-hidden="true" xmlns="http://www.w3.org/2000/svg" fill="currentColor" viewBox="0 0 20 20">
@@ -160,11 +173,20 @@ watch([startDate, endDate], () => {
             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-blue-500 focus:border-blue-500 block w-full ps-10 p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
             placeholder="Select date end" />
         </div>
+       
       </div>
-      <table class="w-full text-sm text-left text-gray-500">
+      <div class="float-end p-5 ps-5 gap-6 print:hidden">
+        <div>
+          <!-- Print receipt Button -->
+          <button @click="printreceipt" class="btn btn-primary mt-3 ">Print Receipt</button>
+        </div>
+      </div>
+        </div>
+      
+      <table class="data w-full text-sm text-left text-gray-500">
         <thead class="text-xs text-gray-700 bg-gray-50">
           <tr>
-            <th scope="col" class="px-6 py-3 text-lg font-sans">ID</th>
+            <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">ID</th> -->
             <th scope="col" class="px-6 py-3 text-lg font-sans">Account Name</th>
             <th scope="col" class="px-6 py-3 text-lg font-sans">Description</th>
             <th scope="col" class="px-6 py-3 text-lg font-sans">Type Transfer</th>
@@ -174,7 +196,7 @@ watch([startDate, endDate], () => {
         </thead>
         <tbody>
           <tr v-for="(transaction, index) in filteredData" :key="index">
-            <td class="px-6 py-3">{{ transaction.id }}</td>
+            <!-- <td class="px-6 py-3">{{ transaction.id }}</td> -->
             <td class="px-6 py-3">{{ transaction.account_name }}</td>
             <td class="px-6 py-3">{{ transaction.description }}</td>
             <td :class="{ 'text-green-600': transaction.type_Tran === 'income', 'text-red-600': transaction.type_Tran === 'outcome' }" class="px-6 py-3">
