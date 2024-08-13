@@ -19,6 +19,13 @@ const supplierRouter: Readonly<RouteRecordRaw[]> = [
     },
     children: [
       {
+        path: '',
+        name: 'SupplierOrderList',
+        component: () => import('../../components/SupplierDashborad/OrderList.vue')
+      },
+
+      {
+        
         path: 'product',
         name: 'SupplierProduct',
         component: () => import('../../components/ListMenu1.vue')
@@ -28,11 +35,7 @@ const supplierRouter: Readonly<RouteRecordRaw[]> = [
         name: 'SupplierDashboard',
         component: () => import('../../components/SupplierDashborad/DashboardView.vue')
       },
-      {
-        path: '',
-        name: 'SupplierOrderList',
-        component: () => import('../../components/SupplierDashborad/OrderList.vue')
-      },
+   
       {
         path: 'total-order',
         name: 'SupplierTotalOrder',
@@ -59,6 +62,11 @@ const supplierRouter: Readonly<RouteRecordRaw[]> = [
     path: '/supplier-logout',
     name: 'supplierLogout',
     component: () => import('../../components/SupplierDashborad/SupplierLogout.vue')
+  },
+  {
+    path: '/print-receipt',
+    name: 'PrintReceipt',
+    component: () => import('../../components/SupplierDashborad/PrintReceipt.vue')
   }
 ]
 

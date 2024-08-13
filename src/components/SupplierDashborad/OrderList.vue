@@ -9,11 +9,11 @@ import { useStore } from 'vuex';
 import { usePurchasesStore } from '../../stores/purchases';
 
 const printreceipt = () => {
-  const originalContent = document.body.innerHTML;
-  const receiptContent = document.querySelector('.container').innerHTML;
-  document.body.innerHTML = receiptContent;
-  window.print();
-  document.body.innerHTML = originalContent;
+    const originalContent = document.body.innerHTML;
+    const receiptContent = document.querySelector('.container').innerHTML;
+    document.body.innerHTML = receiptContent;
+    window.print();
+    document.body.innerHTML = originalContent;
 };
 
 const purchaseStore = usePurchasesStore();
@@ -41,7 +41,7 @@ const getPurchasesOfSupplier = async (supplierId: number) => {
     try {
         const response = await axios.get(`http://localhost/api/suppliers/${supplierId}/purchases`);
         purchases.value = response.data;
-        // console.log('all purchases of supplier: ', response.data);
+        console.log('all purchases of supplier: ', response.data);
     } catch (error) {
         console.log('Error fetching purchases of one supplier :', error);
     }
@@ -78,36 +78,34 @@ const purchasesWithDetails = computed(() => {
         });
 });
 
-const updatePurchaseStatus = async (purchaseId, status) => {
-    try {
-        await axios.patch(`http://localhost/api/purchase/${purchaseId}`, { status });
-        // purchaseStore.fetchAllData();
-        // await getPurchases(); // Fetch updated data
-        Swal.fire("Updated!", `The purchase status has been updated to ${status}.`, "success");
-    } catch (error) {
-        console.error('Error updating purchase status:', error);
-        Swal.fire("Error!", "An error occurred while updating the purchase status.", "error");
-    }
-};
-
-const confirmUpdateStatus = (purchaseId, status) => {
-    const statusAction = status === 'accepted' ? 'accept' : 'reject';
-    const confirmButtonColor = status === 'accepted' ? 'green' : '#3085d6';
-
-    Swal.fire({
-        title: `Are you sure you want to ${statusAction} this order?`,
-        text: "You won't be able to revert this!",
-        icon: "warning",
-        showCancelButton: true,
-        confirmButtonColor: confirmButtonColor,
-        cancelButtonColor: "#d33",
-        confirmButtonText: `Yes, ${statusAction} it!`
-    }).then((result) => {
-        if (result.isConfirmed) {
-            updatePurchaseStatus(purchaseId, status);
+    const updatePurchaseStatus = async (purchaseId:number, status:string) => {
+        try {
+            await axios.patch(`http://localhost/api/purchase/${purchaseId}`, { status });
+            Swal.fire("Updated!", `The purchase status has been updated to ${status}.`, "success");
+        } catch (error) {
+            console.error('Error updating purchase status:', error);
+            Swal.fire("Error!", "An error occurred while updating the purchase status.", "error");
         }
-    });
-};
+    };
+
+    const confirmUpdateStatus = (purchaseId:number, status:string) => {
+        const statusAction = status === 'accepted' ? 'accept' : 'reject';
+        const confirmButtonColor = status === 'accepted' ? 'green' : '#3085d6';
+
+        Swal.fire({
+            title: `Are you sure you want to ${statusAction} this order?`,
+            text: "You won't be able to revert this!",
+            icon: "warning",
+            showCancelButton: true,
+            confirmButtonColor: confirmButtonColor,
+            cancelButtonColor: "#d33",
+            confirmButtonText: `Yes, ${statusAction} it!`
+        }).then((result) => {
+            if (result.isConfirmed) {
+                updatePurchaseStatus(purchaseId, status);
+            }
+        });
+    };
 </script>
 
 <template>
@@ -177,7 +175,7 @@ const confirmUpdateStatus = (purchaseId, status) => {
 
                                 <!-- print receipt -->
 
-                                <i @click="printreceipt"  class='bx bx-printer text-blue-600 text-xl '></i>
+                                <i @click="printreceipt" class='bx bx-printer text-blue-600 text-xl '></i>
 
                                 <!-- <button @click="printreceipt" class="btn btn-primary ">Print Receipt</button> -->
 
