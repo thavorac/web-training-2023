@@ -83,20 +83,6 @@ class SupplierController extends Controller
     //     }
     // }
 
-    // DELETE supplier 
-    public function deleteSupplier($supplierId){//part parameter automatic convert
-        $supplierFound = Supplier::find($supplierId);
-
-        if($supplierFound){
-            $supplierFound->delete();
-
-            return ["message" => "delete success"];
-        }else{
-            return response(["message" =>"supplier not found"],400); 
-        }
-        return "delete 1 supplier";
-
-    }
     // public function deleteSupplier($supplierId){
     //     // Fetch supplier by supplierId
     //     $supplierFound = Supplier::find($supplierId);
@@ -118,10 +104,24 @@ class SupplierController extends Controller
     //     }
     // }
 
+
+    // DELETE supplier 
+    public function deleteSupplier($supplierId){//part parameter automatic convert
+        $supplierFound = Supplier::find($supplierId);
+
+        if($supplierFound){
+            $supplierFound->delete();
+
+            return ["message" => "delete success"];
+        }else{
+            return response(["message" =>"supplier not found"],400); 
+        }
+        return "delete 1 supplier";
+
+    }
     //get all the purchases that belong to 1 supplier
     public function getPurchasesOfSupplier($supplierId){
         $supplier = Supplier::find($supplierId);
-        // dd($supplier);
 
         if($supplier){
             return $supplier->purchases()->orderBy('created_at', 'desc')->get();

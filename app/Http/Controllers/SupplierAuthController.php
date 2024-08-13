@@ -17,7 +17,6 @@ class SupplierAuthController extends Controller
         if ($supplier && Hash::check($credentials['password'], $supplier->password)) {
             // Passwords match
             Auth::guard('supplier')->login($supplier);
-
             // Generate token (if using Sanctum or other token-based authentication)
             $token = $supplier->createToken('supplier-token')->plainTextToken;
 
@@ -27,7 +26,6 @@ class SupplierAuthController extends Controller
                 'token' => $token,
             ], 200);
         }
-
         return response()->json(['error' => 'Unauthorized'], 401);
     }
 

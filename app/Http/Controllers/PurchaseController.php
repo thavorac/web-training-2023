@@ -8,9 +8,22 @@ use Illuminate\Http\Request;
 
 class PurchaseController extends Controller
 {
+
+    //get all purchases
     public function getPurchases(){
         $purchases = Purchase::orderBy('id', 'desc')->get();
         return $purchases;
+    }
+
+    // get one purchase
+    public function getPurchase($purchaseId){
+        $purchase = Purchase::find($purchaseId);
+
+        if($purchase){
+            return $purchase;
+        }else{
+            return response(["message" => "purchase not found"], 400);
+        }
     }
 
     public function createPurchase(Request $request){
@@ -40,15 +53,6 @@ class PurchaseController extends Controller
         return ["message" => "created successfully", "data" => $purchase];
     }
 
-    public function getPurchase($purchaseId){
-        $purchase = Purchase::find($purchaseId);
-
-        if($purchase){
-            return $purchase;
-        }else{
-            return response(["message" => "purchase not found"], 400);
-        }
-    }
 
     public function updatePurchase(Request $request, $purchaseId){
         $purchase = Purchase::find($purchaseId); 
@@ -60,7 +64,6 @@ class PurchaseController extends Controller
                 $oldProduct->qty -= $purchase->qty;
                 $oldProduct->save();
             }
-
             $purchase->qty = $request->input('qty');
             $purchase->status = $request->get('status');
             $purchase->supplier_id = $request->get('supplier_id');
@@ -73,7 +76,6 @@ class PurchaseController extends Controller
             } else {
                 return response(["message" => "product not found"], 400);
             }
-
             $purchase->save();
 
             // Update product quantity if status is "accepted"
