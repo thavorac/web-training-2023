@@ -18,18 +18,6 @@ use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\AccountController;
 use App\Http\Controllers\TransactionController;
 
-Route::post('accounts', [AccountController::class, 'createAccount']);
-Route::get('accounts', [AccountController::class, 'showAllAccounts']);
-Route::get('accounts/{account}', [AccountController::class, 'showAccount']);
-Route::put('accounts/{account}', [AccountController::class, 'updateAccount']);
-Route::delete('accounts/{account}', [AccountController::class, 'deleteAccount']);
-Route::get('account-histroy/{account}', [AccountController::class, 'history']);
-Route::get('accounts/{id}/statistics/{period}', [AccountController::class, 'statistics']);
-
-
-Route::post('transactions/productSold', [TransactionController::class, 'productSold']);
-Route::get('all-history', [TransactionController::class, 'history']);
-Route::post('/transfer', [TransactionController::class, 'transfer']);
 
 
 
@@ -43,6 +31,20 @@ use App\Http\Controllers\PurchaseProductController;
 
 
 
+Route::post('accounts', [AccountController::class, 'createAccount']);
+Route::get('accounts', [AccountController::class, 'showAllAccounts']);
+Route::get('accounts/{account}', [AccountController::class, 'showAccount']);
+Route::put('accounts/{account}', [AccountController::class, 'updateAccount']);
+Route::delete('accounts/{account}', [AccountController::class, 'deleteAccount']);
+Route::get('account-histroy/{account}', [AccountController::class, 'history']);
+Route::get('accounts/{id}/statistics/{period}', [AccountController::class, 'statistics']);
+
+
+
+Route::get('/product-sold', [TransactionController::class, 'productSold']);
+
+Route::get('all-history', [TransactionController::class, 'history']);
+Route::post('/transfer', [TransactionController::class, 'transfer']);
 
 
 
@@ -214,3 +216,5 @@ Route::post('/promotions', [PromotionController::class, 'createPromotion']);
 Route::put('/promotions/{id}', [PromotionController::class, 'updatePromotion']);
 Route::delete('/promotions/{id}', [PromotionController::class, 'deletePromotion']);
 Route::get('/discountHistory', [PromotionController::class, 'discountHistory']);
+Route::get('/showTime', [PromotionController::class, 'showTime']);
+

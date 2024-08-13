@@ -12,13 +12,16 @@ class AccountController extends Controller
             // Validate the request data
             $validatedData = $request->validate([
                 'name' => 'required|string|max:255',
+                'type' => 'required|in:income,outcome',
+                'default' => 'required|in:main,sale,buy,employee_salaries',
             ]);
     
             // Create a new account with the validated name, a balance of 0, and type as 'income'
             $account = Account::create([
                 'name' => $validatedData['name'],
-                'balance' => 0, // Set balance to 0
-                'type' => 'income', // Enforce the type as 'income'
+                'type' => $validatedData['type'],
+                'default' => $validatedData['default'],
+                'balance' => 0, // Set balance to 0'
             ]);
     
             return response()->json(['success' => true, 'account' => $account], 201);

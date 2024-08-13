@@ -4,9 +4,12 @@ use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
 
-class CreateTransactionsTable extends Migration
+return new class extends Migration
 {
-    public function up()
+    /**
+     * Run the migrations.
+     */
+    public function up(): void
     {
         Schema::create('transactions', function (Blueprint $table) {
             $table->id();
@@ -15,15 +18,22 @@ class CreateTransactionsTable extends Migration
             $table->string('description')->nullable();
             $table->timestamps();
 
-            $table->bigInteger('account_id')->unsigned();
+            $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('accounts');
-            $table->bigInteger('order_id')->unsigned()->nullable(); // Optional: Add this line
-            $table->foreign('order_id')->references('id')->on('orders_product')->onDelete('set null'); // Optional: Add this line
+
+            $table->unsignedBigInteger('recipe_id')->nullable();
+            $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('set null');
+
+            $table->unsignedBigInteger('order_product_id')->nullable();
+            $table->foreign('order_product_id')->references('id')->on('orders_product')->onDelete('cascade');
         });
     }
 
-    public function down()
+    /**
+     * Reverse the migrations.
+     */
+    public function down(): void
     {
         Schema::dropIfExists('transactions');
     }
-}
+};

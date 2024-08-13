@@ -209,6 +209,11 @@ class PromotionController extends Controller
     return response()->json($history);
 }
 
+public function showTime()
+{
+    $currentTime = Carbon::now();
+    return response()->json(['current_time' => $currentTime]);
+}
 
 
 

@@ -6,8 +6,12 @@ use App\Models\Account;
 use App\Models\Transaction;
 use Illuminate\Http\Request;
 use App\Models\Product;
-use App\Models\OrderProduct; // Import Order model
+use App\Models\Recipe;
+use App\Models\Order;
+use App\Models\OrderProduct;
+
 use Illuminate\Support\Facades\DB;
+use Illuminate\Http\JsonResponse;
 
 
 class TransactionController extends Controller
@@ -28,7 +32,24 @@ class TransactionController extends Controller
 
     //     return $transaction;
     // }
+    public function store(Request $request)
+    {
+        // Validate the request input
+        $validated = $request->validate([
+            'product_id' => 'required|exists:products,id',
+            'pricing' => 'required|numeric',
+            'quantity' => 'required|integer'
+        ]);
 
+        // Create the OrderProduct
+        $orderProduct = OrderProduct::create($validated);
+
+        // Return a success response with the created order product
+        return response()->json([
+            'message' => 'Order product created successfully',
+            'order_product' => $orderProduct
+        ], 201);
+    }
     public function transfer(Request $request)
     {
         // Validate the request data
@@ -110,131 +131,92 @@ class TransactionController extends Controller
 //         'total_balance' => $balance
 //     ], 200);
 // }
+// public function productSold($orderProductId)
+// {
+//     $orderProduct = OrderProduct::find($orderProductId);
+//     // $products = $recipe->orderProducts; // Get all OrderProducts associated with this recipe
+    
+//     return response()->json($orderProduct);
+// }
 // public function productSold(Request $request)
 // {
+//     // Validate the request input to ensure order_product_id and account_id are provided
 //     $validated = $request->validate([
-//         'order_id' => 'required|exists:orders,id',
-//         'payment_amount' => 'required|numeric|min:0',
-//         'payment_method' => 'required|string',
+//         'order_product_id' => 'required|exists:orders_product,id',
 //         'account_id' => 'required|exists:accounts,id'
 //     ]);
 
-//     $order = Order::findOrFail($validated['order_id']);
+//     // Find the OrderProduct and related Product and Account
+//     $orderProduct = OrderProduct::findOrFail($validated['order_product_id']);
 //     $account = Account::findOrFail($validated['account_id']);
-//     $paymentAmount = $validated['payment_amount'];
-//     $paymentMethod = $validated['payment_method'];
 
-//     // Check if payment amount matches the order total
-//     if ($paymentAmount != $order->total_amount) {
-//         return response()->json(['message' => 'Payment amount does not match order total'], 400);
-//     }
+//     // Calculate the balance based on the pricing and quantity in the OrderProduct
+//     $balance = $orderProduct->pricing * $orderProduct->quantity;
 
-//     // Update the order status to 'paid'
-//     $order->status = 'paid';
-//     $order->save();
-
-//     // Update account balance
-//     $account->balance -= $paymentAmount;
+//     // Update the account balance
+//     $account->balance += $balance;
 //     $account->save();
 
-//     // Create transaction record
+//     // Create a new transaction for this sale
 //     Transaction::create([
-//         'account_id' => $account->id,
-//         'type_Tran' => 'expense',
-//         'balance' => -$paymentAmount,
-//         'description' => 'Payment for order ID: ' . $order->id,
-//         'order_id' => $order->id
+//         'account_id' => 2,
+//         'type_Tran' => 'income',
+//         'balance' => $balance,
+//         'description' => 'Product sold: ' . $orderProduct->product->name . ' x ' . $orderProduct->quantity,
+//         'product_id' => $orderProduct->product_id
 //     ]);
 
-//     // Optionally, send a receipt or confirmation email to the user
-//     // Mail::to($user->email)->send(new PaymentConfirmation($order));
-
+//     // Return a success response with transaction details
 //     return response()->json([
-//         'message' => 'Payment processed successfully',
-//         'order_id' => $order->id,
-//         'remaining_balance' => $account->balance
+//         'message' => 'Product sold and transaction created successfully',
+//         'quantity_sold' => $orderProduct->quantity,
+//         'total_balance' => $balance
 //     ], 200);
 // }
-public function productSold(Request $request)
-{
-    // Validate the request data
-    $request->validate([
-        'order_id' => 'required|exists:order_products,id',
-        'description' => 'nullable|string',
-    ]);
 
-    DB::beginTransaction();
-    try {
-        // Retrieve the OrderProduct model
-        $orderProduct = OrderProduct::findOrFail($request->order_id);
+// public function productSold(Request $request)
+//     {
+//         // Validate incoming request data
+//         $validated = $request->validate([
+//             'recipe_id' => 'required|exists:recipes,id',
+//             'account_id' => 'required|exists:accounts,id',
+//         ]);
 
-        // Create a new transaction using the pricing from the OrderProduct
-        $transaction = Transaction::create([
-            'account_id' => 1, // Set account_id to 1
-            'type_Tran' => 'income', // Assuming income for product sold
-            'balance' => $orderProduct->price, // Use the pricing from OrderProduct
-            'description' => $request->description,
-            'order_id' => $orderProduct->id,
-        ]);
+//         return DB::transaction(function () use ($validated) {
+//             // Retrieve the order with the provided order ID
+//             $recipe_id = recipes::findOrFail($validated['recipe_id']);
 
-        // You can add additional logic here, e.g., update the order product status
+//             // Ensure that the orderProducts relationship is not null and not empty
+//             $orderProducts = $order->orderProducts ?? collect();
 
-        DB::commit();
+//             if ($orderProducts->isEmpty()) {
+//                 return response()->json(['message' => 'No products found for this order.'], 404);
+//             }
 
-        return response()->json([
-            'status' => 'success',
-            'data' => $transaction,
-        ]);
-    } catch (\Exception $e) {
-        DB::rollBack();
-        return response()->json([
-            'status' => 'error',
-            'message' => $e->getMessage(),
-        ], 500);
-    }
-}
 
-// public function orderProducts(Request $request)
-// {
-//     $validated = $request->validate([
-//         'product_id' => 'required|exists:products,id',
-//         'quantity' => 'required|integer|min:1',
-//         'account_id' => 'required|exists:accounts,id'
-//     ]);
+//             // Iterate over each order product and create a corresponding transaction
+//             foreach ($orderProducts as $orderProduct) {
+//                 // Calculate the balance as discounted price * quantity
+//                 $balance = $orderProduct->discounted_price * $orderProduct->quantity;
 
-//     $product = Product::findOrFail($validated['product_id']);
-//     $account = Account::findOrFail($validated['account_id']);
-//     $quantity = $validated['quantity'];
+//                 Transaction::create([
+//                     'type_Tran' => 'income',
+//                     'balance' => $balance,
+//                     'description' => 'Sale of Product #' . $orderProduct->product_id . ' in Order #' . $order->id,
+//                     'account_id' => $validated['account_id'],
+//                     'recipe_id' => $recipe->id,
+//                     'order_product_id' => $orderProduct->id,
+//                 ]);
+//             }
 
-//     $totalCost = $product->cost_price * $quantity;
+//             // Update the order status to 'completed'
+//             $order->status = 'completed';
+//             $order->save();
 
-//     if ($account->balance < $totalCost) {
-//         $quantityAffordable = floor($account->balance / $product->cost_price);
-//         $totalCost = $product->cost_price * $quantityAffordable;
-//     } else {
-//         $quantityAffordable = $quantity;
+//             return response()->json(['message' => 'Transaction and recipe created successfully.'], 201);
+//         });
 //     }
 
-//     $account->balance -= $totalCost;
-//     $account->save();
-
-//     $product->quantity += $quantityAffordable;
-//     $product->save();
-
-//     Transaction::create([
-//         'account_id' => $account->id,
-//         'type_Tran' => 'outcome',
-//         'balance' => $totalCost,
-//         'description' => 'Ordered products: ' . $product->name . ' x ' . $quantityAffordable,
-//         'product_id' => $product->id
-//     ]);
-
-//     return response()->json([
-//         'message' => 'Products ordered and transaction created successfully',
-//         'quantity_ordered' => $quantityAffordable,
-//         'total_balance' => $totalCost
-//     ], 200);
-// }
 public function orderProducts(Request $request)
 {
     $validated = $request->validate([

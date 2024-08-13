@@ -17,7 +17,8 @@ class CreateAccountsTable extends Migration
             $table->id();
             $table->string('name');
             $table->string('card_number')->unique()->nullable(false);
-            $table->enum('type', ['main', 'income']);
+            $table->enum('type', ['income', 'outcome']);
+            $table->enum('default', ['main', 'sale', 'buy', 'employee_salaries']);
             $table->decimal('balance', 15, 2)->default(0);
             $table->timestamps();
         });

@@ -33,12 +33,18 @@ class RecipeController extends Controller
     /**
      * Display the specified resource.
      */
+    // public function show($id)
+    // {
+    //     $recipe = Recipe::with('order')-> findOrFail($id);
+    //     $recipe->order->OrderProduct;
+    //     return response()->json($recipe);
+    // }
     public function show($id)
     {
-        $recipe = Recipe::with('order')-> findOrFail($id);
-        $recipe->order->OrderProduct;
+        $recipe = Recipe::with(['order.orderProduct.product'])->findOrFail($id);
         return response()->json($recipe);
     }
+    
 
     /**
      * Update the specified resource in storage.
