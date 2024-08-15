@@ -1,120 +1,84 @@
 <template>
-  <div class="container pt-5">
-    <div v-if="order">
-      <!-- Invoice section -->
-      <div class="invoice pt-5">
-        <h1>Recipe</h1>
-        <aside>
-          <address id="from">
-            WeasyPrint<br />
-            Cambodia
-          </address>
-          <address id="to">
-            To<br />
-            Address:<br />
-            Tek Tla,<br />
-            Phnom Penh
-          </address>
-        </aside>
-        <dl id="informations">
-          <dt>Invoice number</dt>
-          <dd>{{ order.id }}</dd>
-          <dt>Date</dt>
-          <dd>{{ new Date(order.created_at).toLocaleDateString() }}</dd>
-        </dl>
-        <!-- Invoice items table -->
-        <div>
-          <table>
-            <thead>
-              <tr>
-                <th>Product Name</th>
-                <th>Price</th>
-                <th>Quantity</th>
-                <th>Subtotal</th>
-              </tr>
-            </thead>
-            <tbody>
-              <tr v-for="orderProduct in order.order_products" :key="orderProduct.id" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
-                <td class="py-3 px-2">{{ orderProduct.product.name || 'Unknown' }}</td>
-                <td class="py-3 px-2">{{ orderProduct.product.pricing || 0 }}</td>
-                <td class="py-3 px-2">{{ orderProduct.quantity }}</td>
-                <td class="py-3 px-2">{{ (orderProduct.product.pricing || 0) * orderProduct.quantity }}</td>
-              </tr>
-            </tbody>
-          </table>
-        </div>
-        <!-- Total footer -->
-        <div class="footer-total">
-          <footer>
-            <table id="total">
-              <thead>
-                <tr>
-                  <th>Date Order</th>
-                  <th>Account number</th>
-                  <th>Total due</th>
-                </tr>
-              </thead>
-              <tbody>
-                <tr>
-                  <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
-                  <td>132 456 789 012</td>
-                  <td>{{ order.total }}</td>
-                </tr>
-              </tbody>
-            </table>
-          </footer>
-        </div>
+  <div class="invoice">
+    <h2>Invoice</h2>
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Product Name</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Subtotal</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="(item, index) in cartItems" :key="index">
+          <td>{{ item.product.name }}</td>
+          <td>{{ item.quantity }}</td>
+          <td>{{ item.product.pricing }}</td>
+          <td>{{ (item.product.pricing * item.quantity).toFixed(2) }}</td>
+        </tr>
+      </tbody>
+      <tfoot>
+        <tr>
+          <td colspan="3">Total</td>
+          <td>{{ total }}</td>
+        </tr>
+      </tfoot>
+    </table>
+    <div class="p-5 ps-5 gap-6 print:hidden ">
+      <div>
+        <a href="/cart" class="btn btn-warning mt-3">
+           <i class="fa fa-arrow-left"></i> Continue Shopping Cart
+        </a>
       </div>
-      <!-- Buttons -->
-      <div class="d-flex p-5 ps-5 gap-6">
-        <div >
-          <!-- Print Invoice Button -->
-          <button @click="printInvoice" class="btn btn-primary mt-3">Print Invoice</button>
-        </div>
+      <div>
+        <!-- Print Invoice Button -->
+        <button @click="printInvoice" class="btn btn-primary mt-3">Print Invoice</button>
       </div>
     </div>
   </div>
 </template>
 
-<script setup lang="ts">
-import { ref, onMounted } from 'vue';
-import axios from 'axios';
+<script setup>
+import { ref, onMounted, computed } from 'vue'
+import axios from 'axios'
+import { useStore } from 'vuex'
+import { useRouter } from 'vue-router'
 
-const order = ref(null);
-const orderProducts = ref([]);
-const recipes = ref([]);
-const Products = ref([]); // Make sure you initialize this if it will be used
+const store = useStore()
+const router = useRouter()
 
+const cartItems = ref([])
 
-const fetchRecipes = async (receiptid:number) => {
+onMounted(async () => {
   try {
-    const response = await axios.get(`http://localhost:80/api/orders/${receiptid}/recipes`);
-    recipes.value = response.data;
-    console.log(response.data);
+    const response = await axios.get('http://localhost:80/api/cart', {
+      headers: {
+        Authorization: 'Bearer ' + store.state.token
+      }
+    })
+    cartItems.value = response.data
   } catch (error) {
-    console.error('Failed to fetch recipes:', error);
+    console.error('Failed to fetch cart data:', error)
   }
-};
+})
 
-onMounted(() => {
-  const orderId = 1; // Replace with dynamic order ID as needed
-  fetchRecipes(orderId);
-});
+const total = computed(() => {
+  return cartItems.value.reduce((sum, item) => {
+    return sum + parseFloat(item.product.pricing) * item.quantity
+  }, 0).toFixed(2)
+})
 
 const printInvoice = () => {
-  const elementsToPrint = document.querySelectorAll('.container > div');
-  elementsToPrint.forEach((element) => {
-    element.style.display = 'block';
-  });
-  window.print();
-  elementsToPrint.forEach((element) => {
-    element.style.display = '';
-  });
-};
+  const originalContent = document.body.innerHTML
+  const invoiceContent = document.querySelector('.invoice').innerHTML
+  document.body.innerHTML = invoiceContent
+  window.print()
+  document.body.innerHTML = originalContent
+}
 </script>
 
 <style scoped>
-/* Scoped styles for the component */
 @font-face {
   font-family: Pacifico;
   src: url(pacifico.ttf);
@@ -140,59 +104,19 @@ html {
 body {
   margin: 0;
 }
-
 /* Header styling */
-h1 {
+h2 {
   color: #1ee494;
   font-family: Pacifico;
-  font-size: 40pt;
-  margin: 0;
-}
-
-/* Aside styling */
-aside {
-  display: flex;
-  margin: 2em 0 4em;
-}
-aside address {
-  
-  font-style: normal;
-  white-space: pre-line;
-}
-aside address#from {
-  color: #a9a;
-  flex: 1;
-}
-aside address#to {
-  text-align: right;
-}
-
-/* Definition list (dl) styling */
-dl {
-  position: absolute;
-  right: 0;
-  text-align: right;
-  top: 0;
-}
-dt, dd {
-  display: inline;
-  margin: 0;
-}
-dt {
-  color: #a9a;
-}
-dt::before {
-  content: '';
-  display: block;
-}
-dt::after {
-  content: ':';
+  font-size: 30pt;
+  margin: 0 0 20px;
 }
 
 /* Table styling */
 table {
   border-collapse: collapse;
   width: 100%;
+  margin-bottom: 20px;
 }
 th {
   border-bottom: .2mm solid #a9a;
@@ -221,19 +145,28 @@ th:last-of-type, td:last-of-type {
 }
 
 /* Footer styling */
+tfoot {
+  font-weight: bold;
+}
+tfoot td {
+  border-top: .2mm solid #a9a;
+}
+
 footer {
   content: '';
   display: block;
   height: 6cm;
 }
 table#total {
-  background: #f6f6f6;
-  border-color: #f6f6f6;
+  /* background: #e6e5e5; */
+  /* border-color: #f6f6f6; */
   border-style: solid;
-  border-width: 2cm 3cm;
+  border-width: 2px; 
   font-size: 20pt;
-  margin: 0 -3cm;
-  position: absolute;
+  margin: 0 auto; 
+  padding: 20px; 
   width: 100%;
+  box-sizing: border-box; 
+  height: auto;
 }
 </style>

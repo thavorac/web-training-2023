@@ -63,18 +63,22 @@
                   </td>
                 </tr>
                 <tr>
-                  <td colspan="5" style="text-align: right">
-                    <form @submit.prevent="checkout">
-                      <a href="/" class="btn btn-danger">
+                  <td colspan="5" style="text-align: right" >
+                    <div>
+                      <form @submit.prevent="checkout">
+                      <a href="/" class="btn text-warning">
                         <i class="fa fa-arrow-left"></i> Continue Shopping
                       </a>
                       <button class="btn btn-success">
                         <i class="fa fa-money"></i> Checkout
                       </button>
                     </form>
-                    <button class="btn btn-warning" @click="showInvoicePage">
+                    </div>
+                    <div>
+                      <button class="btn btn-warning " @click="showInvoicePage">
                       <i class="fa fa-file"></i> Invoice
                     </button>
+                    </div>
                   </td>
                 </tr> 
               </tfoot>
@@ -165,81 +169,18 @@ const removeProduct = async (cartItemId) => {
   }
 }
 
-// const checkout = async () => {
-//   const result = await Swal.fire({
-//     title: 'Do you want to Pay by bank or Cash?',
-//     showDenyButton: true,
-//     showCancelButton: true,
-//     confirmButtonText: 'Bank',
-//     denyButtonText: `Cash`,
-//   })
-  
-//   if (result.isConfirmed) {
-//     Swal.fire('Proceeding to payment...', '', 'success')
-//     await handleStripePayment()
-//   } else if (result.isDenied) {
-//     try {
-//       const response = await axios.post('http://localhost:80/api/orders', { cart_id: cartId.value }, {
-//         headers: {
-//           Authorization: 'Bearer ' + store.state.token,
-//           'Content-Type': 'application/json'
-//         }
-//       })
-//       console.log('Order created successfully', response.data)
-//       Swal.fire('Order created successfully', '', 'success')
-//     } catch (error) {
-//       console.error('Order creation failed', error.response ? error.response.data : error.message)
-//       Swal.fire('Order creation failed', error.response ? error.response.data : error.message, 'error')
-//     }
-//   }
-// }
-// const checkout = async () => {
-//   const result = await Swal.fire({
-//     title: 'Do you want to Pay by bank or Cash?',
-//     showDenyButton: true,
-//     showCancelButton: true,
-//     confirmButtonText: 'Bank',
-//     denyButtonText: 'Cash',
-//   });
-
-//   if (result.isConfirmed) {
-//     Swal.fire('Proceeding to payment...', '', 'success');
-//     await handleStripePayment();
-//   } else if (result.isDenied) {
-//     try {
-//       const response = await axios.post('http://localhost:80/api/orders', { cart_id: cartId.value }, {
-//         headers: {
-//           Authorization: 'Bearer ' + store.state.token,
-//           'Content-Type': 'application/json'
-//         }
-//       });
-      
-//       console.log('Order created successfully', response.data);
-//       Swal.fire('Order created successfully', '', 'success');
-      
-//       // Navigate to the receipt page with the order ID
-//       router.push({ name: 'Receipt', params: { orderId: response.data.id } });
-      
-//     } catch (error) {
-//       console.error('Order creation failed', error.response ? error.response.data : error.message);
-//       Swal.fire('Order creation failed', error.response ? error.response.data : error.message, 'error');
-//     }
-//   }
-// }
 const checkout = async () => {
-  const result = await Swal.fire({
-    title: 'Do you want to Pay by bank or Cash?',
-    showDenyButton: true,
-    showCancelButton: true,
-    confirmButtonText: 'Bank',
-    denyButtonText: 'Cash',
-  });
-
-  if (result.isConfirmed) {
-    Swal.fire('Proceeding to payment...', '', 'success');
-    await handleStripePayment();
-  } else if (result.isDenied) {
-    try {
+    const result = await Swal.fire({
+        title: 'Do you want to Pay by bank or Cash?',
+        showDenyButton: true,
+        showCancelButton: true,
+        confirmButtonText: 'Bank',
+        denyButtonText: 'Cash',
+    });
+    if (result.isConfirmed) {
+        Swal.fire('Proceeding to payment...', '', 'success');
+        await handleStripePayment();
+    } else if (result.isDenied) {
       const response = await axios.post('http://localhost:80/api/orders', { cart_id: cartId.value }, {
         headers: {
           Authorization: 'Bearer ' + store.state.token,
@@ -254,54 +195,50 @@ const checkout = async () => {
       // Navigate to the receipt page with the order ID
       router.push({ name: 'Receipt', params: { id:orderId } });
       
-    } catch (error) {
-      console.error('Order creation failed', error.response ? error.response.data : error.message);
-      Swal.fire('Order creation failed', error.response ? error.response.data : error.message, 'error');
     }
-  }
 }
-
-
-
+const cartItemsWithNames = cartItems.value.map(item => ({
+  product_id: item.product_id,
+  quantity: item.quantity,
+  name: findProduct(item.product_id).name,  // Ensure that the name is included
+  price: item.product.pricing // Include price if required by the backend
+}));
 
 const handleStripePayment = async () => {
-  const stripe = await loadStripe(publishableKey)
-  
-  try {
-    const response = await axios.post('http://localhost:80/api/create-payment-intent', { amount: total.value}, {
-      headers: {
-        Authorization: 'Bearer ' + store.state.token,
-        'Content-Type': 'application/json'
-      }
-    })
-    console.log('Payment Intent Response:', response.data)
-    const clientSecret = response.data.clientSecret
+    try {
+        const cartItemsWithNames = cartItems.value.map(item => ({
+            product_id: item.product_id,
+            quantity: item.quantity,
+            name: findProduct(item.product_id).name,
+            pricing: item.product.pricing
+        }));
 
-    const result = await stripe.confirmCardPayment(clientSecret, {
-      payment_method: {
-        card: {
-          // Use a Card Element, you can also pass card details directly
-        }
-      }
-    })
-    console.log('Stripe Payment Result:', result)
+        const response = await axios.post('http://localhost:80/api/create-session', { cartItems: cartItemsWithNames, token: store.state.token }, {
+            headers: {
+                Authorization: 'Bearer ' + store.state.token,
+                'Content-Type': 'application/json'
+            }
+        });
 
-    if (result.error) {
-      Swal.fire('Payment failed', result.error.message, 'error')
-    } else {
-      if (result.paymentIntent.status === 'succeeded') {
-        Swal.fire('Payment succeeded', 'Your payment was successful!', 'success')
-      }
+        const stripe = await loadStripe(publishableKey);
+        await stripe.redirectToCheckout({ sessionId: response.data.id });
+
+    } catch (error) {
+        console.error('Error during payment:', error.response ? error.response.data : error.message);
+        Swal.fire('Payment failed', error.response ? error.response.data : error.message, 'error');
     }
-  } catch (error) {
-    console.error('Error during payment:', error.response ? error.response.data : error.message)
-    Swal.fire('Payment failed', error.response ? error.response.data : error.message, 'error')
-  }
 }
 
 const showInvoicePage = () => {
-  router.push({ name: 'Invoice' });
-}
+  router.push({
+    name: 'Invoice',
+    params: {
+      cartItems: cartItems.value,
+      total: total.value
+    }
+  });
+};
+
 </script>
 
 <style>
