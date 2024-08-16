@@ -21,11 +21,6 @@ return new class extends Migration
             $table->unsignedBigInteger('account_id');
             $table->foreign('account_id')->references('id')->on('accounts');
 
-            $table->unsignedBigInteger('recipe_id')->nullable();
-            $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('set null');
-
-            $table->unsignedBigInteger('order_product_id')->nullable();
-            $table->foreign('order_product_id')->references('id')->on('orders_product')->onDelete('cascade');
         });
     }
 

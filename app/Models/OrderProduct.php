@@ -30,60 +30,34 @@ class OrderProduct extends Model
     {
         return $this->belongsTo(Order::class);
     }
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class);
-    }
-    // protected static function booted()
-    // {
-    //     static::created(function ($orderProduct) {
-    //         // Assuming account ID 2 is used for recording transactions
-    //         $account = Account::find(2); // or use appropriate logic to get the correct account
+   
+//     protected static function booted()
+// {
+//     static::created(function ($orderProduct) {
+//         // Find the account with 'sale' default type
+//         $account = Account::where('default', 'main')->first();
 
-    //         // Calculate the balance
-    //         $balance = $orderProduct->pricing * $orderProduct->quantity;
+//         if ($account) {
+//             // Calculate the balance
+//             $balance = $orderProduct->pricing * $orderProduct->quantity;
 
-    //         // Update the account balance
-    //         $account->balance += $balance;
-    //         $account->save();
+//             // Update the account balance
+//             $account->balance += $balance;
+//             $account->save();
 
-    //         // Create the transaction
-    //         Transaction::create([
-    //             'account_id' => 2,
-    //             'type_Tran' => 'income',
-    //             'balance' => $balance,
-    //             'description' => 'Product sold: ' . $orderProduct->product->name . ' x ' . $orderProduct->quantity,
-    //             'product_id' => $orderProduct->product_id
-    //         ]);
-    //     });
-    // }
-    protected static function booted()
-{
-    static::created(function ($orderProduct) {
-        // Find the account with 'sale' default type
-        $account = Account::where('default', 'main')->first();
-
-        if ($account) {
-            // Calculate the balance
-            $balance = $orderProduct->pricing * $orderProduct->quantity;
-
-            // Update the account balance
-            $account->balance += $balance;
-            $account->save();
-
-            // Create the transaction
-            Transaction::create([
-                'account_id' => $account->id, // Use the dynamically found account ID
-                'type_Tran' => 'income',
-                'balance' => $balance,
-                'description' => 'Product sold: ' . $orderProduct->product->name . ' x ' . $orderProduct->quantity,
-                'product_id' => $orderProduct->product_id
-            ]);
-        } else {
-            // Handle the case where no default sale account is found
-            \Log::warning('No account with default type "sale" found.');
-        }
-    });
-}
+//             // Create the transaction
+//             Transaction::create([
+//                 'account_id' => $account->id, // Use the dynamically found account ID
+//                 'type_Tran' => 'income',
+//                 'balance' => $balance,
+//                 'description' => 'Product sold: ' . $orderProduct->product->name . ' x ' . $orderProduct->quantity,
+//                 'product_id' => $orderProduct->product_id
+//             ]);
+//         } else {
+//             // Handle the case where no default sale account is found
+//             \Log::warning('No account with default type "sale" found.');
+//         }
+//     });
+// }
 
 }

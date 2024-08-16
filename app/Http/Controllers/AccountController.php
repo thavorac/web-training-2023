@@ -33,8 +33,6 @@ class AccountController extends Controller
         }
     }
     
-
-
     public function showAllAccounts()
     {
         $accounts = Account::all();
@@ -90,5 +88,4 @@ class AccountController extends Controller
             'transactions' => $transactions,
         ]);
     }       
-    
 }

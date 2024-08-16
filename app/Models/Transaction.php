@@ -15,19 +15,17 @@ class Transaction extends Model
         'description',
         'recipe_id', 
     ];
-
     public function account()
     {
         return $this->belongsTo(Account::class);
     }
-    public function recipe()
-    {
-        return $this->belongsTo(Recipe::class);
-    }
-
     public function orderProduct()
     {
         return $this->belongsTo(OrderProduct::class);
+    }
+    public function purchase()
+    {
+        return $this->belongsTo(purchase::class);
     }
    
 }
