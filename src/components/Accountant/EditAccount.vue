@@ -119,7 +119,7 @@ onMounted(() => {
                     </select>
                 </div>
             </div>
-            <div class="row">
+            <div class="row def">
                 <div class="col-sm-6 form-group">
                     <label for="default">Default Account</label>
                     <select v-model="isDefault" id="type" class="form-control" required>
@@ -175,8 +175,8 @@ button {
     border-radius: 4px;
 }
 
-.type {
-    padding-top: 50px;
+.type .def{
+    padding-top: 20px;
 }
 
 .bt {

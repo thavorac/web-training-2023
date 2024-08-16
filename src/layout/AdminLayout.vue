@@ -59,11 +59,11 @@ const sidebars = ref([
   },
   {
     path: "/admin/accounts",
-    title: "Accountan",
+    title: "Accounting",
     children: [
       {
         path: "/admin/accounts",
-        title: "Accountant"
+        title: "Account"
       },
       {
         path: "/admin/accounts/transfer",

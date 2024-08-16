@@ -125,7 +125,7 @@ const printreceipt = () => {
         <div class="total-box mr-4 flex items-center">
           <DollaIcon class="mt-2 mr-6" />
           <div>
-            <span>Balance <h4>{{ transactions[0]?.total_balance }}</h4></span>
+            <span>Balance <h4>{{ transactions[0]?.type_Tran === 'outcome' ? '-' : '' }}{{ transactions[0]?.total_balance }}</h4></span>
           </div>
         </div>
         <div class="total-box mr-4 flex items-center">
@@ -137,7 +137,7 @@ const printreceipt = () => {
         <div class="total-box flex items-center">
           <DollaIcon class="mt-2 mr-6" />
           <div>
-            <span>Outcome <h4>{{ totalOutcome }}</h4></span>
+            <span>Outcome <h4>{{ transactions[0]?.type_Tran === 'outcome' ? '-' : '' }}{{totalOutcome }}</h4></span>
           </div>
         </div>
       </div>
