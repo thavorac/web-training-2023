@@ -99,9 +99,9 @@ onMounted(fetchOrders);
       <table class="w-full">
         <thead class="bg-gray-100">
           <tr>
-            <th class="text-start py-3 px-2">Order Id</th>
+            <th class="text-start py-3 px-2">User Id</th>
             <th class="text-start py-3 px-2">User Name</th>
-            <th class="text-start py-3 px-2">Product</th>
+            <th class="text-start py-3 px-2">Order Product</th>
             <th class="text-start py-3 px-2">Total Price</th>
             <th class="text-start py-3 px-2">Order Date</th>
             <th class="text-start py-3 px-2">Status</th>
@@ -110,7 +110,7 @@ onMounted(fetchOrders);
         </thead>
         <tbody>
           <tr v-for="(order, index) in orders" :key="index" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
-            <td class="py-3 px-2">{{ order.id }}</td>
+            <td class="py-3 px-2">{{ order.user.id }}</td>
             <td class="py-3 px-2">{{ order.user_name }}</td>
             <td class="py-3 px-2">
               <li v-for="product in order.products" :key="product.product_name">

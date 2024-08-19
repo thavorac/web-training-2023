@@ -43,14 +43,25 @@ const sidebars = ref([
     path: "/admin/order",
     title: "Order",
     children: [
-      {
-        path: "/admin/order",
-        title: "Order"
-      },
-      {
-        path: "/admin/order/history",
-        title: "Order history"
-      }
+      // {
+      //   path: "/admin/order",
+      //   title: "Order"
+      // },
+      // {
+      //   path: "/admin/order/history",
+      //   title: "Order history"
+      // }
+    ]
+  },
+  {
+    path: "/admin/customer",
+    title: "Customer",
+    children: [
+      // {
+      //   path: "/admin/customer",
+      //   title: "customer"
+      // },
+
     ]
   },
   {
@@ -79,10 +90,7 @@ const sidebars = ref([
     path: "/admin/purchase",
     title: "Purchase"
   },
-  {
-    path: "/admin/customers",
-    title: "Customer"
-  },
+
 ]);
 function toggleEvent() {
   console.log("toggle")
@@ -148,9 +156,10 @@ body {
               <template v-else-if="side.path.match('/admin/purchase')">
                 <IconPromotion className="w-6 h-6 text-white items-center" />
               </template>
-              <template v-else-if="side.path.match('/admin/Customers')">
+              <template v-else-if="side.path.match('/admin/customer')">
                 <IconCustomer className="w-6 h-6 text-white items-center" />
               </template>
+
             </SidebarLink>
             <div
               :class="` transition-all ${side.children?.length && route.path.match(side.path) ? 'scale-100' : 'scale-0'}`"

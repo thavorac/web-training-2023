@@ -117,8 +117,7 @@ onMounted(() => {
               type="button">
               <IconPerson class="mt-1" />
               {{ user.first_name }} {{ user.last_name }} <!-- Assuming user has a 'name' property -->
-            </button>
-
+            </button>     
             <!-- Profile dropdown menu -->
             <div v-if="isProfileDropdownVisible" id="profileDropdown"
               class="z-10 bg-white divide-y divide-gray-100 rounded-lg shadow w-44 dark:bg-gray-700 absolute">
@@ -143,7 +142,6 @@ onMounted(() => {
             </SignIn>
           </router-link>
         </template>
-
         <router-link class="no-underline" to="/wishlist-page1">
           <SignIn text="Favorites">
             <IconHeart />

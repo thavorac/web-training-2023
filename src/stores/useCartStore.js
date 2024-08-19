@@ -1,4 +1,4 @@
-import { defineStore } from 'pinia';
+    import { defineStore } from 'pinia';
 import { useToast } from "vue-toastification";
 
 const toast = useToast();
