@@ -8,7 +8,6 @@ use App\Http\Controllers\SupplierController;
 use App\Http\Controllers\ImageController;
 use App\Http\Controllers\OrderController;
 use App\Http\Controllers\AuthenticationController;
-use App\Http\Controllers\PaymentController;
 use App\Http\Controllers\StripeController;
 use App\Http\Controllers\UserController;
 use App\Http\Controllers\CartController;
@@ -19,10 +18,7 @@ use App\Http\Controllers\PurchaseController;
 use App\Http\Controllers\PurchaseProductController;
 use App\Http\Controllers\AdminAuthController;
 use App\Http\Controllers\PromotionController;
-
-
-
-
+use App\Http\Controllers\StripePaymentController;
 
 //Route Cart_Item
 Route::prefix('cart-items')->group(function () {
@@ -53,7 +49,15 @@ Route::patch('/orders/{orderId}', [OrderController::class, 'update'])->middlewar
 Route::delete('/orders/{orderId}', [OrderController::class, 'remove'])->middleware('auth:sanctum');
 
 // Route Payment
-Route::post('/create-payment-intent', [PaymentController::class, 'createPaymentIntent']);
+// Route::middleware('auth:sanctum')->group(function () {
+//     Route::post('/create-session', [StripePaymentController::class, 'createSession']);
+// });
+// Route::get('/payment-cancel', [StripePaymentController::class, 'cancel'])->name('payment.cancel');
+// Route::get('/payment-success', [StripePaymentController::class, 'success'])->name('payment.success');
+Route::post('/create-session', [StripePaymentController::class, 'createSession'])->name('payment.createSession');
+Route::get('/payment-success', [StripePaymentController::class, 'success'])->name('payment.success');
+Route::get('/payment-cancel', [StripePaymentController::class, 'cancel'])->name('payment.cancel');
+
 
 // Define API routes for the RecipeController
 // Route::apiResource('recipes', RecipeController::class);
@@ -62,10 +66,8 @@ Route::post('/recipes', [RecipeController::class, 'store']);
 Route::get('/orders/{id}/recipes', [RecipeController::class, 'show']);
 Route::put('/orders/{id}/recipes', [RecipeController::class, 'update']);
 Route::delete('/recipes/{id}', [RecipeController::class, 'destroy']);
-Route::post('/carts', [CartController::class, 'addProductToCart']);
-Route::delete('/carts', [CartController::class, 'removeProductFromCart']);
-Route::get('/carts', [CartController::class, 'getProductsFromCart']);
-Route::post('/user', [UserController::class, 'createUser']);
+
+
 
 // api for suppliers
 Route::get('/suppliers',[SupplierController::class,'getSuppliers']);
@@ -170,7 +172,6 @@ Route::post('/forgot-password', [AuthenticationController::class, 'forgotPasswor
 Route::get('reset-password/{token}', [AuthenticationController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [AuthenticationController::class, 'resetPassword']);
 Route::post('/logout', [AuthenticationController::class, 'logout']);
-
 
 
 // User purchase route
