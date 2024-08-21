@@ -223,14 +223,40 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
       {
         path: 'order',
         name: 'ListOrder',
-        component: () => import('../../components/Order/ListOrder.vue')
+        component: () => import('../../components/Order/OrderItem.vue'),
+        children: [
+          {
+            path: 'receipt/:id',
+            name: 'Receipt',
+            component: () => import('../../views/Cart/Receipt.vue'), // Adjust the path to your component
+          },
+          {
+            path: '',
+            name: 'ListOrder',
+            component: () => import('../../components/Order/ListOrder.vue')
+          },
+        ]
+
       },
       {
-        path: '/receipt/:id',
-        name: 'Receipt',
-        component: () => import('../../views/cart/Receipt.vue'), // Adjust the path to your component
-      }
+        path: 'customer',
+        name: 'ListCustomer',
+        component: () => import('../../components/Customer/CustomerItem.vue'),
+        children: [
+          {
+            path: 'receipt/:id',
+            name: 'Receipt',
+            component: () => import('../../views/Cart/Receipt.vue'), // Adjust the path to your component
+          },
+          {
+            path: '',
+            name: 'ListCustomer',
+            component: () => import('../../components/Customer/ListCustomer.vue')
+          },
+        ]
 
+      },
+     
 
     ]
   }

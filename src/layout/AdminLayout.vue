@@ -13,6 +13,7 @@ import IconOrder from '@/components/icons/IconOrder.vue';
 import IconPromotion from '@/components/icons/IconPromotion.vue';
 import AccountantIcon from '@/components/icons/AccountantIcon.vue';
 import IconPerson from '../components/icons/IconPerson.vue';
+import IconCustomer from '@/components/icons/IconCustomer.vue';
 const { route } = useSidebar();
 const showSide = ref(true);
 const sidebars = ref([
@@ -41,7 +42,28 @@ const sidebars = ref([
   },
   {
     path: "/admin/order",
-    title: "Order"
+    title: "Order",
+    children: [
+      // {
+      //   path: "/admin/order",
+      //   title: "Order"
+      // },
+      // {
+      //   path: "/admin/order/history",
+      //   title: "Order history"
+      // }
+    ]
+  },
+  {
+    path: "/admin/customer",
+    title: "Customer",
+    children: [
+      // {
+      //   path: "/admin/customer",
+      //   title: "customer"
+      // },
+
+    ]
   },
   {
     path: "/admin/promotion",
@@ -87,8 +109,6 @@ const sidebars = ref([
     path: "/admin/purchase",
     title: "Purchase"
   },
-
-
 
 ]);
 function toggleEvent() {
@@ -158,6 +178,10 @@ body {
               <template v-else-if="side.path.match('/admin/purchase')">
                 <IconPromotion className="w-6 h-6 text-white items-center" />
               </template>
+              <template v-else-if="side.path.match('/admin/customer')">
+                <IconCustomer className="w-6 h-6 text-white items-center" />
+              </template>
+
             </SidebarLink>
             <div
               :class="` transition-all ${side.children?.length && route.path.match(side.path) ? 'scale-100' : 'scale-0'}`"

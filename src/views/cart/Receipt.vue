@@ -69,6 +69,11 @@
       <!-- Buttons -->
       <div class=" p-5 ps-5 gap-6 print:hidden">
         <div>
+        <a href="/" class="btn btn-warning mt-3">
+           <i class="fa fa-arrow-left"></i> Continue Shopping Cart
+        </a>
+      </div>
+        <div>
           <!-- Print receipt Button -->
           <button @click="printreceipt" class="btn btn-primary mt-3 ">Print Receipt</button>
         </div>
@@ -101,7 +106,7 @@ const fetchRecipes = async (orderId: number) => {
     console.error('Failed to fetch recipes:', error);
   }
 };
-
+  
 onMounted(() => {
   let orderId = +route.params.id; // Replace with dynamic order ID as needed
   console.log('recipt id',route.params);
@@ -244,7 +249,7 @@ const printreceipt = () => {
     height: 6cm;
   }
   table#total {
-    background: #e6e5e5;
+    background: #faf9f9;
     border-color: #f6f6f6;
     border-style: solid;
     border-width: 2px; 

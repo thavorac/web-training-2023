@@ -1,5 +1,4 @@
 import type { RouteRecordRaw } from 'vue-router'
-
 const PichRouter: Readonly<RouteRecordRaw[]> = [
   {
     path: '/cart',
@@ -12,14 +11,15 @@ const PichRouter: Readonly<RouteRecordRaw[]> = [
     component: () => import('../../views/cart/CartItem.vue')
   },
   {
-    path: '/invoice',
-    name: 'Invoice',
-    component: () => import('../../views/cart/Invoice.vue')
-  },
-  {
     path: '/receipt/:id',
     name: 'Receipt',
     component: () => import('../../views/cart/Receipt.vue')
-  }
+  },
+  {
+    path: '/invoice',
+    name: 'Invoice',
+    component: () => import('../../views/cart/Invoice.vue'),
+    props: true
+  } 
 ]
 export { PichRouter }
