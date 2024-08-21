@@ -93,12 +93,12 @@ const confirmDelete = (purchaseId: number) => {
     });
 };
 
-    const filteredPurchases = computed(() => {
-        return purchasesWithDetails.value.filter(purchase =>
-            purchase.status.toLowerCase().includes(searchQuery.value.toLowerCase())
-        );
-    });
-    
+const filteredPurchases = computed(() => {
+    return purchasesWithDetails.value.filter(purchase =>
+        purchase.status.toLowerCase().includes(searchQuery.value.toLowerCase())
+    );
+});
+
 onMounted(async () => {
     await getPurchases();
     await getSuppliers();
@@ -179,13 +179,16 @@ onMounted(async () => {
                                 {{ purchase?.status }}
                             </td>
                             <td class="px-6 py-6 flex space-x-2">
-                                <RouterLink :to="`/admin/purchase/${purchase.id}/edit`">
+                                <RouterLink :to="`/admin/purchase/${purchase.id}/edit`"
+                                    :class="{ 'disabled-button': purchase.status === 'accepted' }">
                                     <IconEdit class="w-6 h-6 text-blue-500 cursor-pointer" />
                                 </RouterLink>
                                 <IconDelete @click="confirmDelete(purchase.id)"
                                     class="w-6 h-6 text-red-500 cursor-pointer" />
                                 <IconDetail class="w-6 h-6 text-green-500 cursor-pointer" />
                             </td>
+
+
                         </tr>
                     </template>
                 </tbody>
@@ -202,5 +205,12 @@ onMounted(async () => {
     overflow: hidden;
     text-overflow: ellipsis;
     white-space: nowrap;
+}
+
+.disabled-button {
+    pointer-events: none;
+    opacity: 0.2;
+    filter: blur(100%);
+    cursor: not-allowed;
 }
 </style>

@@ -175,8 +175,7 @@ getPurchasesOfSupplier(supplier.value.id);
             <div v-if="listPurchase" class="relative">
                 <i class='bx bxs-bell-ring text-3xl text-green-500'></i>
                 <span
-                    class="absolute top-0 right-0  transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full px-2 py-1">{{
-                        listPurchase.length }}</span>
+                    class="absolute top-0 right-0  transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full px-2 py-1">{{totalPending }}</span>
             </div>
             <div v-if="supplier" class="profile-details ">
                 <img src="https://th.bing.com/th/id/OIP.Ntwccxljc9Gmka_Y6InYMAHaHa?w=188&h=188&c=7&r=0&o=5&dpr=1.3&pid=1.7"
