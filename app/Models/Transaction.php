@@ -14,18 +14,26 @@ class Transaction extends Model
         'balance', 
         'description',
         'recipe_id', 
+        'purchase_id'
     ];
     public function account()
     {
         return $this->belongsTo(Account::class);
     }
-    public function orderProduct()
-    {
-        return $this->belongsTo(OrderProduct::class);
-    }
-    public function purchase()
-    {
-        return $this->belongsTo(purchase::class);
-    }
+     // Relationship with Order
+     public function order()
+     {
+         return $this->belongsTo(Order::class);
+     }
+ 
+     // Relationship with Purchase
+     public function purchase()
+     {
+         return $this->belongsTo(Purchase::class);
+     }
+     public function recipe()
+     {
+         return $this->belongsTo(Recipe::class);
+     }
    
 }

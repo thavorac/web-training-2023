@@ -1,5 +1,4 @@
 <?php
-
 use Illuminate\Database\Migrations\Migration;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Support\Facades\Schema;
@@ -18,9 +17,15 @@ return new class extends Migration
             $table->string('description')->nullable();
             $table->timestamps();
 
+            // Foreign key columns
             $table->unsignedBigInteger('account_id');
-            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->unsignedBigInteger('recipe_id')->nullable();
+            $table->unsignedBigInteger('purchase_id')->nullable();
 
+            // Foreign key constraints
+            $table->foreign('account_id')->references('id')->on('accounts');
+            $table->foreign('recipe_id')->references('id')->on('recipes')->onDelete('set null');
+            $table->foreign('purchase_id')->references('id')->on('purchases')->onDelete('set null');
         });
     }
 

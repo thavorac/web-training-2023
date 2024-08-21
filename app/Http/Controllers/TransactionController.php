@@ -34,27 +34,38 @@ class TransactionController extends Controller
     //     return $transaction;
     // }
     public function productSold(Request $request)
-    {
-        // Validate the request input
-        $validated = $request->validate([
-            'product_id' => 'required|exists:products,id',
-            'pricing' => 'required|numeric',
-            'quantity' => 'required|integer',
-            'order_id' => 'required|exists:orders,id'
-        ]);
+{
+    // Validate the request input
+    $validated = $request->validate([
+        'product_id' => 'required|exists:products,id',
+        'pricing' => 'required|numeric',
+        'quantity' => 'required|integer',
+        'order_id' => 'required|exists:orders,id',
+        'discounted_price' => 'nullable|numeric',  // Add this if you use discounted_price in your OrderProduct table
+    ]);
 
-        // Create the OrderProduct
-        $orderProduct = OrderProduct::create($validated);
+    // Create an OrderProduct entry
+    $orderProduct = OrderProduct::create([
+        'order_id' => $validated['order_id'],
+        'product_id' => $validated['product_id'],
+        'pricing' => $validated['pricing'],
+        'quantity' => $validated['quantity'],
+        'discounted_price' => $validated['discounted_price'] ?? null,  // Optional field
+    ]);
 
-        // Optionally, create or update Recipe associated with the Order
-        $recipe = Recipe::firstOrCreate(['order_id' => $validated['order_id']]);
+    // Create a Recipe entry
+    $recipe = Recipe::create([
+        'order_id' => $validated['order_id']
+    ]);
 
-        // Return a success response with the created order product
-        return response()->json([
-            'message' => 'Order product created successfully',
-            'order_product' => $orderProduct
-        ], 201);
-    }
+    // Return a success response with the created order product
+    return response()->json([
+        'message' => 'Order product and recipe created successfully',
+        'order_product' => $orderProduct,
+        'recipe' => $recipe
+    ], 201);
+}
+
     public function orderProducts(Request $request)
     {
         $validatedData = $request->validate([

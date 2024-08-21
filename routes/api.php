@@ -206,6 +206,11 @@ Route::post('/forgot-password', [AuthenticationController::class, 'forgotPasswor
 Route::get('reset-password/{token}', [AuthenticationController::class, 'showResetForm'])->name('password.reset');
 Route::post('reset-password', [AuthenticationController::class, 'resetPassword']);
 Route::post('/logout', [AuthenticationController::class, 'logout']);
+Route::post('/logout', [AuthenticationController::class, 'verifyOTP']);
+Route::get('/verify_otp', [AuthenticationController::class, 'verifyOTP']);
+// In routes/api.php
+Route::post('/resend_otp', [AuthenticationController::class, 'resendOTP']);
+
 
 
 

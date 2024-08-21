@@ -11,7 +11,6 @@ use Illuminate\Support\Facades\Log;
 class PromotionController extends Controller
 
 {
-
     public function createPromotion(Request $request)
     {
         $promotion = Promotion::create([
@@ -23,9 +22,6 @@ class PromotionController extends Controller
         ]);
     
         $this->attachProductsToPromotion($promotion, $request->products);
-    
-        // Update discounted prices for all products after creating a new promotion
-        $this->updateProductDiscountedPrices();
     
         return response()->json($promotion, 201);
     }
@@ -54,9 +50,6 @@ class PromotionController extends Controller
         // Update or attach products that are included in the update request
         $this->attachProductsToPromotion($promotion, $productIds);
     
-        // Update discounted prices for all products after updating the promotion
-        $this->updateProductDiscountedPrices();
-    
         return response()->json($promotion);
     }
     
@@ -66,44 +59,39 @@ class PromotionController extends Controller
             $product = Product::find($productId);
     
             if ($product) {
-                $discountedPrice = $this->calculateDiscountedPrice($product, $promotion);
+                $discountedPrice = $this->isPromotionActive($promotion) ?
+                    $product->pricing * (1 - $promotion->discount_percentage / 100) :
+                    $product->pricing;
+    
+                $product->update(['discounted_price' => $discountedPrice]);
                 $promotion->products()->syncWithoutDetaching([$productId => ['discount_price' => $discountedPrice]]);
             }
         }
+    
+        $this->updateProductDiscountedPrices();
     }
     
     private function updateProductDiscountedPrices()
     {
-        $now = Carbon::now();
+        $activePromotions = Promotion::where('start_date', '<=', now())
+            ->where('end_date', '>=', now())
+            ->get();
+    
         $allProducts = Product::all();
     
         foreach ($allProducts as $product) {
-            $activePromotion = $this->getActivePromotionForProduct($product);
+            $activePromotion = $activePromotions->filter(function ($promotion) use ($product) {
+                return $promotion->products->contains($product->id);
+            })->first();
     
             if ($activePromotion) {
-                $discountedPrice = $this->calculateDiscountedPrice($product, $activePromotion);
+                $discountedPrice = $product->pricing * (1 - $activePromotion->discount_percentage / 100);
             } else {
                 $discountedPrice = $product->pricing;
             }
     
             $product->update(['discounted_price' => $discountedPrice]);
         }
-    }
-    
-    
-    private function calculateDiscountedPrice(Product $product, Promotion $promotion)
-    {
-        return $product->pricing * (1 - $promotion->discount_percentage / 100);
-    }
-    
-    private function getActivePromotionForProduct(Product $product)
-    {
-        $now = Carbon::now();
-        return $product->promotions()
-            ->where('start_date', '<=', $now)
-            ->where('end_date', '>=', $now)
-            ->orderBy('discount_percentage', 'desc')
-            ->first();
     }
     
     public function listAllPromotions()
@@ -145,15 +133,13 @@ class PromotionController extends Controller
             return response()->json(['error' => 'Promotion not found'], 404);
         }
     
+        foreach ($promotion->products as $product) {
+            $product->update(['discounted_price' => $product->pricing]);
+        }
         $promotion->products()->detach();
         $promotion->delete();
-    
-        // Update product prices to reflect any other active promotions
-        $this->updateProductDiscountedPrices();
-    
         return response()->json(['message' => 'Promotion deleted successfully'], 200);
     }
-    
     
     // public function discountHistory()
     // {
@@ -214,7 +200,6 @@ public function showTime()
     $currentTime = Carbon::now();
     return response()->json(['current_time' => $currentTime]);
 }
-
 
 
 

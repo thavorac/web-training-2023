@@ -43,11 +43,31 @@ class Product extends Model
         return $this->hasOne(Image::class)->oldestOfMany();
     }
     
+    protected static function booted()
+    {
+        static::retrieved(function ($product) {
+            $now = Carbon::now();
+            $activePromotion = $product->promotions()
+                ->where('start_date', '<=', $now)
+                ->where('end_date', '>=', $now)
+                ->first();
+
+            if ($activePromotion) {
+                $discountedPrice = $product->pricing * (1 - $activePromotion->discount_percentage / 100);
+            } else {
+                $discountedPrice = 0;
+            }
+
+            if ($product->discounted_price != $discountedPrice) {
+                $product->update(['discounted_price' => $discountedPrice]);
+            }
+        });
+    }
+
+    // Add the relationship to Promotion in your Product model if not already defined
     public function promotions()
     {
-        return $this->belongsToMany(Promotion::class, 'product_promotion')
-                    ->withPivot('discount_price')
-                    ->withTimestamps();
+        return $this->belongsToMany(Promotion::class);
     }
 
     protected function serializeDate(\DateTimeInterface $date)

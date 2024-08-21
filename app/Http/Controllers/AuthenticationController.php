@@ -38,7 +38,8 @@ class AuthenticationController extends Controller
 
                 $user->save();
 
-                $linkOTP = "http://localhost:80/verify_otp?user_id=".$user->id."&otp=".$user->otp;
+                $linkOTP = "otp=".$user->otp;
+                // $linkOTP = "http://localhost:80/verify_otp?user_id=".$user->id."&otp=".$user->otp;
                 Mail::to($user->email)->send(new OtpMail($linkOTP));
 
                  // Create token
@@ -48,8 +49,12 @@ class AuthenticationController extends Controller
                     'message' => 'Registration successful',
                     'access_token' => $token,
                     'token_type' => 'Bearer',
+                    "user_id" => $user->id
                 ]);
-                return response(["message" => "Registration successful"]);
+                return response([
+                    "message" => "Registration successful",
+                    
+                ]);
             } else {
                 return response(["message" => "Password and Confirm Password do not match"], 400);
             }
@@ -81,7 +86,28 @@ class AuthenticationController extends Controller
             return response()->json(['message' => 'Invalid OTP'], 400);
         }
     }
-
+    public function resendOTP(Request $request) {
+        // Validate the input
+        $request->validate([
+            'user_id' => 'required|exists:users,id',
+        ]);
+    
+        $user = User::find($request->input('user_id'));
+    
+        // Generate a new OTP and set the current time as the OTP created time
+        $user->otp = mt_rand(100000, 999999);
+        $user->otp_created_at = Carbon::now();
+        $user->save();
+    
+        // Send the new OTP via email
+        $linkOTP = url("/verify_otp?user_id={$user->id}&otp={$user->otp}");
+        Mail::to($user->email)->send(new OtpMail($linkOTP));
+    
+        return response()->json([
+            'message' => 'A new OTP has been sent to your email.',
+        ]);
+    }
+    
     public function login(Request $request)
     {
         $credentials = $request->only('email', 'password');

@@ -37,7 +37,7 @@ class CartController extends Controller
                 'product_id'=>$product->id, 
                 'pricing'=>$product->pricing, 
                 'quantity'=>$request->quantity,
-                'discounted_price' => $product->pricing
+                'discounted_price' => $product->discounted_price
             ]
         );
         if($cartItem->id)$cartItem->quantity+=$request->quantity;
