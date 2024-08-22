@@ -10,7 +10,19 @@ const PichRouter: Readonly<RouteRecordRaw[]> = [
     name: 'cartItem',
     component: () => import('../../views/cart/CartItem.vue')
   },
-  {
+//   {
+// <<<<<<< HEAD
+//     path: '/invoice',
+//     name: 'Invoice',
+//     component: () => import('../../views/cart/Invoice.vue')
+//   },
+//   {
+//     path: '/receipt/:id',
+//     name: 'Receipt',
+//     component: () => import('../../views/cart/Receipt.vue')
+//   }
+// =======
+{
     path: '/receipt/:id',
     name: 'Receipt',
     component: () => import('../../views/cart/Receipt.vue')

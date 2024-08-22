@@ -217,6 +217,18 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             name: 'HistoryPromotion',
             component: () => import('../../components/Accountant/HistoryTransection.vue'),
             props: true
+          },
+          {
+            path: 'statistic',
+            name: 'statisticstatistic',
+            component: () => import('../../components/Accountant/Statistic.vue'),
+            props: true
+          },
+          {
+            path: 'test2',
+            name: 'test2',
+            component: () => import('../../components/Accountant/Test2.vue'),
+            props: true
           }
         ]
       },
@@ -228,7 +240,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
           {
             path: 'receipt/:id',
             name: 'Receipt',
-            component: () => import('../../views/Cart/Receipt.vue'), // Adjust the path to your component
+            component: () => import('../../views/cart/Receipt.vue'), // Adjust the path to your component
           },
           {
             path: '',
@@ -246,7 +258,7 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
           {
             path: 'receipt/:id',
             name: 'Receipt',
-            component: () => import('../../views/Cart/Receipt.vue'), // Adjust the path to your component
+            component: () => import('../../views/cart/Receipt.vue'), // Adjust the path to your component
           },
           {
             path: '',

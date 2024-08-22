@@ -115,7 +115,7 @@ const router = useRouter()
 const cartItems = ref([])
 const Products = ref([])
 const cartId = ref(null)
-const publishableKey = 'pk_test_51P1JoBFkNe48oU2cId3sbBElDBn05m45HLaMDuTVLInhFA7u4Ul4147ZVCTOeDT1zm9Ighj15L387irOOTiVjckY00yDG70we6'
+const publishableKey = 'pk_test_51OxWmQJHPL10HWr5U3E0VzNl5ix19abvgrRVZASVpY5xnlit4KhRkFrUCwy5gDIObiDcJFIR6pUSMQl9lkp4qQrA00D66WvRpQ'
 
 onMounted(async () => {
   try {

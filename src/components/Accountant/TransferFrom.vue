@@ -106,7 +106,7 @@ const transferBalance = async () => {
         const fromAccountBalance = accountResponse.data.balance;
 
         if (amount.value > fromAccountBalance) {
-            alertMessage.value = 'Insufficient balance in the selected account';
+            alertMessage.value = 'You do not have enough balance for transfer!';
             alertClass.value = 'alert alert-danger';
             return;
         }
