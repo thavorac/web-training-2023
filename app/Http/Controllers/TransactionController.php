@@ -10,6 +10,7 @@ use App\Models\Recipe;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Purchase;
+use Carbon\Carbon;
 
 use Illuminate\Support\Facades\DB;
 use Illuminate\Http\JsonResponse;
@@ -133,7 +134,34 @@ class TransactionController extends Controller
 
 
 
-public function history()
+// public function history()
+// {
+//     // Fetch all transactions with related account
+//     $transactions = Transaction::with('account')->get();
+
+//     // Format the transactions for the response
+//     $formattedTransactions = $transactions->map(function ($transaction) {
+//         return [
+//             'id' => $transaction->id,
+//             'account_name' => $transaction->account->name,
+//             'type_Tran' => $transaction->type_Tran,
+//             'balance' => number_format($transaction->balance, 2), // Correctly formatted balance
+//             'description' => $transaction->description,
+//             'date' => $transaction->created_at->format('d/m/Y'),
+//         ];
+//     });
+
+//     // Calculate the total balance
+//     $totalBalance = Account::sum('balance');
+
+//     return response()->json([
+//         'transactions' => $formattedTransactions,
+//         'total_balance' => number_format($totalBalance, 2) // Total balance formatted
+//     ]);
+// }
+
+
+public function history(Request $request)
 {
     // Fetch all transactions with related account
     $transactions = Transaction::with('account')->get();
@@ -153,9 +181,49 @@ public function history()
     // Calculate the total balance
     $totalBalance = Account::sum('balance');
 
+    // Calculate statistics for different periods
+    $today = Carbon::today();
+    $startOfWeek = Carbon::now()->startOfWeek();
+    $startOfMonth = Carbon::now()->startOfMonth();
+
+    $dailyIncome = Transaction::where('type_Tran', 'income')
+        ->whereDate('created_at', $today)
+        ->sum('balance');
+    $dailyOutcome = Transaction::where('type_Tran', 'outcome')
+        ->whereDate('created_at', $today)
+        ->sum('balance');
+
+    $weeklyIncome = Transaction::where('type_Tran', 'income')
+        ->whereBetween('created_at', [$startOfWeek, Carbon::now()])
+        ->sum('balance');
+    $weeklyOutcome = Transaction::where('type_Tran', 'outcome')
+        ->whereBetween('created_at', [$startOfWeek, Carbon::now()])
+        ->sum('balance');
+
+    $monthlyIncome = Transaction::where('type_Tran', 'income')
+        ->whereBetween('created_at', [$startOfMonth, Carbon::now()])
+        ->sum('balance');
+    $monthlyOutcome = Transaction::where('type_Tran', 'outcome')
+        ->whereBetween('created_at', [$startOfMonth, Carbon::now()])
+        ->sum('balance');
+
     return response()->json([
         'transactions' => $formattedTransactions,
-        'total_balance' => number_format($totalBalance, 2) // Total balance formatted
+        'total_balance' => number_format($totalBalance, 2), // Total balance formatted
+        'statistics' => [
+            'daily' => [
+                'income' => number_format($dailyIncome, 2),
+                'outcome' => number_format($dailyOutcome, 2),
+            ],
+            'weekly' => [
+                'income' => number_format($weeklyIncome, 2),
+                'outcome' => number_format($weeklyOutcome, 2),
+            ],
+            'monthly' => [
+                'income' => number_format($monthlyIncome, 2),
+                'outcome' => number_format($monthlyOutcome, 2),
+            ],
+        ],
     ]);
 }
 

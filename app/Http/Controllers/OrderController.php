@@ -7,6 +7,7 @@ use Illuminate\Http\Request;
 use App\Models\Order;
 use App\Models\OrderProduct;
 use App\Models\Cart;
+use App\Models\User;
 use App\Models\CartItem;
 use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
@@ -30,7 +31,7 @@ class OrderController extends Controller
             // Retrieve or create an active order
             $order = Order::create([
                 'user_id' => Auth::id(), 
-                'status' => 'Pending', 
+                'status' => 'completed', 
                 'total' => $subtotal
             ]);
     
@@ -53,8 +54,6 @@ class OrderController extends Controller
             return response()->json(['message' => 'Failed to add product to order', 'error' => $e->getMessage()], 500);
         }
     }
-    
-
     /**
      * Remove a product from the order.
      */
@@ -87,14 +86,33 @@ class OrderController extends Controller
     /**
      * View the current active order for the authenticated user.
      */
+    // public function view(Request $request)
+    // {
+    //     $order = Order::all();
+
+    //     if ($order) {
+    //         return response()->json($order->map(function($o){
+    //             $o->OrderProduct;
+    //             return $o;}));
+    //     }
+    //     return response()->json([]);
+    // }
     public function view(Request $request)
     {
-        $order = Order::all();
+        $orders = Order::with(['user', 'orderProduct.product','recipe'])->get();
 
-        if ($order) {
-            return response()->json($order->map(function($o){
-                $o->OrderProduct;
-                return $o;}));
+        if ($orders) {
+            return response()->json($orders->map(function($order){
+                $order->user_name = $order->user->first_name . ' ' . $order->user->last_name;
+                $order->products = $order->orderProduct->map(function($orderProduct) {
+                    return [
+                        'product_name' => $orderProduct->product->name,
+                        'quantity' => $orderProduct->quantity,
+                        'pricing' => $orderProduct->pricing,
+                    ];
+                });
+                return $order;
+            }));
         }
         return response()->json([]);
     }
@@ -106,4 +124,4 @@ class OrderController extends Controller
         }
         return response()->json($orderProducts, 200);
     }
-    }
+}

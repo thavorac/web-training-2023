@@ -44,8 +44,6 @@ class RecipeController extends Controller
         $recipe = Recipe::with(['order.orderProduct.product'])->findOrFail($id);
         return response()->json($recipe);
     }
-    
-
     /**
      * Update the specified resource in storage.
      */
