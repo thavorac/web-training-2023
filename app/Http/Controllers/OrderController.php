@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -13,10 +11,8 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
-
 class OrderController extends Controller
 {
-
     public function add(Request $request)
     {
         try {
@@ -54,9 +50,6 @@ class OrderController extends Controller
             return response()->json(['message' => 'Failed to add product to order', 'error' => $e->getMessage()], 500);
         }
     }
-    /**
-     * Remove a product from the order.
-     */
     public function remove(Request $request, $id)
     {
         try {
@@ -82,22 +75,16 @@ class OrderController extends Controller
             Log::error('Failed to remove product from order', ['error' => $e->getMessage()]);
             return response()->json(['message' => 'Failed to remove product from order', 'error' => $e->getMessage()], 500);
         }
+     }
+        public function index()
+    {
+        $orders = Order::with('user')
+            ->select('orders.*', \DB::raw('COUNT(orders.id) as purchase_count'))
+            ->groupBy('orders.user_id')
+            ->get();
+        return response()->json($orders);
     }
-    /**
-     * View the current active order for the authenticated user.
-     */
-    // public function view(Request $request)
-    // {
-    //     $order = Order::all();
-
-    //     if ($order) {
-    //         return response()->json($order->map(function($o){
-    //             $o->OrderProduct;
-    //             return $o;}));
-    //     }
-    //     return response()->json([]);
-    // }
-    public function view(Request $request)
+      public function view(Request $request)
     {
         $orders = Order::with(['user', 'orderProduct.product','recipe'])->get();
 

@@ -1,7 +1,5 @@
 <?php
-
 namespace App\Http\Controllers;
-
 use App\Models\Cart;
 use App\Models\Order;
 use App\Models\OrderProduct;
@@ -14,7 +12,6 @@ use Stripe\Stripe;
 use Stripe\Checkout\Session;
 use Illuminate\Support\Facades\Auth;
 use App\Models\PaymentStrip;
-
 class StripePaymentController extends Controller
 {
     public function createSession(Request $request)

@@ -15,7 +15,7 @@ return new class extends Migration
 
             $table->enum('status', ['pending', 'processing', 'completed'])->default('pending');
             $table->double('total')->default(0);
-            $table->boolean('active')->default(true); // Add this line for the active column
+            $table->boolean('active')->default(true);
             $table->timestamps();
         });
     }
