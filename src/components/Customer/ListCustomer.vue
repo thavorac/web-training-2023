@@ -21,14 +21,18 @@ const fetchOrders = async () => {
   loading.value = true;
   try {
     const response = await axios.get(`http://localhost/api/orders`);
-    console.log('fetchOrders',response.data)
-    orders.value = response.data;
+    console.log('fetchOrders', response.data);
+    orders.value = response.data.map(order => ({
+      ...order,
+      purchase_count: order.purchase_count || 0, // Ensure purchase count is handled properly
+    }));
   } catch (error) {
     console.error('Error fetching orders:', error);
   } finally {
     loading.value = false;
   }
 };
+
 
 const viewRecipe = async (recipeId: number) => {
   try {
@@ -101,10 +105,8 @@ onMounted(fetchOrders);
           <tr>
             <th class="text-start py-3 px-2">User Id</th>
             <th class="text-start py-3 px-2">User Name</th>
-            <th class="text-start py-3 px-2">Order Product</th>
-            <th class="text-start py-3 px-2">Total Price</th>
-            <th class="text-start py-3 px-2">Order Date</th>
-            <th class="text-start py-3 px-2">Status</th>
+            <th class="text-start py-3 px-2">Phone Number</th>
+            <th class="text-start py-3 px-2">Purchese</th>
             <th class="text-start py-3 px-2">Action</th>
           </tr>
         </thead>
@@ -112,17 +114,8 @@ onMounted(fetchOrders);
           <tr v-for="(order, index) in orders" :key="index" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
             <td class="py-3 px-2">{{ order.user.id }}</td>
             <td class="py-3 px-2">{{ order.user_name }}</td>
-            <td class="py-3 px-2">
-              <li v-for="product in order.products" :key="product.product_name">
-                {{ product.product_name }} ({{ product.quantity }})
-              </li>
-            </td>
-            <td class="py-3 px-2">{{ order.total }}
-            </td>
+            <td class="py-3 px-2">{{ order.user.phone_number }}</td>
             <td class="py-3 px-2">{{ new Date(order.created_at).toLocaleDateString() }}</td>
-            <td class="py-3 px-2">
-              <span class="bg-[rgb(50,212,61)] text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">{{ order.status }}</span>
-            </td>
             <td class="py-3 px-2">
               <button @click="viewRecipe(order.recipe.id)" class="bg-[#F66603] text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-blue-200">
                 <IconRecipe :w="'5'" :h="'5'" className="inline-block" />

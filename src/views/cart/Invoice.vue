@@ -14,14 +14,14 @@
         <tr v-for="(item, index) in cartItems" :key="index">
           <td>{{ item.product.name }}</td>
           <td>{{ item.quantity }}</td>
-          <td>{{ item.product.pricing }}</td>
-          <td>{{ (item.product.pricing * item.quantity).toFixed(2) }}</td>
+          <td>{{ `$${item.product.pricing}` }}</td>
+          <td>{{ `$${(item.product.pricing * item.quantity).toFixed(2)}` }}</td>
         </tr>
       </tbody>
       <tfoot>
         <tr>
           <td colspan="3">Total</td>
-          <td>{{ total }}</td>
+          <td>{{ `$${total}` }}</td>
         </tr>
       </tfoot>
     </table>

@@ -36,9 +36,9 @@
             <tbody>
               <tr v-for="recipe in recipes" :key="recipe.id" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
                 <td class="py-3 px-2">{{ recipe.product.name }}</td>
-                <td class="py-3 px-2">{{ recipe.product.pricing || 0 }}</td>
+                <td class="py-3 px-2">{{ `$${recipe.product.pricing || 0}` }}</td>
                 <td class="py-3 px-2">{{ recipe.quantity }}</td>
-                <td class="py-3 px-2">{{ (recipe.product.pricing || 0) * recipe.quantity }}</td>
+                <td class="py-3 px-2">{{ `$${(recipe.product.pricing || 0) * recipe.quantity}` }}</td>
               </tr>
             </tbody>
           </table>
@@ -59,7 +59,7 @@
                   <td>{{ new Date(order.created_at).toLocaleDateString() }}</td>
                   <!-- Assuming account number is user_id -->
                   <td>{{ order.user_id }}</td>
-                  <td>{{ order.total || 0 }}</td>
+                  <td>{{ `$${order.total || 0}` }}</td>
                 </tr>
               </tbody>
             </table>

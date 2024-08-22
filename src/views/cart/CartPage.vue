@@ -37,7 +37,7 @@
                     </div>
                   </td>
                   <td data-th="Name">{{ findProduct(item.product_id).name }}</td>
-                  <td data-th="Price">{{ item.product.pricing }}</td>
+                  <td data-th="Price">{{ `$${item.product.pricing}` }}</td>
                   <td data-th="Quantity">
                     <input
                       type="number"
@@ -58,7 +58,7 @@
                 <tr>
                   <td colspan="5" style="text-align: right">
                     <h3>
-                      <strong>Total {{ total }}</strong>
+                      <strong>Total {{ `$${total}` }}</strong>
                     </h3>
                   </td>
                 </tr>
@@ -108,7 +108,7 @@ import Footer from '../../components/Footer.vue'
 import SubHeader from '../../components/SubHeader.vue'
 import ChevronRight from '../../components/icons/ChevronRight.vue'
 import SubFooter from '../../components/SubFooter.vue'
-import Invoice from '../../views/Cart/Invoice.vue'
+import Invoice from '../../views/cart/Invoice.vue'
 
 const store = useStore()
 const router = useRouter()
