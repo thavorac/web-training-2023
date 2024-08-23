@@ -36,10 +36,6 @@ Route::get('accounts', [AccountController::class, 'showAllAccounts']);
 Route::get('accounts/{account}', [AccountController::class, 'showAccount']);
 Route::put('accounts/{account}', [AccountController::class, 'updateAccount']);
 Route::delete('accounts/{account}', [AccountController::class, 'deleteAccount']);
-Route::get('account-histroy/{account}', [AccountController::class, 'history']);
-Route::get('accounts/{id}/statistics/{period}', [AccountController::class, 'statistics']);
-
-
 
 Route::get('/product-sold', [TransactionController::class, 'productSold']);
 Route::get('/product-order', [TransactionController::class, 'orderProducts']);

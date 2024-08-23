@@ -160,7 +160,6 @@ class TransactionController extends Controller
 //     ]);
 // }
 
-
 public function history(Request $request)
 {
     // Fetch all transactions with related account
@@ -185,6 +184,7 @@ public function history(Request $request)
     $today = Carbon::today();
     $startOfWeek = Carbon::now()->startOfWeek();
     $startOfMonth = Carbon::now()->startOfMonth();
+    $startOfYear = Carbon::now()->startOfYear();
 
     $dailyIncome = Transaction::where('type_Tran', 'income')
         ->whereDate('created_at', $today)
@@ -207,6 +207,13 @@ public function history(Request $request)
         ->whereBetween('created_at', [$startOfMonth, Carbon::now()])
         ->sum('balance');
 
+    $yearlyIncome = Transaction::where('type_Tran', 'income')
+        ->whereBetween('created_at', [$startOfYear, Carbon::now()])
+        ->sum('balance');
+    $yearlyOutcome = Transaction::where('type_Tran', 'outcome')
+        ->whereBetween('created_at', [$startOfYear, Carbon::now()])
+        ->sum('balance');
+
     return response()->json([
         'transactions' => $formattedTransactions,
         'total_balance' => number_format($totalBalance, 2), // Total balance formatted
@@ -223,9 +230,14 @@ public function history(Request $request)
                 'income' => number_format($monthlyIncome, 2),
                 'outcome' => number_format($monthlyOutcome, 2),
             ],
+            'yearly' => [
+                'income' => number_format($yearlyIncome, 2),
+                'outcome' => number_format($yearlyOutcome, 2),
+            ],
         ],
     ]);
 }
+
 
 
 }

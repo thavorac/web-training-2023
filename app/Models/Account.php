@@ -15,6 +15,10 @@ class Account extends Model
         'default',
         'balance',
     ];
+    public function transactions()
+    {
+        return $this->hasMany(Transaction::class);
+    }
 
     protected static function boot()
     {
@@ -35,8 +39,5 @@ class Account extends Model
 
         return $cardNumber;
     }
-    public function transactions()
-    {
-        return $this->hasMany(Transaction::class);
-    }
+  
 }

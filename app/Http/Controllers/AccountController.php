@@ -66,26 +66,26 @@ class AccountController extends Controller
 
         return response()->json(null, 204);
     }
-    public function history($id)
-    {
-        // Fetch the account with its transactions
-        $account = Account::with('transactions')->findOrFail($id);
+    // public function history($id)
+    // {
+    //     // Fetch the account with its transactions
+    //     $account = Account::with('transactions')->findOrFail($id);
     
-        // Format transactions and include the account name
-        $transactions = $account->transactions->map(function($transaction) use ($account) {
-            return [
-                'id' => $transaction->id,
-                'account_name' => $account->name,
-                'type_Tran' => $transaction->type_Tran,
-                'balance' => $transaction->balance,
-                'total_balance'=>$account->balance,
-                'description' => $transaction->description,
-                'date' => $transaction->created_at->format('d/m/Y'),
-            ];
-        });
+    //     // Format transactions and include the account name
+    //     $transactions = $account->transactions->map(function($transaction) use ($account) {
+    //         return [
+    //             'id' => $transaction->id,
+    //             'account_name' => $account->name,
+    //             'type_Tran' => $transaction->type_Tran,
+    //             'balance' => $transaction->balance,
+    //             'total_balance'=>$account->balance,
+    //             'description' => $transaction->description,
+    //             'date' => $transaction->created_at->format('d/m/Y'),
+    //         ];
+    //     });
     
-        return response()->json([
-            'transactions' => $transactions,
-        ]);
-    }       
+    //     return response()->json([
+    //         'transactions' => $transactions,
+    //     ]);
+    // }       
 }

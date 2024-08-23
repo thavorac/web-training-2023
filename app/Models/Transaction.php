@@ -20,11 +20,6 @@ class Transaction extends Model
     {
         return $this->belongsTo(Account::class);
     }
-     // Relationship with Order
-     public function order()
-     {
-         return $this->belongsTo(Order::class);
-     }
  
      // Relationship with Purchase
      public function purchase()
