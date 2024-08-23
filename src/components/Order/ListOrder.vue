@@ -117,14 +117,14 @@ onMounted(fetchOrders);
                 {{ product.product_name }} ({{ product.quantity }})
               </li>
             </td>
-            <td class="py-3 px-2">{{ order.total }}
+            <td class="py-3 px-2">{{ `$${order.total}` }}
             </td>
             <td class="py-3 px-2">{{ new Date(order.created_at).toLocaleDateString() }}</td>
             <td class="py-3 px-2">
               <span class="bg-[rgb(50,212,61)] text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-200 dark:text-blue-800">{{ order.status }}</span>
             </td>
             <td class="py-3 px-2">
-              <button @click="viewRecipe(order.recipe.id)" class="bg-[#F66603] text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-blue-200">
+              <button @click="viewRecipe(order.recipe.id)" class="bg-[#d7966a] text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-blue-200">
                 <IconRecipe :w="'5'" :h="'5'" className="inline-block" />
                 <span>Receipt</span>
               </button>

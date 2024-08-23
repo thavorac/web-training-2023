@@ -91,10 +91,10 @@ const sidebars = ref([
         path: "/admin/accounts/transfer",
         title: "Transfer"
       },
-      // {
-      //   path: "/admin/accounts/History",
-      //   title: "History"
-      // },
+      {
+        path: "/admin/accounts/history",
+        title: "history"
+      },
     ]
   },
   {

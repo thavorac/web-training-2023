@@ -37,7 +37,7 @@
                     </div>
                   </td>
                   <td data-th="Name">{{ findProduct(item.product_id).name }}</td>
-                  <td data-th="Price">{{ item.product.pricing }}</td>
+                  <td data-th="Price">{{ `$${item.product.pricing}` }}</td>
                   <td data-th="Quantity">
                     <input
                       type="number"
@@ -58,7 +58,7 @@
                 <tr>
                   <td colspan="5" style="text-align: right">
                     <h3>
-                      <strong>Total {{ total }}</strong>
+                      <strong>Total {{ `$${total}` }}</strong>
                     </h3>
                   </td>
                 </tr>
@@ -99,7 +99,7 @@ import { ref, onMounted, computed } from 'vue'
 import axios from 'axios'
 import { useStore } from 'vuex'
 import Swal from 'sweetalert2'
-// import { loadStripe } from '@stripe/stripe-js'
+import { loadStripe } from '@stripe/stripe-js'
 import { useRouter } from 'vue-router'
 import WishlistProduct from '../../components/WishlistProduct.vue'
 import MenuHeader from '../../components/MenuHeader.vue'
@@ -108,7 +108,7 @@ import Footer from '../../components/Footer.vue'
 import SubHeader from '../../components/SubHeader.vue'
 import ChevronRight from '../../components/icons/ChevronRight.vue'
 import SubFooter from '../../components/SubFooter.vue'
-// import Invoice from '../../views/Cart/Invoice.vue'
+import Invoice from '../../views/cart/Invoice.vue'
 
 const store = useStore()
 const router = useRouter()

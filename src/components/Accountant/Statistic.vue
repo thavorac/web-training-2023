@@ -1,106 +1,95 @@
 <template>
   <div>
-    <h1>Account Statistics</h1>
 
-    <div>
-      <label for="period">Select Period: </label>
-      <select id="period" v-model="selectedPeriod" @change="updateCharts">
-        <option value="weekly">Weekly</option>
-        <option value="monthly">Monthly</option>
-        <option value="yearly">Yearly</option>
-      </select>
+    <div class="row float-end">
+      <div class="col-12">
+        <label for="period">Select Period: </label>
+        <select id="period" v-model="selectedPeriod" @change="fetchHistory">
+          <option value="weekly">Weekly</option>
+          <option value="monthly">Monthly</option>
+          <option value="yearly">Yearly</option>
+        </select>
+      </div>
     </div>
 
-    <h2>{{ selectedPeriodLabel }} Statistics</h2>
-    <p>Income: {{ selectedStatistics.income }}</p>
-    <p>Outcome: {{ selectedStatistics.outcome }}</p>
+    <div class="pt-7">
+      <h2>{{ selectedPeriodLabel }} Transaction History</h2>
+      <div class="flex float-end mr-7 mt-">
+        <div class="total-box mr-4 flex items-center">
+          <DollaIcon class="mt-2 mr-6" />
+          <div>
+            <span>Income</span>
+            <h4>{{ selectedStatistics.income }}</h4>
+          </div>
+        </div>
+        <div class="total-box flex items-center">
+          <DollaIcon class="mt-2 mr-6" />
+          <div>
+            <span>Outcome</span>
+            <h4>{{ selectedStatistics.outcome }}</h4>
+          </div>
+        </div>
+      </div>
+    </div>
 
-    <h2>Doughnut Chart</h2>
-    <Doughnut :data="doughnutChartData" :options="doughnutChartOptions" />
+    <table class="data w-full text-sm text-left text-gray-500">
+      <thead class="text-xs text-gray-700 bg-gray-50">
+        <tr>
+          <th scope="col" class="px-6 py-3 text-lg font-sans">Date</th>
+          <th scope="col" class="px-6 py-3 text-lg font-sans">Account Name</th>
+          <th scope="col" class="px-6 py-3 text-lg font-sans">Amount</th>
+          <th scope="col" class="px-6 py-3 text-lg font-sans">Type</th>
+          <th scope="col" class="px-6 py-3 text-lg font-sans">Description</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr v-for="transaction in paginatedTransactions" :key="transaction.id">
+          <td class="px-6 py-3">{{ transaction.date }}</td>
+          <td class="px-6 py-3">{{ transaction.account_name }}</td>
+          <td class="px-6 py-3">{{ transaction.balance }}</td>
+          <td class="px-6 py-3">{{ transaction.type_Tran }}</td>
+          <td class="px-6 py-3">{{ transaction.description }}</td>
+        </tr>
+      </tbody>
+    </table>
 
-    <h2>Bar Chart</h2>
-    <canvas ref="barChartCanvas"></canvas>
+    <!-- Pagination Controls -->
+    <div class="pagination-controls mt-4">
+      <button @click="previousPage" :disabled="currentPage === 1">Previous</button>
+      <span>Page {{ currentPage }} of {{ totalPages }}</span>
+      <button @click="nextPage" :disabled="currentPage === totalPages">Next</button>
+    </div>
   </div>
 </template>
 
-<script setup lang="ts">
+<script setup>
 import { ref, computed, onMounted, watch } from 'vue';
 import axios from 'axios';
-import { Doughnut } from 'vue-chartjs';
-import { Chart as ChartJS, Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, LinearScale } from 'chart.js';
+import DollaIcon from '../icons/DollaIcon.vue';
 
-// Register necessary components with ChartJS
-ChartJS.register(Title, Tooltip, Legend, ArcElement, BarElement, CategoryScale, LinearScale);
-
-// Reactive references
 const transactions = ref([]);
 const statistics = ref({
-  weekly: { income: 0, outcome: 0 },
-  monthly: { income: 0, outcome: 0 },
-  yearly: { income: 0, outcome: 0 },
+  weekly: { income: '', outcome: '' },
+  monthly: { income: '', outcome: '' },
+  yearly: { income: '', outcome: '' },
 });
 const selectedPeriod = ref('weekly');
 
-const doughnutChartData = ref({
-  labels: ['Income', 'Outcome'],
-  datasets: [
-    {
-      label: 'Income vs Outcome',
-      data: [],
-      backgroundColor: [
-        'rgba(75, 192, 192, 0.2)',
-        'rgba(255, 99, 132, 0.2)',
-      ],
-      borderColor: [
-        'rgba(75, 192, 192, 1)',
-        'rgba(255, 99, 132, 1)',
-      ],
-      borderWidth: 1,
-    },
-  ],
-});
+// Pagination state
+const currentPage = ref(1);
+const itemsPerPage = ref(5); // Change this value for more or fewer items per page
 
-const doughnutChartOptions = ref({
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Income vs Outcome',
-    },
-  },
-});
-
-const barChartData = ref({
-  labels: [],
-  datasets: [
-    {
-      label: 'Sales',
-      data: [],
-      backgroundColor: 'rgba(75, 192, 192, 0.2)',
-      borderColor: 'rgba(75, 192, 192, 1)',
-      borderWidth: 1,
-    },
-  ],
-});
-
-const barChartOptions = ref({
-  responsive: true,
-  plugins: {
-    legend: {
-      position: 'top',
-    },
-    title: {
-      display: true,
-      text: 'Sales Over Time',
-    },
-  },
-});
-
-const barChartCanvas = ref<HTMLCanvasElement | null>(null);
-let barChartInstance: ChartJS | null = null; // Track the chart instance
+const fetchHistory = async () => {
+  try {
+    const response = await axios.get('http://localhost:80/api/all-history', {
+      params: { period: selectedPeriod.value },
+    });
+    transactions.value = response.data.transactions;
+    statistics.value = response.data.statistics;
+  } catch (error) {
+    console.error('Error fetching history:', error);
+  }
+};
 
 const selectedStatistics = computed(() => {
   return statistics.value[selectedPeriod.value];
@@ -119,37 +108,28 @@ const selectedPeriodLabel = computed(() => {
   }
 });
 
-const fetchHistory = async () => {
-  try {
-    const response = await axios.get('http://localhost:80/api/all-history');
-    transactions.value = response.data.transactions;
-    statistics.value = response.data.statistics;
-    updateCharts(); // Initialize charts after fetching data
-  } catch (error) {
-    console.error('Error fetching history:', error);
+// Computed property for paginated transactions
+const paginatedTransactions = computed(() => {
+  const start = (currentPage.value - 1) * itemsPerPage.value;
+  const end = start + itemsPerPage.value;
+  return transactions.value.slice(start, end);
+});
+
+// Total pages computed based on items per page
+const totalPages = computed(() => {
+  return Math.ceil(transactions.value.length / itemsPerPage.value);
+});
+
+// Pagination methods
+const nextPage = () => {
+  if (currentPage.value < totalPages.value) {
+    currentPage.value++;
   }
 };
 
-const updateCharts = () => {
-  const currentStatistics = statistics.value[selectedPeriod.value];
-  doughnutChartData.value.datasets[0].data = [currentStatistics.income, currentStatistics.outcome];
-  
-  // Update bar chart data
-  barChartData.value.labels = transactions.value.map(t => t.date);
-  barChartData.value.datasets[0].data = transactions.value.map(t => t.balance);
-  
-  // Destroy existing chart if it exists
-  if (barChartInstance) {
-    barChartInstance.destroy();
-  }
-  
-  // Create new chart
-  if (barChartCanvas.value) {
-    barChartInstance = new ChartJS(barChartCanvas.value, {
-      type: 'bar',
-      data: barChartData.value,
-      options: barChartOptions.value,
-    });
+const previousPage = () => {
+  if (currentPage.value > 1) {
+    currentPage.value--;
   }
 };
 
@@ -157,15 +137,32 @@ onMounted(() => {
   fetchHistory();
 });
 
-// Watch for period changes and update charts
 watch(selectedPeriod, () => {
-  updateCharts();
+  currentPage.value = 1; // Reset to first page when period changes
+  fetchHistory();
 });
 </script>
 
-<style scoped>
-canvas {
-  max-width: 600px;
-  margin: 0 auto;
+<style>
+.total-box {
+  padding: 15px 50px;
+  border-radius: 7px;
+  box-shadow: rgba(100, 100, 111, 0.2) 0px 7px 29px 0px;
+}
+.total-box p {
+  padding-left: 20px;
+}
+.table {
+  width: 700px;
+  height: 500px;
+}
+.pagination-controls {
+  display: flex;
+  justify-content: center;
+  align-items: center;
+}
+.pagination-controls button {
+  margin: 0 10px;
+  padding: 5px 10px;
 }
 </style>

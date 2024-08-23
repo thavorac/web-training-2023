@@ -178,7 +178,7 @@ const printreceipt = () => {
       <div class="float-end p-5 ps-5 gap-6 print:hidden">
         <div>
           <!-- Print receipt Button -->
-          <button @click="printreceipt" class="btn btn-primary mt-3 ">Print Receipt</button>
+          <button @click="printreceipt" class="btn btn-primary mt-3 ">Print</button>
         </div>
       </div>
         </div>
