@@ -42,28 +42,19 @@
             <span>{{ product.rate }}</span>
           </div>
           <div>
-            <div v-if="product.pricing === product.discounted_price">
+            <div v-if="product.discounted_price === 0">
               <PricingBtn style="margin-top: 8px; margin-left: -10px" :newPriceBtn="`$${product.pricing}`" />
             </div>
             <div v-else>
               <PricingBtn style="margin-top: 8px; margin-left: -10px" :discountBtn="calculateDiscount(product)"
-                :newPriceBtn="`$${product.discounted_price}`" :fullPriceBtn="`$${product.pricing}`" />
+                :newPriceBtn="`$${product.discounted_price.toFixed(2)}`" :fullPriceBtn="`$${product.pricing}`" />
             </div>
           </div>
 
         </div>
         <div class="AddToCardButton flex justify-between">
-          <AddToCardButton
-            class="cursor-pointer"
-            color="#7367F0"
-            text="Add to cart"
-            colorText="#FFFFFF"
-            width="151px"
-            height="42px"
-            :icon="none"
-            raduis="1px 4px 4px"
-            @click="addToCart(product)"
-          >
+          <AddToCardButton class="cursor-pointer" color="#7367F0" text="Add to cart" colorText="#FFFFFF" width="151px"
+            height="42px" :icon="none" raduis="1px 4px 4px" @click="addToCart(product)">
             <ShopIcon />
           </AddToCardButton>
         </div>
@@ -127,9 +118,9 @@ const addToCart = async (product) => {
   }
 
   try {
-    const response = await axios.post('http://localhost/api/cart/add', cartItem,{
-      headers:{
-        Authorization: 'Bearer '+store.state.token
+    const response = await axios.post('http://localhost/api/cart/add', cartItem, {
+      headers: {
+        Authorization: 'Bearer ' + store.state.token
       }
     });
     console.log('Product added to cart:', response.data);

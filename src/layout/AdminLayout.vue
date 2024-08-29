@@ -92,8 +92,8 @@ const sidebars = ref([
         title: "Transfer"
       },
       {
-        path: "/admin/accounts/history",
-        title: "history"
+        path: "/admin/accounts/statistic",
+        title: "statistic"
       },
     ]
   },

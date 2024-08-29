@@ -41,14 +41,14 @@
                                     <span>{{ product.rate }}</span>
                                 </div>
                                 <div>
-                                    <div v-if="product.pricing === product.discounted_price">
+                                    <div v-if="product.discounted_price === 0">
                                         <PricingBtn style="margin-top: 8px; margin-left: -10px"
                                             :newPriceBtn="`$${product.pricing}`" />
                                     </div>
                                     <div v-else>
                                         <PricingBtn style="margin-top: 8px; margin-left: -10px"
                                             :discountBtn="calculateDiscount(product)"
-                                            :newPriceBtn="`$${product.discounted_price}`"
+                                            :newPriceBtn="`$${product.discounted_price.toFixed(2)}`"
                                             :fullPriceBtn="`$${product.pricing}`" />
                                     </div>
                                 </div>

@@ -213,11 +213,11 @@ const adminRouter: Readonly<RouteRecordRaw[]> = [
             props: true
           },        
           {
-            path: 'history',
-            name: 'history',
-            component: () => import('../../components/Accountant/Statistic.vue'),
+            path: 'statistic',
+            name: 'statistic',
+            component: () => import('../../components/Accountant/HistoryTransection.vue'),
             props: true
-          }
+          },
         ]
       },
       {

@@ -182,8 +182,8 @@ const printreceipt = () => {
         </div>
       </div>
         </div>
-      
-      <table class="data w-full text-sm text-left text-gray-500">
+      <div class="data relative overflow-auto shadow-md sm:rounded-lg mt-4">
+        <table class="w-full overflow-auto text-sm text-left rtl:text-right text-gray-500">
         <thead class="text-xs text-gray-700 bg-gray-50">
           <tr>
             <!-- <th scope="col" class="px-6 py-3 text-lg font-sans">ID</th> -->
@@ -209,6 +209,8 @@ const printreceipt = () => {
           </tr>
         </tbody>
       </table>
+      </div>
+     
     </div>
   </div>
 </template>
