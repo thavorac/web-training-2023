@@ -37,6 +37,8 @@ Route::get('accounts/{account}', [AccountController::class, 'showAccount']);
 Route::put('accounts/{account}', [AccountController::class, 'updateAccount']);
 Route::delete('accounts/{account}', [AccountController::class, 'deleteAccount']);
 Route::get('account-histroy/{account}', [AccountController::class, 'history']);
+Route::get('account-statistics', [AccountController::class, 'accountStatistics']);
+
 
 
 
