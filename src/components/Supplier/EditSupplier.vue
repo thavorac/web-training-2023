@@ -23,12 +23,12 @@ const products = ref([]);
 const categories = ref([]);
 const dropdownOpen = ref(false);
 const selectAll = ref(false);
-let filteredProducts = ref([]);
-const supplierId = route.params.id;
+const filteredProducts = ref([]);
+const supplierId = ref<number | null>(null);
 
-const getSupplier = async (supplierId: number) => {
+const getSupplier = async (id: number) => {
     try {
-        const response = await axios.get(`http://localhost/api/suppliers/${supplierId}`);
+        const response = await axios.get(`http://localhost/api/suppliers/${id}`);
         const supplier = response.data;
 
         // Update reactive variables with supplier data
@@ -38,7 +38,7 @@ const getSupplier = async (supplierId: number) => {
         email.value = supplier.email;
         address.value = supplier.address;
         company.value = supplier.company;
-        selectedCategory.value = supplier.products[0]?.category_id;
+        selectedCategory.value = supplier.products[0]?.category_id || '';
         selectedProducts.value = supplier.products.map(product => product.id);
     } catch (error) {
         console.error('Error fetching supplier:', error);
@@ -99,8 +99,8 @@ const submitForm = async () => {
         };
 
         let response;
-        if (supplierId) {
-            response = await axios.patch(`http://localhost/api/suppliers/${supplierId}`, formData);
+        if (supplierId.value) {
+            response = await axios.patch(`http://localhost/api/suppliers/${supplierId.value}`, formData);
         } else {
             response = await axios.post('http://localhost/api/suppliers', formData);
         }
@@ -127,9 +127,10 @@ const submitForm = async () => {
 
 // Fetch supplier, products, and categories when component mounts
 onMounted(() => {
-    const supplierId = Number(route.params.supplierId);
-    if (!isNaN(supplierId)) {
-        getSupplier(supplierId);
+    const id = Number(route.params.supplierId);
+    if (!isNaN(id)) {
+        supplierId.value = id;
+        getSupplier(id);
     } else {
         console.error('Invalid supplierId:', route.params.supplierId);
     }
@@ -137,6 +138,7 @@ onMounted(() => {
     getProducts();
 });
 </script>
+
 
 <template>
     <section class="bg-white dark:bg-gray-900">
@@ -240,7 +242,7 @@ onMounted(() => {
                     </button>
                     <button type="submit"
                         class="text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-4 focus:ring-blue-300 font-medium rounded-lg text-sm px-5 py-2.5 dark:bg-blue-600 dark:hover:bg-blue-700 dark:focus:ring-blue-800">
-                        SUBMIT
+                        UPDATE
                     </button>
                 </div>
             </form>

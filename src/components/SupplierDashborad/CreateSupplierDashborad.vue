@@ -4,6 +4,9 @@ import axios from 'axios';
 import { ref, onMounted, watch, computed } from 'vue';
 import { usePurchasesStore } from '../../stores/purchases';
 import { useSearchStore } from '../../stores/search';
+import { useRoute } from 'vue-router';
+import { useStore } from 'vuex';
+import { useRouter } from 'vue-router';
 
 const purchasesStore = usePurchasesStore();
 const totalAccepted = ref(0);
@@ -11,6 +14,8 @@ const totalRejected = ref(0);
 const totalPending = ref(0);
 const searchStore = useSearchStore();
 const search = computed(() => searchStore.search);
+const route = useRoute();
+
 
 
 // Computed property to safely access purchases length
@@ -27,6 +32,18 @@ const fetchData = async () => {
         console.error('Error in fetchData:', error);
     }
 };
+
+const store = useStore();
+const supplier = computed(() => store.getters.getSupplier);
+const router = useRouter();
+const logoutHandler = () => {
+    store.dispatch('logout');
+    router.push('/supplier-login'); // Redirect to sign-in page after logout
+};
+
+if (!store.getters.isAuthenticated || !supplier.value) {
+    router.push('/supplier-login'); // Redirect to login if not authenticated or admin not found
+}
 
 // Watch for changes in the store's totals
 watch(() => purchasesStore.totalAccepted, (newValue) => {
@@ -62,6 +79,25 @@ const filteredData = computed(() => {
     }
     return filtered;
 });
+
+const isVisible = ref(false);
+
+const toggleVisibility = () => {
+    isVisible.value = !isVisible.value;
+};
+
+const listPurchase = ref([]);
+const getPurchasesOfSupplier = async (supplierId: number) => {
+    try {
+        const response = await axios.get(`http://localhost/api/suppliers/${supplierId}/purchases`);
+        listPurchase.value = response.data;
+        console.log('all purchases of supplier: ', response.data);
+    } catch (error) {
+        console.log('Error fetching purchases of one supplier :', error);
+    }
+}
+
+getPurchasesOfSupplier(supplier.value.id);
 </script>
 
 <template>
@@ -74,7 +110,7 @@ const filteredData = computed(() => {
         <ul class="nav-links">
 
             <li>
-                <RouterLink to="/supplier/dasboard">
+                <RouterLink to="/supplier/dashboard">
                     <i class="bx bx-grid-alt"></i>
                     <span class="links_name">Dashboard</span>
                 </RouterLink>
@@ -108,14 +144,14 @@ const filteredData = computed(() => {
             </li>
 
             <li>
-                <RouterLink to="/supplier/setting">
+                <RouterLink to="/supplier/supplier-profile">
                     <i class="bx bx-cog"></i>
 
                     <span class="links_name">Setting</span>
                 </RouterLink>
             </li>
             <li class="log_out">
-                <a href="#">
+                <a href="#" @click="logoutHandler">
                     <i class='bx bx-log-out'></i>
 
                     <span class="links_name">Log out</span>
@@ -133,21 +169,31 @@ const filteredData = computed(() => {
             <div class="search-box">
                 <input type="text" v-model="searchStore.search" placeholder="Search..." />
                 <i class='bx bx-search'></i>
-
-                <!-- <i class="bx bx-search"></i> -->
             </div>
-            <div class="profile-details">
+
+            <!-- notification alert  -->
+            <div v-if="listPurchase" class="relative">
+                <i class='bx bxs-bell-ring text-3xl text-green-500'></i>
+                <span
+                    class="absolute top-0 right-0  transform translate-x-1/2 -translate-y-1/2 bg-red-600 text-white text-xs rounded-full px-2 py-1">{{totalPending }}</span>
+            </div>
+            <div v-if="supplier" class="profile-details ">
                 <img src="https://th.bing.com/th/id/OIP.Ntwccxljc9Gmka_Y6InYMAHaHa?w=188&h=188&c=7&r=0&o=5&dpr=1.3&pid=1.7"
                     alt="" />
-                <span class="admin_name">Prem Shahi</span>
-                <div>
-                    <svg xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24" stroke-width="1.5"
-                        stroke="currentColor" class="size-4">
-                        <path stroke-linecap="round" stroke-linejoin="round" d="m19.5 8.25-7.5 7.5-7.5-7.5" />
-                    </svg>
+                <span class="admin_name">{{ supplier.name }}</span>
+                <i @click="toggleVisibility" class="bx bx-chevron-down"></i>
 
-                </div>
-                <!-- <i class="bx bx-chevron-down"></i> -->
+            </div>
+            <!-- div profile  -->
+            <div id="myDIV" v-show="isVisible" class="flex flex-col gap-y-2  rounded-sm bg-gray-300">
+                <a href=""
+                    class="no-underline text-black flex justify-start items-center gap-3 hover:bg-yellow-200 h-12 hover:text-white ps-3 mt-3">
+                    <i class='bx bx-user-circle text-xl'></i>
+                    Profile</a>
+                <a href=""
+                    class="no-underline text-black  flex justify-start items-center gap-3 hover:bg-yellow-200 h-12  ps-3">
+                    <i class='bx bx-log-out text-xl'></i>
+                    Log Out</a>
             </div>
         </nav>
 
@@ -353,7 +399,7 @@ nav .sidebar-button i {
     height: 50px;
     max-width: 550px;
     width: 100%;
-    margin: 0 20px;
+
 }
 
 /* .search-box {
@@ -401,6 +447,11 @@ nav .sidebar-button i {
     min-width: 190px;
     padding: 0 15px 0 2px;
 }
+
+#myDIV {
+    min-width: 190px;
+}
+
 
 nav .profile-details img {
     height: 40px;

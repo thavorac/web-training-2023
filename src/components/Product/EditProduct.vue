@@ -12,6 +12,7 @@ const brand = ref('');
 const price = ref(0);
 const origin_price = ref(0);
 const category = ref('');
+const qty = ref(0);
 const size = ref('');
 const description = ref('');
 const image = ref<File | null>(null);
@@ -27,6 +28,7 @@ const getProduct = async (productId: number) => {
         productName.value = product.name;
         brand.value = product.brand;
         price.value = product.pricing;
+        qty.value = product.qty;
         origin_price.value = product.origin_price;
         category.value = product.category_id
 
@@ -75,6 +77,7 @@ const updateProduct = async () => {
     formData.append('origin_price', origin_price.value.toString());
     formData.append('category_id', category.value);
     formData.append('size', size.value);
+    formData.append('qty', qty.value.toString());
     formData.append('description', description.value);
 
     if (image.value) {
@@ -95,7 +98,9 @@ const updateProduct = async () => {
         productName.value = updatedProduct.name;
         brand.value = updatedProduct.brand;
         price.value = updatedProduct.pricing;
+        qty.value = updatedProduct.qty;
         origin_price.value = updatedProduct.origin_price;
+        
         category.value = updatedProduct.category_id.toString(); // Ensure category_id is string for select binding
         size.value = updatedProduct.size;
         description.value = updatedProduct.description;
@@ -115,63 +120,72 @@ const updateProduct = async () => {
 const handleCancel = () => {
     router.push('/admin');
 };
-</script><template>
+</script>
+<template>
     <section class="bg-white dark:bg-gray-900">
         <div class="py-3 px-4 max-w-2xl lg:py-16">
-            <p class="mb-4 font-semibold text-xl dark:text-white text-[#58AB5D]">Edit Product</p>
+            <p class="mb-4 font-semibold text-xl dark:text-white text-[#58AB5D]">Edit product</p>
             <form @submit.prevent="updateProduct">
                 <div class="pt-1 grid gap-4 sm:grid-cols-2 sm:gap-6">
-                    <div class="sm:col-span-2">
+                    <div class="w-full">
                         <label for="name" class="block mb-2 font-semibold text-gray-900 dark:text-white">Product
                             Name</label>
                         <input v-model="productName" type="text" name="name" id="name"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Type product name">
+                            placeholder="Type product name" required>
                     </div>
-                    <div class="sm:col-span-2">
+                    <div class="w-full">
+                        <label for="origin_price" class="block mb-2 font-semibold text-gray-900 dark:text-white">Origin
+                            Price</label>
+                        <input v-model.number="origin_price" type="number" name="origin_price" id="origin_price"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="$29" required>
+                    </div>
+                   
+                    <div class="w-full">
+                        <label for="price" class="block mb-2 font-semibold text-gray-900 dark:text-white">Price</label>
+                        <input v-model.number="price" type="number" name="price" id="price"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="$2999" required>
+                    </div>
+                    <div>
+                        <label for="category_id"
+                            class="block mb-2 font-semibold text-gray-900 dark:text-white">Category</label>
+                        <select v-model="category"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
+                            <option value="" disabled>Select category</option>
+                            <option v-for="category in categories" :key="category.id" :value="category.id">{{
+                                category.name }}</option>
+                        </select>
+                    </div>
+                    <div>
+                        <label for="qty" class="block mb-2 font-semibold text-gray-900 dark:text-white">Qty</label>
+                        <input v-model.number="qty" type="number" name="qty" id="qty"
+                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
+                            placeholder="$2999" required>
+                    </div>
+                     <div class="">
                         <label for="brand" class="block mb-2 font-semibold text-gray-900 dark:text-white">Brand</label>
                         <input v-model="brand" type="text" name="brand" id="brand"
                             class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Type brand">
                     </div>
+
                     <div class="sm:col-span-2">
-                        <label for="size" class="block mb-2 font-semibold text-gray-900 dark:text-white">Size</label>
-                        <input v-model="size" type="text" name="size" id="size"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="Type size">
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label for="price" class="block mb-2 font-semibold text-gray-900 dark:text-white">Price</label>
-                        <input v-model.number="price" type="number" name="price" id="price"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="$2999">
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label for="price" class="block mb-2 font-semibold text-gray-900 dark:text-white">Base_Pricee</label>
-                        <input v-model.number="origin_price" type="number" name="price" id="price"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-600 focus:border-primary-600 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
-                            placeholder="$2999">
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label for="category"
-                            class="block mb-2 font-semibold text-gray-900 dark:text-white">Category</label>
-                        <select v-model="category" name="category" id="category"
-                            class="bg-gray-50 border border-gray-300 text-gray-900 text-sm rounded-lg focus:ring-primary-500 focus:border-primary-500 block w-full p-2.5 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500">
-                            <option disabled value="">Select category</option>
-                            <option v-for="cat in categories" :key="cat.id" :value="cat.id">{{ cat.name }}</option>
-                        </select>
-                    </div>
-                    <div class="sm:col-span-2">
-                        <label class="block mb-2 font-semibold text-gray-900 dark:text-white" for="image">Upload
-                            Image</label>
-                        <input @change="handleImageUpload"
+                        <label for="multiple_files" class="block mb-2 font-medium text-gray-900 dark:text-white">Upload
+                            multiple files</label>
+                        <input ref="fileInput" @change="handleFileChange"
                             class="block w-full text-sm text-gray-900 border border-gray-300 rounded-lg cursor-pointer bg-gray-50 dark:text-gray-400 focus:outline-none dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400"
-                            id="image" type="file">
+                            id="multiple_files" type="file" multiple>
+                    </div>
+                    <div class="sm:col-span-2">
+                        <img v-if="uploadedImageUrl" :src="uploadedImageUrl" alt="Uploaded Image"
+                            class="mt-3 max-w-full h-auto">
                     </div>
                     <div class="sm:col-span-2">
                         <label for="description"
                             class="block mb-2 font-semibold text-gray-900 dark:text-white">Description</label>
-                        <textarea v-model="description" id="description" rows="4"
+                        <textarea id="description" rows="8" v-model="description"
                             class="block p-2.5 w-full text-sm text-gray-900 bg-gray-50 rounded-lg border border-gray-300 focus:ring-primary-500 focus:border-primary-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-primary-500 dark:focus:border-primary-500"
                             placeholder="Your description here"></textarea>
                     </div>
@@ -187,10 +201,12 @@ const handleCancel = () => {
                     </button>
                 </div>
             </form>
+            <p v-if="errorMessage" class="text-red-500 mt-4">{{ errorMessage }}</p>
+            <p v-if="successMessage" class="text-green-500 mt-4">{{ successMessage }}</p>
         </div>
     </section>
-</template>
 
+</template>
 <style scoped>
 @import url('https://fonts.googleapis.com/css2?family=Rubik:ital,wght@0,300..900;1,300..900&display=swap');
 
