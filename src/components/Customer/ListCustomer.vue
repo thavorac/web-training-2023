@@ -15,7 +15,9 @@ const currentPage = ref(1);
 const totalPages = ref(0);
 const loading = ref(true);
 const orders = ref([]);
+const users = ref([]);
 const router = useRouter();
+
 
 const fetchOrders = async () => {
   loading.value = true;
@@ -26,6 +28,19 @@ const fetchOrders = async () => {
       ...order,
       purchase_count: order.purchase_count || 0, // Ensure purchase count is handled properly
     }));
+    let groupUsers = {}
+    response.data.map(d=>{
+      if (!groupUsers.hasOwnProperty(d.user.id)){
+        groupUsers[d.user.id]= [];
+      }
+      groupUsers[d.user.id].push(d);
+    })
+    let cus = [];
+    for(let k in groupUsers){
+      cus.push(groupUsers[k]);
+    }
+    users.value=cus;
+    console.log('groupUsers',groupUsers);
   } catch (error) {
     console.error('Error fetching orders:', error);
   } finally {
@@ -34,19 +49,11 @@ const fetchOrders = async () => {
 };
 
 
-const viewRecipe = async (recipeId: number) => {
+const viewOrder = async (userId: number) => {
   try {
-    //const response = await axios.get(`http://localhost/api/orders/${orderId}`);
-    //const order = response.data;
-
-    //if (order && order.products.length > 0) {
-      // Navigate to the Receipt page with the order ID
-      router.push({ name: 'Receipt', params: { id: recipeId } });
-    //} else {
-    //  console.error('No products found for this order.');
-    //}
+      router.push({ name: 'ListOrder', params: { id: userId } });
   } catch (error) {
-    console.error('Error fetching recipe:', error);
+    console.error('Error fetching order:', error);
   }
 };
 
@@ -111,15 +118,15 @@ onMounted(fetchOrders);
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(order, index) in orders" :key="index" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
-            <td class="py-3 px-2">{{ order.user.id }}</td>
-            <td class="py-3 px-2">{{ order.user_name }}</td>
-            <td class="py-3 px-2">{{ order.user.phone_number }}</td>
-            <td class="py-3 px-2">{{ new Date(order.created_at).toLocaleDateString() }}</td>
+          <tr v-for="(user, index) in users" :key="index" class="whitespace-nowrap odd:bg-white even:bg-gray-100">
+            <td class="py-3 px-2">{{ user[0].id }}</td>
+            <td class="py-3 px-2">{{ user[0].user_name }}</td>
+            <td class="py-3 px-2">{{ user[0].user.phone_number }}</td>
+            <td class="py-3 px-2">{{ (user.length)}}</td>
             <td class="py-3 px-2">
-              <button @click="viewRecipe(order.recipe.id)" class="bg-[#F66603] text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-blue-200">
+              <button @click="viewOrder(user[0].user.id)" class="bg-[#F66603] text-white text-xs font-medium mr-2 px-2.5 py-0.5 rounded dark:bg-blue-600 dark:text-blue-200">
                 <IconRecipe :w="'5'" :h="'5'" className="inline-block" />
-                <span>Receipt</span>
+                <span>Orders</span>
               </button>
             </td>
           </tr>

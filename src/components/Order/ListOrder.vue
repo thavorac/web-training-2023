@@ -7,6 +7,7 @@ import IconCategories from '../icons/IconCategories.vue';
 import IconSearch from '../icons/IconSearch.vue';
 import IconSkLoading from '@/components/loading/SmsLoading.vue';
 import IconRecipe from '../icons/IconRecipe.vue';
+import { useRoute } from 'vue-router';
 
 // Define reactive variables
 const page = ref(1);
@@ -16,11 +17,13 @@ const totalPages = ref(0);
 const loading = ref(true);
 const orders = ref([]);
 const router = useRouter();
+const route = useRoute();
 
-const fetchOrders = async () => {
+
+const fetchOrders = async (userId:number=0) => {
   loading.value = true;
   try {
-    const response = await axios.get(`http://localhost/api/orders`);
+    const response = await axios.get(`http://localhost/api/orders/${userId}`);
     console.log('fetchOrders',response.data)
     orders.value = response.data;
   } catch (error) {
@@ -46,7 +49,7 @@ const viewRecipe = async (recipeId: number) => {
   }
 };
 
-onMounted(fetchOrders);
+onMounted(()=>fetchOrders(+route.params.id));
 </script>
 
 <template>
