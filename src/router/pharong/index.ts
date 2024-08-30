@@ -106,7 +106,18 @@ const pharongRouter: Readonly<RouteRecordRaw[]> = [
     path: '/dashboard-view',
     name: 'DashboardView',
     component: () => import('../../components/SupplierDashborad/DashboardView.vue')
-  }
+  },
+  {
+    path: '/supplier-login',
+    name: 'supplierLogin',
+    component: () => import('../../components/SupplierDashborad/SupplierLogin.vue')
+  },
+  {
+    path: '/supplier-profile',
+    name: 'supplierProfile',
+    component: () => import('../../components/SupplierDashborad/SupplierProfile.vue')
+  },
+
 ]
 
 export { pharongRouter }

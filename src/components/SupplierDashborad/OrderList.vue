@@ -5,30 +5,37 @@ import Swal from 'sweetalert2';
 import IconSkLoading from '../loading/SmsLoading.vue';
 import IconCategories from '../icons/IconCategories.vue';
 import { useSearchStore } from '../../stores/search';
+import { useStore } from 'vuex';
+import { usePurchasesStore } from '../../stores/purchases';
+
+const printreceipt = () => {
+    const originalContent = document.body.innerHTML;
+    const receiptContent = document.querySelector('#print_purchase')?.innerHTML || '';
+    document.body.innerHTML = receiptContent;
+    window.print();
+    document.body.innerHTML = originalContent;
+};
+
+const purchaseStore = usePurchasesStore();
+const store = useStore();
+const supplier = computed(() => store.getters.getSupplier);
 
 const purchases = ref([]);
 const suppliers = ref([]);
 const products = ref([]);
 const loading = ref(true);
 const searchStore = useSearchStore();
+const updatedStatuses = ref<Record<number, boolean>>(purchaseStore.updatedStatuses); // Load updated statuses from the store
 
 const search = computed(() => searchStore.search);
 
-const getPurchases = async () => {
+const getPurchasesOfSupplier = async (supplierId: number) => {
     try {
-        const response = await axios.get('http://localhost/api/purchases');
+        const response = await axios.get(`http://localhost/api/suppliers/${supplierId}/purchases`);
         purchases.value = response.data;
+        console.log('all purchases of supplier: ', response.data);
     } catch (error) {
-        console.error('Error fetching purchases:', error);
-    }
-};
-
-const getSuppliers = async () => {
-    try {
-        const response = await axios.get('http://localhost/api/suppliers');
-        suppliers.value = response.data;
-    } catch (error) {
-        console.error('Error fetching suppliers:', error);
+        console.log('Error fetching purchases of one supplier:', error);
     }
 };
 
@@ -42,7 +49,7 @@ const getProducts = async () => {
 };
 
 onMounted(async () => {
-    await Promise.all([getPurchases(), getSuppliers(), getProducts()]);
+    await Promise.all([getPurchasesOfSupplier(supplier.value.id), getProducts()]);
     loading.value = false;
 });
 
@@ -57,23 +64,12 @@ const purchasesWithDetails = computed(() => {
             product_origin_price: product ? product.origin_price : 'Unknown',
         };
     })
-    .filter(purchase => {
+        .filter(purchase => {
             return purchase.product_name.toLowerCase().includes(search.value.toLowerCase());
         });
 });
 
-const updatePurchaseStatus = async (purchaseId, status) => {
-    try {
-        await axios.patch(`http://localhost/api/purchase/${purchaseId}`, { status });
-        await getPurchases(); // Fetch updated data
-        Swal.fire("Updated!", `The purchase status has been updated to ${status}.`, "success");
-    } catch (error) {
-        console.error('Error updating purchase status:', error);
-        Swal.fire("Error!", "An error occurred while updating the purchase status.", "error");
-    }
-};
-
-const confirmUpdateStatus = (purchaseId, status) => {
+const confirmUpdateStatus = (purchaseId: number, status: string) => {
     const statusAction = status === 'accepted' ? 'accept' : 'reject';
     const confirmButtonColor = status === 'accepted' ? 'green' : '#3085d6';
 
@@ -87,7 +83,7 @@ const confirmUpdateStatus = (purchaseId, status) => {
         confirmButtonText: `Yes, ${statusAction} it!`
     }).then((result) => {
         if (result.isConfirmed) {
-            updatePurchaseStatus(purchaseId, status);
+            purchaseStore.updatePurchaseStatus(purchaseId, status);
         }
     });
 };
@@ -95,11 +91,11 @@ const confirmUpdateStatus = (purchaseId, status) => {
 
 <template>
     <div class="w-full bg-white rounded-md p-2">
-        <div class="flex">
+        <div class="flex justify-between items-center">
             <div class="bg-gray-100 flex items-center py-3 px-3 space-x-4 rounded-md">
-                <IconCategories :w="'12'" :h="'12'" className="text-[#F66603]" />
+                <IconCategories :w="'12'" :h="'12'" class="text-[#F66603]" />
                 <template v-if="loading">
-                    <IconSkLoading className="w-6 h-6" />
+                    <IconSkLoading class="w-6 h-6" />
                 </template>
                 <template v-else>
                     <div class="flex flex-col">
@@ -112,14 +108,19 @@ const confirmUpdateStatus = (purchaseId, status) => {
                     <span class="text-xl font-semibold"> Order Request</span>
                 </RouterLink>
             </div>
+            <div>
+                <button @click="printreceipt" type="button"
+                    class="bg-blue-700 px-3 py-2 rounded-md font-bold text-white">Print
+                    Receipt</button>
+            </div>
         </div>
-        <div class="relative overflow-auto shadow-md sm:rounded-lg mt-4">
+        <div class="relative overflow-auto shadow-md sm:rounded-lg mt-4" id="print_purchase">
             <table class="w-full overflow-auto text-sm text-left rtl:text-right text-gray-500">
                 <thead class="text-xs text-gray-700 bg-gray-50">
                     <tr>
-                        <th scope="col" class="px-6 py-3 text-lg font-sans"> ID</th>
-                        <th scope="col" class="px-6 py-3 text-lg font-sans"> Product</th>
-                        <th scope="col" class="px-6 py-3 text-lg font-sans"> Bprice</th>
+                        <th scope="col" class="px-6 py-3 text-lg font-sans">No</th>
+                        <th scope="col" class="px-6 py-3 text-lg font-sans">Product</th>
+                        <th scope="col" class="px-6 py-3 text-lg font-sans">Bprice</th>
                         <th scope="col" class="px-6 py-3 text-lg">Qty</th>
                         <th scope="col" class="px-6 py-3 text-lg">Total Price</th>
                         <th scope="col" class="px-6 py-3 text-lg">Date</th>
@@ -129,13 +130,13 @@ const confirmUpdateStatus = (purchaseId, status) => {
                 <tbody>
                     <tr v-if="loading">
                         <th colspan="6">
-                            <IconSkLoading className="w-6 h-6" />
+                            <IconSkLoading class="w-6 h-6" />
                         </th>
                     </tr>
                     <template v-else>
                         <tr v-for="(purchase, index) in purchasesWithDetails" :key="index"
                             :class="`bg-white ${index === purchasesWithDetails.length - 1 ? '' : 'border-b'} border-gray-200 cursor-pointer hover:bg-gray-100`">
-                            <td class="px-6 py-6">{{ purchase?.id }}</td>
+                            <td class="px-6 py-6">{{ index + 1 }}</td>
                             <td class="px-6 py-6">{{ purchase?.product_name }}</td>
                             <td class="px-6 py-6">{{ purchase?.product_origin_price }}</td>
                             <td class="px-6 py-6">{{ purchase?.qty }}</td>
@@ -143,7 +144,8 @@ const confirmUpdateStatus = (purchaseId, status) => {
                             <td class="px-6 py-6">{{ purchase?.created_at }}</td>
                             <td class="px-6 py-6 flex space-x-2">
                                 <!-- accept icon -->
-                                <svg @click="confirmUpdateStatus(purchase.id, 'accepted')"
+                                <svg v-if="!updatedStatuses[purchase.id]"
+                                    @click="confirmUpdateStatus(purchase.id, 'accepted')"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="green" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"
@@ -151,7 +153,8 @@ const confirmUpdateStatus = (purchaseId, status) => {
                                 </svg>
 
                                 <!-- reject icon -->
-                                <svg @click="confirmUpdateStatus(purchase.id, 'rejected')"
+                                <svg v-if="!updatedStatuses[purchase.id]"
+                                    @click="confirmUpdateStatus(purchase.id, 'rejected')"
                                     xmlns="http://www.w3.org/2000/svg" fill="none" viewBox="0 0 24 24"
                                     stroke-width="1.5" stroke="red" class="size-6">
                                     <path stroke-linecap="round" stroke-linejoin="round"

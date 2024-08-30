@@ -18,6 +18,7 @@ const products = ref<any[]>([]);
 const loading = ref(true);
 const searchStore = useSearchStore();
 
+
 const getSuppliers = async () => {
     try {
         const response = await axios.get('http://localhost/api/suppliers');
