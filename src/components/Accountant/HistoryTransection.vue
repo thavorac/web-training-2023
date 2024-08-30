@@ -32,7 +32,7 @@
         </div>
       </div>
 
-      <div class="relative overflow-auto shadow-md sm:rounded-lg mt-4 text-gray-500">
+      <div class="relative overflow-auto shadow-md sm:rounded-lg mt-4">
         <table class="w-full overflow-auto text-sm text-left rtl:text-right text-gray-500">
           <thead class="text-xs text-gray-700 bg-gray-50">
             <tr>
@@ -44,7 +44,7 @@
             </tr>
           </thead>
           <tbody>
-            <tr v-for="tran in paginatedTransactions" :key="tran.date + tran.account_name">
+            <tr v-for="tran in paginatedTransactions" :key="tran.date + tran.account_name" class="bg-white border-b border-gray-200">
               <td class="px-6 py-6">{{ tran.account_name }}</td>
               <td class="px-6 py-6">{{ tran.date }}</td>
               <td class="px-6 py-6">{{ tran.description }}</td>
@@ -96,8 +96,8 @@ import {
   CategoryScale,
   LinearScale,
   PointElement,
-  ChartData,
-  ChartOptions,
+  // ChartData,
+  // ChartOptions,
 } from 'chart.js';
 
 // Register Chart.js components
@@ -321,10 +321,14 @@ onMounted(fetchStatistics);
 .filter-container {
   display: flex;
   align-items: center;
+  border-radius: 4px;
   gap: 10px; /* Optional: Adds space between the label and select */
 }
 .filter-class{
   text-align: left;
+}
+select:not([size]){
+  border-radius: 7px;
 }
 .chart {
   width: 100%;

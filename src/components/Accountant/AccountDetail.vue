@@ -122,12 +122,12 @@ const printreceipt = () => {
       </RouterLink>
 
       <div class="flex">
-        <div class="total-box mr-4 flex items-center">
+        <!-- <div class="total-box mr-4 flex items-center">
           <DollaIcon class="mt-2 mr-6" />
           <div>
             <span>Balance <h4>{{ transactions[0]?.type_Tran === 'outcome' ? '-' : '' }}{{ transactions[0]?.total_balance }}</h4></span>
           </div>
-        </div>
+        </div> -->
         <div class="total-box mr-4 flex items-center">
           <DollaIcon class="mt-2 mr-6" />
           <div>
@@ -195,7 +195,7 @@ const printreceipt = () => {
           </tr>
         </thead>
         <tbody>
-          <tr v-for="(transaction, index) in filteredData" :key="index">
+          <tr v-for="(transaction, index) in filteredData" :key="index"  class="bg-white border-b border-gray-200">
             <!-- <td class="px-6 py-3">{{ transaction.id }}</td> -->
             <td class="px-6 py-3">{{ transaction.account_name }}</td>
             <td class="px-6 py-3">{{ transaction.description }}</td>
@@ -223,5 +223,10 @@ const printreceipt = () => {
 }
 .total-box p {
   padding-left: 20px;
+}
+@media print {
+  .data {
+    border: 1px solid; /* Add a 1px solid border */
+  }
 }
 </style>
