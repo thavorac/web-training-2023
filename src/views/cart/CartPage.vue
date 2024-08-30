@@ -212,7 +212,7 @@ const handleStripePayment = async () => {
             name: findProduct(item.product_id).name,
             pricing: item.product.pricing
         }));
-
+// console.log({ cartItems: cartItemsWithNames, token: store.state.token })return;
         const response = await axios.post('http://localhost:80/api/create-session', { cartItems: cartItemsWithNames, token: store.state.token }, {
             headers: {
                 Authorization: 'Bearer ' + store.state.token,

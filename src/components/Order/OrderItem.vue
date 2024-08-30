@@ -10,14 +10,28 @@ import IconDelete from '../icons/IconDelete.vue';
 import IconDetail from '../icons/IconDetail.vue';
 import { RouterLink } from 'vue-router';
 import { ref, toValue } from 'vue';
-
+import axios from 'axios';
+import { useStore } from 'vuex';
+const store = useStore();
 // const page = ref(1);
 // const search = ref("");
 // const { loading, data } = useFetch<any>(import.meta.env.VITE_BACKEND + /api/categories ? page = ${ toValue(page) } & search=${ toValue(search) });
+//     const handleExport = async () => {
+//   try {
+//     const response = await axios.get(`http://localhost/api/orders/export`);
+//     console.log('fetchOrders',response.data)
+//     orders.value = response.data;
+//   } catch (error) {
+//     console.error('Error fetching orders:', error);
+//   } finally {
+//     loading.value = false;
+//   }
+// };
 </script>
 
 <template>
     <ProductView :subtitle="'Order'">
+        <a :href="`http://localhost/api/orders/export?token=${store.state.token}`">Export</a>
         <div class="w-full selection:bg-gray-100 py-10 px-10 mt-10 rounded-lg bg-gray-200 shadow-md">
             <div class="w-full bg-white rounded-md p-2">
                 <!-- inject the create and edit form here when click on create and edit action -->
