@@ -42,7 +42,7 @@ Route::patch('/order-products/{orderProduct}', [OrderProductController::class, '
 Route::delete('/order-products/{orderProduct}', [OrderProductController::class, 'destroy']);
 
 //Orders api urls
-Route::get('/orders', [OrderController::class, 'view'])->middleware('auth:sanctum');
+Route::get('/orders/{userId?}', [OrderController::class, 'view'])->middleware('auth:sanctum');
 Route::post('/orders', [OrderController::class, 'add'])->middleware('auth:sanctum');
 Route::get('/orders/export', [OrderController::class, 'export']);
 Route::get('/orders/{orderId}', [OrderController::class, 'show'])->middleware('auth:sanctum');

@@ -87,10 +87,13 @@ class OrderController extends Controller
             ->get();
         return response()->json($orders);
     }
-      public function view(Request $request)
+      public function view(Request $request ,$userId=0)
     {
-        $orders = Order::with(['user', 'orderProduct.product','recipe'])->get();
-
+        $q = Order::with(['user', 'orderProduct.product','recipe']);
+        if($userId>0){
+            $q->where('user_id',$userId);
+        }
+        $orders=$q->get();
         if ($orders) {
             return response()->json($orders->map(function($order){
                 $order->user_name = $order->user->first_name . ' ' . $order->user->last_name;
