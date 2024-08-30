@@ -44,6 +44,7 @@ Route::delete('/order-products/{orderProduct}', [OrderProductController::class, 
 //Orders api urls
 Route::get('/orders', [OrderController::class, 'view'])->middleware('auth:sanctum');
 Route::post('/orders', [OrderController::class, 'add'])->middleware('auth:sanctum');
+Route::get('/orders/export', [OrderController::class, 'export']);
 Route::get('/orders/{orderId}', [OrderController::class, 'show'])->middleware('auth:sanctum');
 Route::patch('/orders/{orderId}', [OrderController::class, 'update'])->middleware('auth:sanctum');
 Route::delete('/orders/{orderId}', [OrderController::class, 'remove'])->middleware('auth:sanctum');
@@ -62,6 +63,7 @@ Route::get('/payment-cancel', [StripePaymentController::class, 'cancel'])->name(
 // Define API routes for the RecipeController
 // Route::apiResource('recipes', RecipeController::class);
 Route::get('/recipes', [RecipeController::class, 'index']);
+Route::get('/recipes/export', [RecipeController::class, 'export']);
 Route::post('/recipes', [RecipeController::class, 'store']);
 Route::get('/orders/{id}/recipes', [RecipeController::class, 'show']);
 Route::put('/orders/{id}/recipes', [RecipeController::class, 'update']);

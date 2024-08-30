@@ -2,8 +2,10 @@
 
 namespace App\Http\Controllers;
 
+use App\Exports\ReceiptsExport;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
+use Maatwebsite\Excel\Facades\Excel;
 
 class RecipeController extends Controller
 {
@@ -67,6 +69,10 @@ class RecipeController extends Controller
         $recipe = Recipe::findOrFail($id);
         $recipe->delete();
         return response()->json(null, 204);
+    }
+    public function export() 
+    {
+        return Excel::download(new ReceiptsExport, 'receipts.xlsx');
     }
 }
 

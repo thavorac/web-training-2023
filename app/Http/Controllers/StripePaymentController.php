@@ -57,8 +57,8 @@ class StripePaymentController extends Controller
     {
         $cartItems=json_decode(request()->cartItems);
         $hashedToken =request()->token;
-        $token = PersonalAccessToken::findToken($hashedToken)->first();
-        //dd($token);
+        $token = PersonalAccessToken::findToken($hashedToken);
+        
         $user = $token->tokenable;
         // Assume that cart_id is passed with the session or through request
         $order = $this->createOrder($cartItems,$user);

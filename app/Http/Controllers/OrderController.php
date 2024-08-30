@@ -1,5 +1,6 @@
 <?php
 namespace App\Http\Controllers;
+use App\Exports\OrdersExport;
 use App\Models\Recipe;
 use Illuminate\Http\Request;
 use App\Models\Order;
@@ -11,6 +12,8 @@ use App\Models\Product;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Log;
 use Illuminate\Support\Arr;
+use Laravel\Sanctum\PersonalAccessToken;
+use Maatwebsite\Excel\Facades\Excel;
 class OrderController extends Controller
 {
     public function add(Request $request)
@@ -110,5 +113,18 @@ class OrderController extends Controller
             return response()->json(['message' => 'Order products not found'], 404);
         }
         return response()->json($orderProducts, 200);
+    }
+    public function export() 
+    {
+        $hashedToken = request('token','');
+        if(filled($hashedToken)){
+            $token = PersonalAccessToken::findToken($hashedToken);
+        
+            $user = $token->tokenable;
+            if($user){
+                return Excel::download(new OrdersExport($user->id), 'orders.xlsx');
+            }
+        }
+        return 'Unauthorized';
     }
 }
